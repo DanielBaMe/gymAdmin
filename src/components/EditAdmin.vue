@@ -6,28 +6,28 @@
             <HeaderDesktop/>
             <div class="main-content">
                 <div class="d-flex justify-content-around">
-                <form @submit="editInfo" method="post" action="https://smartgym.infornet.mx/api/gimnasio/login">
-                    <error-list :errors="errors.nombre"></error-list>
-                    <h3>Nombre:     {{datos.nombre}}</h3>                   
-                    <input name='nombre' id='nombre' class="au-input au-input" type="text" v-model="nombre" placeholder='Editar nombre'>
-                    </br>
-                    </br>
-                    <error-list :errors="errors.telefono"></error-list>
-                    <h3>Telefono:       {{datos.telefono}}</h3>
-                    <input name='telefono' id='telefono' class="au-input au-input" type="text" v-model="telefono" placeholder='Editar telefono'>
-                    </br>
-                    </br>
-                    <error-list :errors="errors.email"></error-list>
-                    <h3>Correo electronico: {{datos.email}}</h3>
-                    <input name='email' id='email' class="au-input au-input" type="text" v-model="correo" placeholder='Editar correo'>
-                    <div v-if="confirmacion" class="alert alert-success w-100">
-                        <span>Se han editado los datos satisfactoriamente</span>
+                    <form @submit="editInfo" method="post" action="https://smartgym.infornet.mx/api/gimnasio/login">
+                        <error-list :errors="errors.nombre"></error-list>
+                        <h3>Nombre:     {{datos.nombre}}</h3>                   
+                        <input name='nombre' id='nombre' class="au-input au-input" type="text" v-model="nombre" placeholder='Editar nombre'>
                         </br>
-                    </div>
-                    </br>
-                    </br>
-                    <button class="au-btn au-btn--block au-btn--green m-b-20 w-50" @click.prevent="editInfo">Entrar</button>
-                </form>
+                        </br>
+                        <error-list :errors="errors.telefono"></error-list>
+                        <h3>Telefono:       {{datos.telefono}}</h3>
+                        <input name='telefono' id='telefono' class="au-input au-input" type="text" v-model="telefono" placeholder='Editar telefono'>
+                        </br>
+                        </br>
+                        <error-list :errors="errors.email"></error-list>
+                        <h3>Correo electronico: {{datos.email}}</h3>
+                        <input name='email' id='email' class="au-input au-input" type="text" v-model="correo" placeholder='Editar correo'>
+                        <div v-if="confirmacion" class="alert alert-success w-100">
+                            <span>Se han editado los datos satisfactoriamente</span>
+                            </br>
+                        </div>
+                        </br>
+                        </br>
+                        <button class="au-btn au-btn--block au-btn--green m-b-20 w-50" @click.prevent="editInfo">Entrar</button>
+                    </form>
                 </div>
             </div>    
         </div>

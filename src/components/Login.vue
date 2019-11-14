@@ -69,8 +69,13 @@ export default {
             })
         },
         checkAuth() {
-            if (localStorage.getItem('token') !== null) {
-                this.$router.push('/')
+            let token = localStorage.getItem('token');
+            if (token !== null) {
+                jwt.verify(token, process.env.MIX_SECRET, (err, decoded) => {
+                    if (!err) {
+                        this.$router.push('/')
+                    }
+                });
             }
         }
     }
