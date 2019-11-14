@@ -2,9 +2,16 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios';
 import router from '../router/router'
+import ErrorsList from '../components/ErrorsList.vue'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  components: {
+    'error-list': ErrorsList
+  },
+  data(){
+    errors: []
+  },
   state: {
     token: null,
     loggingIn: false,

@@ -5,11 +5,13 @@
                 <div class="login-wrap">
                     <div class="login-content">
                         <div class="login-logo">
-                            <router-link to="/"> <img src="/assets/logo.png" alt="CoolAdmin"></router-link>
+                            <router-link to="/"> <img src="/images/smartgym-logo.png" alt="CoolAdmin"></router-link>
                         </div>
                             <div class="login-form"> 
                                 <form @submit="formSubmit">
                                     <div class="form-group">
+                                        <span v-if="er" class="alert alert-danger w-100">{{ error_message }}</span> 
+                                        <error-list :errors="errors.email"></error-list>
                                         <label>Dirección de correo electronico</label>
                                         <input class="au-input au-input--full" type="email" v-model="email" placeholder="Email">
                                         <br/>
@@ -48,7 +50,8 @@ export default {
             password: '',
             confirm: '',
             errors: [],
-            er: false
+            er: false,
+            error_message: ''
         };
     },
     methods: {
@@ -65,10 +68,16 @@ export default {
                 this.$router.push('/login');
             })
             .catch(error => {
-                this.errors = (error.response.data)
-                this.er = true
+                
+                if (!error.response.data.error) {
+                    this.errors = (error.response.data)
+                } else {
+                    this.er = true
+                    this.error_message = error.response.data.error
+                }
+                
             })
     }
 }
-}
+};
 </script>

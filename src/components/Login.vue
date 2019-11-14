@@ -7,12 +7,9 @@
                         <div class="login-logo">
                             <router-link to="/"> <img src="/images/smartgym-logo.png" alt="CoolAdmin"></router-link>
                         </div>
-                        <div v-if="loginError !== null" class="row">
-                            <span class="alert alert-danger col-md-12">{{ loginError }}</span>
-                        </div>
                         <div class="login-form">
                             <form @submit="loginSubmit" method="post" action="https://smartgym.infornet.mx/api/gimnasio/login">
-                                
+                                <error-list :errors="errors"></error-list>
                                 <div class="form-group">
                                     <label>Correo electronico</label>
                                     <input class="au-input au-input--full" type="email" v-model="email" placeholder="Email">
@@ -39,13 +36,16 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-
+import ErrorsList from './ErrorsList.vue'
 export default {
-
+    components: {
+        'error-list': ErrorsList
+    },
     data(){
         return{
             email: '',
-            password: ''
+            password: '',
+            errors: []
         }
     },
     computed: {
@@ -66,6 +66,20 @@ export default {
             this.doLogin({
                 email: this.email,
                 password: this.password
+            })
+            .then(response => {
+                localStorage.setItem('token', response.data.access_token);
+                window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+                this.errors = [];
+                router.push('/');
+            })
+            .catch(error => {
+                if (error.response.data.message === 'The given data was invalid.') {
+
+                        this.errors = error.response.data.errors;
+
+                    } else if(error.response.data.message === 'Email duplicado') {
+                    }
             })
         },
         checkAuth() {
