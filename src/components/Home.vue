@@ -7,19 +7,19 @@
             <div class="main-content d-flex justify-content-around">
                 <div>
                     <h3>Estado del servicio</h3>
-                    </br>
+                    <br/>
                         <span class="alert alert-success w-100">{{datos.estado}}</span>
-                    </br>
+                    <br/>
                 </div>
                 <div>
                     <h3>Tipo de plan</h3>
                     <p>{{datos.id_plan}}</p>   
-                    </br>      
+                    <br/>      
                 </div>
                 <div>
                     <h3>Fecha de expiración</h3>
                     <p>{{datos.fecha_expiracion}}</p>
-                    </br>
+                    <br/>
                 </div>
             </div>
         </div>
@@ -31,6 +31,7 @@
 import HeaderMobile from './HeaderMobile'
 import MenuSidebar from './MenuSidebar'
 import HeaderDesktop from './HeaderDesktop'
+import { mapState, mapActions } from 'vuex';
 import axios from 'axios';
 
 export default {
@@ -46,26 +47,27 @@ export default {
             estado: false
         };
     },
-    mounted(){
-            axios.get('/perfil')
-            .then(response => console.log(response.data))
-    },
     created(){
+        this.verifyToken();
         this.obtenerDatos();
     },
     methods:{
+        ...mapActions([
+            'getToken'
+        ]),
+        verifyToken(){
+            this.getToken()
+        },
         obtenerDatos(){
             axios.get('/perfil')
             .then((response) =>
             {   
-                this.datos = response.data.contrato
+                this.datos = response.data.contrato;
                 if(datos.estado === 'Activo'){
                     this.estado = true
                 }
-                console.log(response.data)
-                console.log(this.datos)
             }).catch(function (error){
-                console.log('Error: ' + error);
+                console.log(error);
             })
         }
     }

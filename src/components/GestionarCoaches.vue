@@ -15,28 +15,44 @@
                     </div>
                     <div>
                         <button class="btn btn-info btn-lg" @click="agregar = !agregar">
-                        Nuevo servicio
+                        Nuevo coach
                         </button>
                     </div>
-                    <div class="login-content-center w-50" v-show="agregar">
+                    <div class="w-50" v-show="agregar">
                         <div class="login-form">
-                            <form method="post" @submit="addService">
-                                <error-list :errors="errors.nombre"></error-list>
+                            <form method="post" @submit="addCoach">
                                 <div class="form-group">
-                                    <label>Nombre del servicio: </label>
-                                <input type="text" name="servicio" id="servicio" class="au-input au-input" v-model="nombre">
+                                    <error-list :errors="errors.nombre"></error-list>
+                                    <label>Nombre del coach: </label>
+                                    <input type="text" name="nombre" id="nombre" class="au-input au-input--full" v-model="nombre">
                                 </div>
                                 <div class="form-group">
-                                    <label>Precio del servicio: </label>
-                                <input type="number" step="0.01" name="precio" id="precio" class="au-input au-input" v-model="precio">
+                                    <label>Biografía: </label>
+                                    <textarea type="text" name="biografia" id="biografia" class="au-input au-input--full" v-model="biografia"></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <error-list :errors="errors.descripcion"></error-list>
-                                    <label>Descripcion del servicio: </label>
-                                    <input type="text" name="descripcion" id="descripcion" class="au-input au-input" v-model="descripcion">
+                                    <error-list :errors="errors.email"></error-list>
+                                    <label>Email: </label>
+                                    <input type="text" name="email" id="email" class="au-input au-input" v-model="email">
                                 </div>
+                                <div class="form-group">
+                                    
+                                    <label>Password: </label>
+                                    <input type="password" name="password" id="password" class="au-input au-input" v-model="password">
+                                </div>
+                                <div class="form-group">
+                                    
+                                    <label>Horarios: </label>
+                                    <input type="text" name="horarios" id="horarios" class="au-input au-input" v-model="horarios">
+                                </div>
+                                <div v-if="hecho" class="alert alert-info w-100">
+                                <span>Se ha agregado correctamente un nueva servio</span>
+                                <b/>
+                                </div>
+                                <br/>
+                                <br/>
                                 <div>
-                                    <button class="au-btn au-btn--block au-btn--green m-b-20 w-50" v-if="!cargando" type="submit" @click.prevent="addService">
+                                    <button class="au-btn au-btn--block au-btn--green m-b-20 w-50" v-if="!cargando" type="submit" @click.prevent="addCoach">
                                         <span class="glyphicon glyphicon-plus"></span>Agregar</button>
                                     <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
                                 </div>
@@ -47,20 +63,20 @@
                         <thead>
                             <tr>
                                 <th>Nombre</th>
-                                <th>Precio</th>
-                                <th>Descripcion</th>
+                                <th>Correo</th>
+                                <th>Horarios</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="item of datos" :key="item.id">
                                 <td>{{item.nombre}}</td>
-                                <td>{{item.precio}}</td>
-                                <td>{{item.descripcion}}</td>
-                                <router-link :to="'/edit-miembro/' + item.id" class="btn btn-info btn-lg">
+                                <td>{{item.email}}</td>
+                                <td>{{item.horarios}}</td>
+                                <router-link :to="'/edit-coach/' + item.id" class="btn btn-info btn-lg">
                                     <span class="glyphicon glyphicon-pencil" title="Editar"></span> 
                                 </router-link>
                                 &nbsp &nbsp
-                                <button class="btn btn-danger btn-lg" type="submit" @click.prevent="deleteServicio(item)">
+                                <button class="btn btn-danger btn-lg" type="submit" @click.prevent="deleteCoach(item)">
                                     <span class="glyphicon glyphicon-minus" title="Eliminar"></span>
                                 </button>
                             </tr>
@@ -72,18 +88,15 @@
     </div>
 </template>
 
-
 <script>
 import HeaderMobile from './HeaderMobile'
 import MenuSidebar from './MenuSidebar'
 import HeaderDesktop from './HeaderDesktop'
 import ErrorsList from './ErrorsList.vue'
-import { mapState, mapActions } from 'vuex';
 import axios from 'axios';
-// import func from '../../vue-temp/vue-editor-bridge';
+import { mapState, mapActions } from 'vuex';
 
 export default {
-    name: 'Servicios',
     components: {
         HeaderMobile,
         MenuSidebar,
@@ -91,11 +104,13 @@ export default {
         'error-list': ErrorsList
     },
     data(){
-        return{
-            nombre:'',
-            precio:'',
-            descripcion:'',
-            datos: [],
+        return {
+            nombre: '',
+            biografia: '',
+            email: '',
+            password: '',
+            horarios: '',
+            datos : [],
             errors: [],
             ide: '',
             agregar: false,
@@ -103,7 +118,7 @@ export default {
             hecho: false,
             cargando: false,
             er: false
-        };
+        }
     },
     created(){
         this.verifyToken();
@@ -125,22 +140,24 @@ export default {
             })
         },
         obtenerDatos(){
-            axios.get('/servicios')
+            axios.get('/coaches')
             .then((response) =>
             {   
-
-                this.datos = response.data;
-
+                this.datos = response.data
+                console.log(response.data)
+                console.log(this.datos)
             }).catch(function (error){
                 console.log('Error: ' + error);
             })
         },
-        addService(){
-            axios.post('/servicios',
+        addCoach(){
+            axios.post('/coaches',
             {
                 nombre: this.nombre,
-                precio: this.precio,
-                descripcion: this.descripcion,
+                biografia: this.biografia,
+                email: this.email,
+                password: this.password,
+                horarios: this.horarios,
                 id_gimnasio: this.ide
             })
             .then( response => {
@@ -149,27 +166,27 @@ export default {
                 this.errors = [];
                 this.hecho = true;
                 this.agregar = false;
-                obtenerDatos();
             })
             .catch(error=>{
                 this.errors = (error.response.data.errors)
                 this.cargando = false;
             })
             this.nombre = '';
-            this.precio = '';
-            this.descripcion = '';
+            this.email = '';
+            this.biografia = '';
+            this.password = '';
+            this.horarios = '';
             this.errors = '';
         },
-        deleteServicio(item){
-            axios.delete('/servicios/'+ item.id)
+        deleteCoach(item){
+            axios.delete('/coaches/'+ item.id)
             .then( response => {
                 console.log(response)
-                obtenerDatos();
             }).catch(error => {
                 console.log(error)
             })
         }
     }
-}
-
+    }
+;
 </script>

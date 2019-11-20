@@ -2,20 +2,16 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios';
 import router from '../router/router'
-import ErrorsList from '../components/ErrorsList.vue'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  components: {
-    'error-list': ErrorsList
-  },
-  data(){
-    errors: []
-  },
   state: {
     token: null,
     loggingIn: false,
     loginError: null
+  },
+  data(){
+    _this = this
   },
   mutations: {
     loginStart: state => state.loggingIn = true,
@@ -37,16 +33,18 @@ export default new Vuex.Store({
       axios.post('/login', {
         ...loginData
       })
-      .then(response => {
-          localStorage.setItem('token', response.data.access_token);
-          window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-          commit('loginStop', null);
-          commit('updateAccessToken', response.data.access_token);
-          router.push('/');
+      .then((response) => {
+        localStorage.setItem('token', response.data.access_token);
+        window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+        commit('loginStop', null);
+        commit('updateAccessToken', response.data.access_token);
+        console.log(response.data)
+        router.push('/');
       })
       .catch(error => {
         commit('loginStop', error.response.data.message);
         commit('updateAccessToken', null);
+        console.log(error.response)
       })
     },
     fetchAccessToken({commit}) {
@@ -56,6 +54,15 @@ export default new Vuex.Store({
       localStorage.removeItem('token')
       commit('logout')
       router.push('/login');
+    },
+    getToken(){
+      axios.get('/perfil')
+      .then(response => {
+        if(response.data.status){
+          localStorage.removeItem('token')
+          router.push('/login');
+      }
+      })
     }
   },
   modules: {

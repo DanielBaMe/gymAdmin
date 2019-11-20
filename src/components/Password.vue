@@ -5,21 +5,22 @@
                 <div class="login-wrap">
                     <div class="login-content">
                         <div   class="login-form"> 
-                            <form @submit="formSubmit">
+                            <form @submit.prevent="formSubmit" method="post" action="/password/email">
                                 <div class="form-group">
                                     <label>Le enviaremos una liga para poder restablecer su contraseña</label>
                                     <div v-if="estado" class="alert alert-success w-100">
                                         <span>Se ha enviado el correo</span>
-                                        </br>
+                                        <br/>
                                     </div>
-                                    <div v-if="error"  class="alert alert-danger w-100">
-                                        <span>El correo ingresado no esta registrado en el sistema</span>
-                                        </br>
+                                    <div v-if="er"  class="alert alert-danger w-100">
+                                        <span>{{errors.error}}</span>
+                                        <br/>
                                     </div>
-                                    <input class="au-input au-input--full" type="email" v-model="email" v-on:keyup.enter="submit" placeholder="Correo electronico">
+                                    <input class="au-input au-input--full" type="email" v-model="email" placeholder="Correo electronico">
+                                    <button v-if="!cargando" type="submit" class="au-btn au-btn--block au-btn--green m-b-20 w-50">Enviar</button>
+                                    <button v-else disabled class="au-btn au-btn--block au-btn--info m-b-20 w-50">Actualizando...</button>
                                 </div>
                             </form>
-                            <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit" @click.prevent="formSubmit">Enviar</button>
                         </div>
                     </div>
                 </div>
@@ -29,35 +30,48 @@
 </template>
 
 <script>
+import ErrorsList from './ErrorsList.vue';
 export default {
 
     name: 'Password',
     props: {
         msg: String
     },
+        components: {
+        'error-list': ErrorsList
+    },
     data(){
         return{
             email: '',
-            estado: false,
-            error: false
+            cargando: false,
+            error: false,
+            errors: [],
+            er: false,
+            error_message: '',
+            estado: false
         };
     },
     methods: {
-        formSubmit(e){
-            e.preventDefault();
+        formSubmit(){
+            this.cargando = true
             axios.post('/password/email',{
                 email: this.email
             })
             .then(response => (
                 this.estado= true,
-                this.error = false
+                this.er = false,
+                this.errors = [],
+                this.cargando = false
                 ))
             .catch(error => (
-                console.log(error),
-                this.error= true,
-                this.estado = false
+                this.cargando = false,
+                this.er = true,
+                this.errors = (error.response.data)
                 ))
-            this.email = '';
+            this.email = ''
+            this.errors = []
+            this.er = false
+            this.cargando = false
         }
     }
 }

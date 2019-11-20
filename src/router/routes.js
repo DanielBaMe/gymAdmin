@@ -4,6 +4,9 @@ import Reset from '../components/Reset.vue'
 import Error404 from '../components/Error404.vue'
 import Servicios from '../components/Servicios.vue'
 import EditAdmin from '../components/EditAdmin.vue'
+import GestionarCoaches from '../components/GestionarCoaches.vue'
+import Miembros from '../components/Miembros.vue'
+import EditMiembro from '../components/EditMiembro.vue'
 import CambiarContraseña from '../components/CambiarContraseña.vue'
 
 import Home from '../components/Home.vue'
@@ -82,6 +85,33 @@ const routes = [
         component: CambiarContraseña,
         meta : {
             title: 'Edit-Password',
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/gestionar-coaches',
+        name:  'GestionarCoaches',
+        component: GestionarCoaches,
+        meta : {
+            title: 'Manage-Coach',
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/miembros',
+        name: 'Miembros',
+        component: Miembros,
+        meta : {
+            title: 'Miembros',
+            requiresAuth: true
+        }
+    },
+    {
+        path : '/edit-miembro/:id',
+        name: 'EditMiembro',
+        component: EditMiembro,
+        meta : {
+            title: 'Edit Miembro',
             requiresAuth: true
         }
     }

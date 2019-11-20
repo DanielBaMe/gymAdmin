@@ -8,13 +8,18 @@
                             <router-link to="/"> <img src="/images/smartgym-logo.png" alt="CoolAdmin"></router-link>
                         </div>
                         <div class="login-form">
-                            <form @submit="loginSubmit" method="post" action="https://smartgym.infornet.mx/api/gimnasio/login">
-                                <error-list :errors="errors"></error-list>
+                            <div v-if="er" class="alert alert-danger w-100">
+                                {{ error_message }}
+                                <br/>
+                            </div>
+                            <form @submit.prevent="loginSubmit" method="post" action="https://smartgym.infornet.mx/api/gimnasio/login">
                                 <div class="form-group">
+                                    <error-list :errors="errors.email"></error-list>
                                     <label>Correo electronico</label>
                                     <input class="au-input au-input--full" type="email" v-model="email" placeholder="Email">
                                 </div>
                                 <div class="form-group">
+                                    <error-list :errors="errors.password"></error-list>
                                     <label>Contraseña</label>
                                     <input class="au-input au-input--full" type="password" v-model="password" placeholder="Password">
                                 </div>
@@ -23,7 +28,7 @@
                                         <router-link to='/password-request'>¿Olvidaste tu contraseña?</router-link>
                                     </label>
                                 </div>
-                                <button class="au-btn au-btn--block au-btn--green m-b-20" @click.prevent="loginSubmit">Entrar</button>
+                                <button type="submit" class="au-btn au-btn--block au-btn--green m-b-20" >Entrar</button>
                             </form>
                         </div>
                     </div>
@@ -37,6 +42,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import ErrorsList from './ErrorsList.vue'
+
 export default {
     components: {
         'error-list': ErrorsList
@@ -45,13 +51,14 @@ export default {
         return{
             email: '',
             password: '',
-            errors: []
+            errors: [],
+            er: false,
+            eo: false,
+            error_message: ''
         }
     },
     computed: {
         ...mapState([
-            'loggingIn',
-            'loginError',
             'token'
         ])
     },
@@ -59,28 +66,31 @@ export default {
         this.checkAuth();
     },
     methods: {
-        ...mapActions([
-            'doLogin'
-        ]),
         loginSubmit(){
-            this.doLogin({
+            axios.post('/login', {
                 email: this.email,
                 password: this.password
             })
-            .then(response => {
+            .then((response) => {
                 localStorage.setItem('token', response.data.access_token);
                 window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-                this.errors = [];
-                router.push('/');
+                this.updateAccessToken = response.data.access_token;
+                console.log(response.data)
+                this.$router.push('/');
             })
             .catch(error => {
-                if (error.response.data.message === 'The given data was invalid.') {
-
-                        this.errors = error.response.data.errors;
-
-                    } else if(error.response.data.message === 'Email duplicado') {
-                    }
+                if (!error.response.data.errors) {
+                    this.er = true
+                    this.error_message = error.response.data.message
+                    
+                } else{
+                    this.errors = (error.response.data.errors)
+                }
+                console.log(error.response)
             })
+            this.er = false
+            this.errors = []
+            this.error_message= ''
         },
         checkAuth() {
             let token = localStorage.getItem('token');
@@ -88,6 +98,9 @@ export default {
                 jwt.verify(token, process.env.MIX_SECRET, (err, decoded) => {
                     if (!err) {
                         this.$router.push('/')
+                    } else {
+                        vm.$forceUpdate();
+                        console.log(err.response)
                     }
                 });
             }

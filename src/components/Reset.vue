@@ -8,9 +8,12 @@
                             <router-link to="/"> <img src="/images/smartgym-logo.png" alt="CoolAdmin"></router-link>
                         </div>
                             <div class="login-form"> 
-                                <form @submit="formSubmit">
+                                <form @submit.prevent="formSubmit" method="post">
                                     <div class="form-group">
-                                        <span v-if="er" class="alert alert-danger w-100">{{ error_message }}</span> 
+                                        <div v-if="er" class="alert alert-danger w-100">
+                                            {{ error_message}}
+                                            <br/>
+                                        </div>
                                         <error-list :errors="errors.email"></error-list>
                                         <label>Dirección de correo electronico</label>
                                         <input class="au-input au-input--full" type="email" v-model="email" placeholder="Email">
@@ -24,8 +27,8 @@
                                         <label>Confirmar contraseña</label>
                                         <input class="au-input au-input--full" type="password" v-model="confirm" placeholder="Confirm password">
                                     </div>
+                                    <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">Enviar</button>
                                 </form>
-                                <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit" @click.prevent="formSubmit">Enviar</button>
                             </div>
                         </div>
                     </div>
@@ -68,7 +71,6 @@ export default {
                 this.$router.push('/login');
             })
             .catch(error => {
-                
                 if (!error.response.data.error) {
                     this.errors = (error.response.data)
                 } else {
@@ -77,6 +79,9 @@ export default {
                 }
                 
             })
+            this.errors = []
+            this.er = false
+            this.error_message = ''
     }
 }
 };

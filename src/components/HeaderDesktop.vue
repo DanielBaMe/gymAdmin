@@ -121,15 +121,15 @@
                         <div class="account-wrap">
                             <div class="account-item clearfix js-item-menu">
                                 <div class="content">
-                                    <a class="js-acc-btn" href="#">john doe</a>
+                                    <a class="js-acc-btn" href="#">{{datos.nombre}}</a>
                                 </div>
                                 <div class="account-dropdown js-dropdown">
                                     <div class="info clearfix">
                                         <div class="content">
                                             <h5 class="name">
-                                                <a href="#">john doe</a>
+                                                <a href="#">{{datos.nombre}}</a>
                                             </h5>
-                                            <span class="email">johndoe@example.com</span>
+                                            <span class="email">{{datos.email}}</span>
                                         </div>
                                     </div>
                                     <div class="account-dropdown__body">
@@ -161,6 +161,30 @@
 </template>
 <script>
 export default {
-    name: 'HeaderDesktop'
+    name: 'HeaderDesktop',
+    data(){
+        return {
+            datos: []
+        }
+    },
+    created(){
+        this.obtenerDatos();
+    },
+    mounted(){
+        this.obtenerDatos();
+    },
+    methods:{
+        obtenerDatos(){
+            axios.get('/perfil')
+            .then((response) =>
+            {   
+                this.datos = response.data.gimnasio;
+                console.log(response.data)
+
+            }).catch(function (error){
+                console.log('Error: ' + error);
+            })
+        }
+    }
 }
 </script>

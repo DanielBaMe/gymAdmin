@@ -27,12 +27,12 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="chart.html">
-                            <i class="fas fa-chart-bar"></i>Coaches</a>
+                        <router-link to="/gestionar-coaches">
+                        <i class="fas fa-chart-bar"></i>Gestionar coaches</router-link>
                     </li>
                     <li>
-                        <a href="table.html">
-                            <i class="fas fa-table"></i>Miembros</a>
+                        <router-link to="/miembros">
+                        <i class="fas fa-table"></i>Miembros</router-link>
                     </li>
                     <li>
                         <router-link to='/servicios'>
@@ -84,14 +84,15 @@ export default{
         'token'
     ])
     },
+    created(){
+
+    },
     methods:{
         logout(){
 
             axios.get('/logout')
             .then(response => {
 
-                localStorage.removeItem('expires')
-                localStorage.removeItem('token-type')
                 localStorage.removeItem('token')
                 this.$router.push('/login')
 
@@ -103,5 +104,4 @@ export default{
         }
     }
 }
-
 </script>
