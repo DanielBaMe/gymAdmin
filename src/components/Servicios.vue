@@ -56,7 +56,7 @@
                                 <td>{{item.nombre}}</td>
                                 <td>{{item.precio}}</td>
                                 <td>{{item.descripcion}}</td>
-                                <router-link :to="'/edit-miembro/' + item.id" class="btn btn-info btn-lg">
+                                <router-link :to="'/edit-servicio/' + item.id" class="btn btn-info btn-lg">
                                     <span class="glyphicon glyphicon-pencil" title="Editar"></span> 
                                 </router-link>
                                 &nbsp &nbsp
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
-    </div>
+
 </template>
 
 

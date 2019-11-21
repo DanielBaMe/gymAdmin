@@ -7,6 +7,7 @@ import EditAdmin from '../components/EditAdmin.vue'
 import GestionarCoaches from '../components/GestionarCoaches.vue'
 import Miembros from '../components/Miembros.vue'
 import EditMiembro from '../components/EditMiembro.vue'
+import EditServicio from '../components/EditServicio.vue'
 import CambiarContraseña from '../components/CambiarContraseña.vue'
 
 import Home from '../components/Home.vue'
@@ -113,6 +114,15 @@ const routes = [
         meta : {
             title: 'Edit Miembro',
             requiresAuth: true
+        }
+    },
+    { 
+        path : '/edit-servicio/:id',
+        name : 'EditServicio',
+        component: EditServicio,
+        meta : {
+            title: 'Edit Servicio',
+            requiresAuth : true
         }
     }
 ];

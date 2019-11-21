@@ -21,9 +21,9 @@
                             <li>
                                 <a href="index3.html">Pagar plan</a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <router-link to="/edit-password">Cambiar contraseña</router-link>
-                            </li>
+                            </li> -->
                         </ul>
                     </li>
                     <li>
