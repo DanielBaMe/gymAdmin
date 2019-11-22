@@ -5,67 +5,81 @@
         <div class="page-container">
             <HeaderDesktop/>
             <div class="main-content">
-                <div>
-                    <div v-if="hecho" class="alert alert-info w-100">
-                        <span>Se ha agregado correctamente un nuevo servicio</span>
-                        <br/>
-                        </div>
-                        <br/>
-                        <br/>
-                    </div>
-                    <div>
-                        <button class="btn btn-info btn-lg" @click="agregar = !agregar">
-                        Nuevo servicio
+                <div class="row">
+                    <div class="col">
+                        <button @click="$router.go(-1)" class="btn btn-primary ml-5 glyphicon glyphicon-arrow-left">
+                            Atras
                         </button>
                     </div>
-                    <div class="login-content-center w-50" v-show="agregar">
-                        <div class="login-form">
-                            <form method="post" @submit="addService">
-                                <error-list :errors="errors.nombre"></error-list>
-                                <div class="form-group">
-                                    <label>Nombre del servicio: </label>
-                                <input type="text" name="servicio" id="servicio" class="au-input au-input" v-model="nombre">
-                                </div>
-                                <div class="form-group">
-                                    <label>Precio del servicio: </label>
-                                <input type="number" step="0.01" name="precio" id="precio" class="au-input au-input" v-model="precio">
-                                </div>
-                                <div class="form-group">
-                                    <error-list :errors="errors.descripcion"></error-list>
-                                    <label>Descripcion del servicio: </label>
-                                    <input type="text" name="descripcion" id="descripcion" class="au-input au-input" v-model="descripcion">
-                                </div>
-                                <div>
-                                    <button class="au-btn au-btn--block au-btn--green m-b-20 w-50" v-if="!cargando" type="submit" @click.prevent="addService">
-                                        <span class="glyphicon glyphicon-plus"></span>Agregar</button>
-                                    <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
-                                </div>
-                            </form>
-                        </div>
+                    <div class="col"></div>
+                    <div class="col">
+                        <button class="btn btn-info btn-lg content-aling-center" @click="agregar = !agregar">
+                            Nuevo servicio
+                            </button>
+                            <br/>
+                            <br/>
                     </div>
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Precio</th>
-                                <th>Descripcion</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="item of datos" :key="item.id">
-                                <td>{{item.nombre}}</td>
-                                <td>{{item.precio}}</td>
-                                <td>{{item.descripcion}}</td>
-                                <router-link :to="'/edit-servicio/' + item.id" class="btn btn-info btn-lg">
-                                    <span class="glyphicon glyphicon-pencil" title="Editar"></span> 
-                                </router-link>
-                                &nbsp &nbsp
-                                <button class="btn btn-danger btn-lg" type="submit" @click.prevent="deleteServicio(item)">
-                                    <span class="glyphicon glyphicon-minus" title="Eliminar"></span>
-                                </button>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                </div>
+                    <div class="login-content justify-content-around">
+                                <div v-if="hecho" class="alert alert-info w-100">
+                                    <span>Se ha agregado correctamente un nuevo servicio</span>
+                                    <br/>
+                                </div>
+                                    <br/>
+                                    <br/>
+                                <div class="login-content-center w-50" v-show="agregar">
+                                    <div class="login-form">
+                                        <form method="post" @submit="addService">
+                                            <error-list :errors="errors.nombre"></error-list>
+                                            <div class="form-group">
+                                                <label>Nombre del servicio: </label>
+                                                <input type="text" name="servicio" id="servicio" class="au-input au-input" v-model="nombre">
+                                            </div>
+                                            <div class="form-group">
+                                                <error-list :errors="errors.precio"></error-list>
+                                                <label>Precio del servicio: </label>
+                                            <input type="number" step="0.01" name="precio" id="precio" class="au-input au-input" v-model="precio">
+                                            </div>
+                                            <div class="form-group">
+                                                <error-list :errors="errors.descripcion"></error-list>
+                                                <label>Descripcion del servicio: </label>
+                                                <input type="text" name="descripcion" id="descripcion" class="au-input au-input" v-model="descripcion">
+                                            </div>
+                                            <div>
+                                                <button class="au-btn au-btn--block au-btn--green m-b-20 w-50" v-if="!cargando" type="submit" @click.prevent="addService">
+                                                    <span class="glyphicon glyphicon-plus"></span>      Agregar</button>
+                                                <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <table class="table table-bordered table-hover text-center">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Nombre</th>
+                                            <th class="text-center">Precio</th>
+                                            <th class="text-center">Descripcion</th>
+                                            <th class="text-center">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="item of datos" :key="item.id">
+                                            <td>{{item.nombre}}</td>
+                                            <td>{{item.precio}}</td>
+                                            <td>{{item.descripcion}}</td>
+                                            <router-link :to="'/edit-servicio/' + item.id" class="btn btn-info btn-lg">
+                                                <span class="glyphicon glyphicon-pencil" title="Editar"></span> 
+                                            </router-link>
+                                            &nbsp &nbsp
+                                            <button class="btn btn-danger btn-lg" type="submit" @click.prevent="deleteServicio(item)">
+                                                <span class="glyphicon glyphicon-minus" title="Eliminar"></span>
+                                            </button>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -109,6 +123,9 @@ export default {
         this.verifyToken();
         this.obtenerDatos();
     },
+    updated(){
+        this.obtenerDatos();
+    },
     methods:{
         ...mapActions([
             'getToken'
@@ -128,9 +145,8 @@ export default {
             axios.get('/servicios')
             .then((response) =>
             {   
-
                 this.datos = response.data;
-
+                console.log(datos)
             }).catch(function (error){
                 console.log('Error: ' + error);
             })
@@ -149,22 +165,20 @@ export default {
                 this.errors = [];
                 this.hecho = true;
                 this.agregar = false;
-                obtenerDatos();
+                this.nombre = ''
+                this.precio = ''
+                this.descripcion = ''
             })
             .catch(error=>{
                 this.errors = (error.response.data.errors)
                 this.cargando = false;
             })
-            this.nombre = '';
-            this.precio = '';
-            this.descripcion = '';
-            this.errors = '';
+            this.errors= []
         },
         deleteServicio(item){
             axios.delete('/servicios/'+ item.id)
             .then( response => {
                 console.log(response)
-                obtenerDatos();
             }).catch(error => {
                 console.log(error)
             })

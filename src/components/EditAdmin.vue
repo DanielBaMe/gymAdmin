@@ -15,7 +15,7 @@
                                 <div class="form-group">
                                     <br/>
                                     <error-list :errors="errors.nombre"></error-list>
-                                    <h4 class="text-center">Nombre     </h4>                   
+                                    <h4 class="text-center">Nombre del gimnasio</h4>                   
                                     <input name='nombre' id='nombre' class="form-control" type="text" pattern="[a-zA-Z0-9\s]+"
                                     minlength="4" maxlength="20" v-model="usuario.nombre" placeholder='Editar nombre'
                                     title="Solo letras, Tamaño minimo: 4. Tamaño maximo: 20">

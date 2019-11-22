@@ -13,7 +13,7 @@
                             <i class="fas fa-tachometer-alt"></i>Perfil</a>
                         <ul class="list-unstyled navbar__sub-list js-sub-list">
                             <li>
-                                <router-link to="/edit-info">Editar información personal</router-link>
+                                <router-link to="/edit-info">Editar información del gimnasio</router-link>
                             </li>
                             <li>
                                 <a href="index2.html">Actualizar tipo de plan</a>
@@ -89,13 +89,10 @@ export default{
     },
     methods:{
         logout(){
-
             axios.get('/logout')
             .then(response => {
-
                 localStorage.removeItem('token')
                 this.$router.push('/login')
-
             })
             .catch(e => {
                 console.log(e);

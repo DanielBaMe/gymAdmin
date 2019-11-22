@@ -5,31 +5,39 @@
         <div class="page-container">
             <HeaderDesktop/>
             <div class="main-content">
+                <div>
+                    <h1 class="text-center">¿Que desea hacer con la información de {{miembro.nombre}} ?</h1>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 pt-3">
+                            <router-link to="/" class="pb-5">
+                            <i class="btn btn-primary glyphicon glyphicon-pencil">  Editar información personal</i></router-link>
+                            <br/>
+                            <router-link to="/" class="pb-5">
+                            <i class="btn btn-primary glyphicon glyphicon-log-in">  Agregar planes o servicios</i></router-link>
+                            <br/>
+                            <router-link to="/" class="pb-5">
+                            <i class="btn btn-primary glyphicon glyphicon-btc"> Visualizar plan de pago</i></router-link>
+                            <br/>
+                            <i @click="$router.go(-1)" class="btn btn-primary glyphicon glyphicon-arrow-left">  Atrás</i>
+                    </div>
+                    <div class="col-lg-4">
+                        <label>Nombre</label>
+                        <p>{{miembro.nombre}}</p>
+                        <label>Apellidos</label>
+                        <p>{{miembro.apellidos}}</p>
+                        <label>Telefono</label>
+                        <p>{{miembro.telefono}}</p>
+                        <label>Servicios</label>
+                        <p>{{miembro.servicios}}</p>
+                        <label></label>
+                    </div>
+                </div>
+            </div>
                 <div class="d-flex justify-content-around">
-                    <form method="post">
-                        <h3>Nombre: &nbsp &nbsp {{datos.nombre}}</h3> 
-                        <br/>  
-                        <h3>Apellidos: &nbsp &nbsp {{datos.apellidos}}</h3>   
-                        <br/>
-                        <h3>Telefono: &nbsp &nbsp {{datos.telefono}}</h3>   
-                        <br/>
-                        <h3>Email: &nbsp &nbsp {{datos.email}}</h3>   
-                        <br/>
-                        <h3>Condición fisica: &nbsp &nbsp {{datos.condicion_fisica}}</h3>   
-                        <br/>
-                        <h3>Plan de alimentación: &nbsp &nbsp {{datos.id_plan_alimentacion}}</h3>   
-                        <br/>
-                        <h3>Plan de entrenamiento: &nbsp &nbsp {{datos.id_plan_entrenamiento}}</h3>   
-                        <br/>
-                        <h3>Rutina: &nbsp &nbsp {{datos.id_rutina}}</h3>   
-                        <br/>
-                        <h3>Telefono de emergencia: &nbsp &nbsp {{datos.telefono_emergencia}}</h3>   
-                        <br/>
-                    </form>
                 </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script>
@@ -50,10 +58,16 @@ export default {
     },
     data(){
         return {
-            datos: [],
-            nombre: '',
-            telefono: '',
-            correo: '',
+            miembro: {
+                nombre: '',
+                apellidos: '',
+                telefono: '',
+                condicion_fisica: '',
+                servicios: '',
+                id: '',
+                id_gimnasio: '',
+                updated_at: ''
+            },
             confirmacion: false,
             errors: []
         };
@@ -70,15 +84,15 @@ export default {
             this.getToken()
         },
         obtenerDatos(){
-            var ide = this.$route.params.id;
-            axios.get('/miembros/' + ide)
+            this.ide = this.$route.params.id;
+            axios.get('/miembros/' + this.ide)
             .then((response) =>
-            {   
-                this.datos = response.data
-                console.log(response.data)
-                console.log(this.datos)
+            {  
+                this.miembro = response.data;
+                console.log(this.miembro)
             }).catch(function (error){
                 console.log('Error: ' + error);
+                this.er = true
             })
         }
     }

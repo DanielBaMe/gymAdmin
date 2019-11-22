@@ -170,17 +170,15 @@ export default {
     created(){
         this.obtenerDatos();
     },
-    mounted(){
+    updated(){
         this.obtenerDatos();
     },
     methods:{
         obtenerDatos(){
             axios.get('/perfil')
             .then((response) =>
-            {   
+            {  
                 this.datos = response.data.gimnasio;
-                console.log(response.data)
-
             }).catch(function (error){
                 console.log('Error: ' + error);
             })
