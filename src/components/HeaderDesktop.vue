@@ -160,28 +160,31 @@
     </header>
 </template>
 <script>
+import { mapState, mapActions } from 'vuex';
 export default {
+
     name: 'HeaderDesktop',
     data(){
         return {
             datos: []
         }
     },
-    created(){
-        this.obtenerDatos();
-    },
-    updated(){
+    mounted(){
         this.obtenerDatos();
     },
     methods:{
+        ...mapActions([
+            'getId'
+        ]),
+        obtenerId(){
+            this.getId()
+        },
         obtenerDatos(){
-            axios.get('/perfil')
-            .then((response) =>
-            {  
-                this.datos = response.data.gimnasio;
-            }).catch(function (error){
-                console.log('Error: ' + error);
-            })
+            var CryptoJs = require("crypto-js");
+            var info = localStorage.getItem('gimnasio')
+            var bytes = CryptoJs.AES.decrypt(info.toString(), 'hola mundo')
+            var decryptedData = JSON.parse(bytes.toString(CryptoJs.enc.Utf8))
+            this.datos = decryptedData
         }
     }
 }

@@ -92,6 +92,7 @@ export default{
             axios.get('/logout')
             .then(response => {
                 localStorage.removeItem('token')
+                localStorage.removeItem('gimnasio')
                 this.$router.push('/login')
             })
             .catch(e => {

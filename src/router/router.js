@@ -15,7 +15,7 @@ router.beforeEach((to, from, next) => {
 
         if (token !== null) {
             
-            jwt.verify(token, 'rVoxbWNfD8NU6QctneavsRROOl3vNYe5gvd2umkUwHPmENz3eZllZ0zzCoJ5xLIU', function(err, decoded) {
+            jwt.verify(token, process.env.MIX_SECRET, function(err, decoded) {
                 if (err) {
                     next('/login');
                     console.log(token)

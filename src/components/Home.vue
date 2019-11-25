@@ -63,7 +63,7 @@ export default {
             .then((response) =>
             {   
                 this.datos = response.data.contrato;
-                if(datos.estado === 'Activo'){
+                if(this.datos.estado === 'Activo'){
                     this.estado = true
                 }
             }).catch(function (error){

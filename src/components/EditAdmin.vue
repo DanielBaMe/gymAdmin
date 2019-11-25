@@ -6,12 +6,9 @@
             <HeaderDesktop/>
             <div class="main-content">
                 <div class="row justify-content-around">
-                    <div class="col-md-4 border border-info rounded">
+                    <div class="col-md-4 border border-info rounded login-content">
                         <h2>Editar información</h2>
                         <form @submit.prevent="editInfo" method="post" action="https://smartgym.infornet.mx/api/gimnasio/login" class="justify-content-md-center">
-                                <div v-if="confirmacion" class="alert alert-success w-100">
-                                    <span>Se han editado los datos satisfactoriamente</span>
-                                </div>
                                 <div class="form-group">
                                     <br/>
                                     <error-list :errors="errors.nombre"></error-list>
@@ -43,18 +40,16 @@
                                     <button v-else disabled class="au-btn au-btn--block au-btn--info m-b-20">Actualizando...</button>
                         </form>
                     </div>
-                    <div class="col-md-4 border border-info rounded">
+                    <div class="col-md-4 border border-info rounded login-content">
                         <h2>Cambiar contraseña</h2>
                         <form @submit.prevent="editPass" method="post" action="/password/update" class="justify-content-md-center">
-                                <div v-if="hecho" class="alert alert-success w-100">
-                                    <span>Se ha cambiado correctamente la nueva contraseña</span>
-                                </div>
                                 <div class="form-group">
                                     <br/>
-                                    <div v-if="er" class="alert alert-danger w-100">
+                                    <!-- <div v-if="er" class="alert alert-danger w-100">
                                         {{ error_message }}
                                         <br/>
-                                    </div>
+                                    </div> -->
+                                        <error-list :errors="errors.current_password"></error-list>
                                     <h4>Contraseña actual</h4>
                                     <input class="form-control" type="password" v-model="current_password" placeholder="Password actual">
                                     <br/>
@@ -90,6 +85,7 @@ import HeaderDesktop from './HeaderDesktop'
 import ErrorsList from './ErrorsList.vue'
 import axios from 'axios';
 import { mapState, mapActions } from 'vuex';
+import SweetAlert from 'sweetalert2'
 
 export default {
     name: 'Edit-info',
@@ -106,50 +102,56 @@ export default {
                 telefono: '',
                 email: ''
             },
-            confirmacion: false,
             errors: [],
             cargando: false,
             current_password: '',
             password: '',
             confirm: '',
-            hecho: false,
             er: false,
             error_message: '',
             loading: false
         };
     },
-    created(){
-        this.verifyToken();
-        this.obtenerDatos();
-    },
     mounted(){
-        this.obtenerDatos();
+        this.obtenerDatos()
     },
     methods:{
         ...mapActions([
-            'getToken'
+            'getToken',
+            'getPerfil'
+        ]),
+        ...mapState([
+            'perfil'
         ]),
         verifyToken(){
             this.getToken()
         },
         obtenerDatos(){
-            axios.get('/perfil')
-            .then((response) =>
-            {   
-                this.usuario = response.data.gimnasio
-            }).catch(function (error){
-                console.log('Error: ' + error);
+            this.getPerfil(this.perfil)
+            .then(response => {
+                console.log(response)
+                this.usuario = response.data
+                console.log(this.usuario)
+            }).catch(error => {
+                console.log(error)
             })
-        },
+            },
         editInfo(){
             this.cargando = true;
             axios.post('/perfil',this.usuario)
             .then( response => {
                 this.cargando = false;
                 this.errors = [];
-                this.confirmacion= true;
-            })
-            .catch(error=>{
+                SweetAlert.fire(
+                'Correcto',
+                'Se ha editado la información exitosamente',
+                'success')
+            }).catch(error=>{
+                SweetAlert.fire(
+                'Ops! No se ha podido editar',
+                'Revisa los errores',
+                'error'
+            )
                 this.errors = (error.response.data.errors)
             })
             this.cargando = false;
@@ -172,12 +174,12 @@ export default {
             })
             .catch( error => {
                 this.loading = false;
-                if (!error.response.data.errors.current_password) {
-                    this.errors = (error.response.data.errors)
-                } else{
-                    this.er = true
-                    this.error_message = error.response.data.errors.current_password
-                }
+                SweetAlert.fire(
+                'Ops! No se ha podido editar',
+                'Revisa los errores',
+                'error'
+            )
+                this.errors = (error.response.data.errors)
             })
             this.errors = [];
             this.er = false;
@@ -185,5 +187,6 @@ export default {
             this.loading = false;
         }
     }
-};
+}
+;
 </script>

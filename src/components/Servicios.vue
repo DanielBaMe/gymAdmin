@@ -76,7 +76,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="item of datos" :key="item.id">
+                                        <tr v-for="(item,index) of datos" :key="item.id">
                                             <td>{{item.nombre}}</td>
                                             <td>{{item.precio}}</td>
                                             <td>{{item.descripcion}}</td>
@@ -87,7 +87,7 @@
                                             </td>
                                             
                                             <td>
-                                                <button class="btn btn-danger btn-lg" type="submit" @click.prevent="deleteServicio(item)">
+                                                <button class="btn btn-danger btn-lg" type="submit" @click.prevent="deleteServicio(index,item.id)">
                                                     <span class="glyphicon glyphicon-minus"></span>
                                                 </button>
                                             </td>
@@ -137,9 +137,8 @@ export default {
     },
     created(){
         this.verifyToken();
-        this.obtenerDatos();
     },
-    updated(){
+    mounted(){
         this.obtenerDatos();
     },
     methods:{
@@ -150,9 +149,9 @@ export default {
             this.getToken()
         },
         idGym(){
-            axios.get('perfil')
+            axios.get('/perfil')
             .then((response) => {
-                this.ide = response.data.gimnasio.id;
+                this.ide = response.data.gimnasio.id
             }).catch(function (error) {
                 console.log(error);
             })
@@ -161,8 +160,7 @@ export default {
             axios.get('/servicios')
             .then((response) =>
             {   
-                this.datos = response.data;
-                console.log(this.datos)
+                this.datos = response.data
             }).catch(function (error){
                 console.log('Error: ' + error);
             })
@@ -176,6 +174,13 @@ export default {
                 id_gimnasio: this.ide
             })
             .then( response => {
+                let servicio = {
+                    nombre: this.nombre,
+                    precio: this.precio,
+                    descripcion: this.descripcion,
+                    id_gimnasio: this.ide
+                }
+                this.datos.unshift(servicio)
                 console.log(response)
                 this.cargando = false;
                 this.errors = [];
@@ -196,9 +201,10 @@ export default {
             })
             this.errors= []
         },
-        deleteServicio(item){
-            axios.delete('/servicios/'+ item.id)
+        deleteServicio(index,id){
+            axios.delete('/servicios/'+ id)
             .then( response => {
+                this.datos.splice(index, 1)
                 console.log(response)
             }).catch(error => {
                 console.log(error)

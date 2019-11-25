@@ -2,14 +2,15 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios';
 import router from '../router/router'
-import VueSweetalert2 from 'vue-sweetalert2';
-Vue.use(Vuex, VueSweetalert2)
+Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     token: null,
     loggingIn: false,
-    loginError: null
+    loginError: null,
+    ideGym: null,
+    perfil: null
   },
   data(){
     _this = this
@@ -53,6 +54,7 @@ export default new Vuex.Store({
     },
     logout({commit}) {
       localStorage.removeItem('token')
+      localStorage.removeItem('gimnasio')
       commit('logout')
       router.push('/login');
     },
@@ -64,6 +66,30 @@ export default new Vuex.Store({
           router.push('/login');
       }
       })
+    },
+    getId(){
+      axios.get('/perfil')
+      .then((response) =>
+      {  
+        localStorage.setItem('ideGym', response.data.gimnasio.id)
+      }).catch(function (error){
+          console.log('Error: ' + error);
+      })
+    },
+    getPerfil(){
+      axios.get('/perfil')
+        .then((response) =>
+        {   
+           //Decrypt
+          var CryptoJs = require("crypto-js");
+          var infoGym = localStorage.getItem('gimnasio')
+          var bytes = CryptoJs.AES.decrypt(infoGym.toString(), 'hola mundo')
+          var decryptedData = JSON.parse(bytes.toString(CryptoJs.enc.Utf8))
+          this.perfil = decryptedData
+          //return decryptedData
+        }).catch(function (error){
+            console.log('Error: ' + error);
+        })
     }
   },
   modules: {

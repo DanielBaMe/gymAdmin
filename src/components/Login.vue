@@ -64,6 +64,9 @@ export default {
     },
     created() {
         this.checkAuth();
+        let gimnasio = localStorage.getItem('gimnasio')
+        let json = JSON.parse(gimnasio)
+        console.table(json)
     },
     methods: {
         loginSubmit(){
@@ -75,7 +78,12 @@ export default {
                 localStorage.setItem('token', response.data.access_token);
                 window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
                 this.updateAccessToken = response.data.access_token;
-                console.log(response.data)
+                //Crypted info
+                let gimnasio = JSON.stringify(response.data.usuario);
+                var CryptoJs = require("crypto-js");
+                var infoGym = CryptoJs.AES.encrypt(gimnasio, 'hola mundo')
+                localStorage.setItem('gimnasio', infoGym) 
+
                 this.$router.push('/');
             })
             .catch(error => {

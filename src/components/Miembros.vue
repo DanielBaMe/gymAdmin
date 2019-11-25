@@ -148,7 +148,7 @@ export default {
         this.verifyToken();
         this.obtenerDatos();
     },
-    updated(){
+    mounted(){
         this.obtenerDatos();
     },
     methods:{
@@ -175,6 +175,14 @@ export default {
                 fecha_nacimiento : this.fecha_nacimiento,
                 email : this.email
             }).then(response => {
+                let miembro = {
+                    nombre: this.nombre,
+                    apellidos: this.apellidos,
+                    telefono: this.telefono,
+                    fecha_nacimiento : this.fecha_nacimiento,
+                    email : this.email
+                }
+                this.datos.unshift(miembro)
                 console.log(response)
                 this.cargando = false;
                 this.errors = [];
