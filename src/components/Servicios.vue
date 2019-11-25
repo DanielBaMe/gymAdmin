@@ -22,38 +22,48 @@
                     <div class="col"></div>
                     <div class="col"></div>
                 </div>
-                    <div class="login-content justify-content-around">
-                                <div v-if="hecho" class="alert alert-info w-100">
-                                    <span>Se ha agregado correctamente un nuevo servicio</span>
-                                    <br/>
-                                </div>
-                                    <br/>
-                                    <br/>
-                                <div class="login-content-center w-50" v-show="agregar">
-                                    <div class="login-form">
-                                        <form method="post" @submit="addService">
-                                            <error-list :errors="errors.nombre"></error-list>
-                                            <div class="form-group">
-                                                <label>Nombre del servicio: </label>
-                                                <input type="text" name="servicio" id="servicio" class="au-input au-input" v-model="nombre">
+                    <div class="login-content justify-content-around ml-5 mr-5">
+                                <div v-show="agregar">
+                                    <form method="post" @submit="addService" class="border border-info">
+                                        <div class="row">
+                                            <div class="col"></div>
+                                            <div class="col">
+                                                <div>
+                                                    <error-list :errors="errors.nombre"></error-list>
+                                                    <div>
+                                                        <div class="form-group text-center">
+                                                            <label>Nombre del servicio </label>
+                                                            <input type="text" name="servicio" id="servicio" class="form-control" v-model="nombre">
+                                                        </div>
+                                                        <div class="form-group text-center">
+                                                            <error-list :errors="errors.precio"></error-list>
+                                                            <label>Precio del servicio </label>
+                                                        <input type="number" step="0.01" name="precio" id="precio" class="form-control" v-model="precio">
+                                                        </div>
+                                                        <div class="form-group text-center">
+                                                            <error-list :errors="errors.descripcion"></error-list>
+                                                            <label>Descripcion del servicio </label>
+                                                            <input type="text" name="descripcion" id="descripcion" class="form-control" v-model="descripcion">
+                                                        </div>
+                                                        
+                                                        
+                                                        <div class="row">
+                                                            <div class="col"></div>
+                                                            <div class="w-50 col h-25">
+                                                                <button class="au-btn au-btn--block au-btn--green m-b-20 text-center" v-if="!cargando" type="submit" @click.prevent="addService">
+                                                                <span class="glyphicon glyphicon-plus"></span></button>
+                                                                <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
+                                                            </div>
+                                                            <div class="col"></div>
+                                                            
+                                                        </div>
+
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="form-group">
-                                                <error-list :errors="errors.precio"></error-list>
-                                                <label>Precio del servicio: </label>
-                                            <input type="number" step="0.01" name="precio" id="precio" class="au-input au-input" v-model="precio">
-                                            </div>
-                                            <div class="form-group">
-                                                <error-list :errors="errors.descripcion"></error-list>
-                                                <label>Descripcion del servicio: </label>
-                                                <input type="text" name="descripcion" id="descripcion" class="au-input au-input" v-model="descripcion">
-                                            </div>
-                                            <div>
-                                                <button class="au-btn au-btn--block au-btn--green m-b-20 w-50" v-if="!cargando" type="submit" @click.prevent="addService">
-                                                    <span class="glyphicon glyphicon-plus"></span>      Agregar</button>
-                                                <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                            <div class="col"></div>
+                                        </div>
+                                    </form>
                                 </div>
                                 <table class="table table-bordered table-hover text-center">
                                     <thead>
@@ -61,7 +71,8 @@
                                             <th class="text-center">Nombre</th>
                                             <th class="text-center">Precio</th>
                                             <th class="text-center">Descripcion</th>
-                                            <th class="text-center">Acciones</th>
+                                            <th class="text-center text-primary">Editar</th>
+                                            <th class="text-center text-danger">Editar</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -69,13 +80,18 @@
                                             <td>{{item.nombre}}</td>
                                             <td>{{item.precio}}</td>
                                             <td>{{item.descripcion}}</td>
-                                            <router-link :to="'/edit-servicio/' + item.id" class="btn btn-info btn-lg">
-                                                <span class="glyphicon glyphicon-pencil" title="Editar"></span> 
-                                            </router-link>
-                                            &nbsp &nbsp
-                                            <button class="btn btn-danger btn-lg" type="submit" @click.prevent="deleteServicio(item)">
-                                                <span class="glyphicon glyphicon-minus" title="Eliminar"></span>
-                                            </button>
+                                            <td>
+                                                <router-link :to="'/edit-servicio/' + item.id" class="btn btn-info btn-lg">
+                                                    <span class="glyphicon glyphicon-pencil"></span> 
+                                                </router-link>
+                                            </td>
+                                            
+                                            <td>
+                                                <button class="btn btn-danger btn-lg" type="submit" @click.prevent="deleteServicio(item)">
+                                                    <span class="glyphicon glyphicon-minus"></span>
+                                                </button>
+                                            </td>
+                                        
                                         </tr>
                                     </tbody>
                                 </table>
@@ -94,6 +110,7 @@ import HeaderDesktop from './HeaderDesktop'
 import ErrorsList from './ErrorsList.vue'
 import { mapState, mapActions } from 'vuex';
 import axios from 'axios';
+import SweetAlert from 'sweetalert2'
 // import func from '../../vue-temp/vue-editor-bridge';
 
 export default {
@@ -114,7 +131,6 @@ export default {
             ide: '',
             agregar: false,
             btnagregar: false,
-            hecho: false,
             cargando: false,
             er: false
         };
@@ -146,7 +162,7 @@ export default {
             .then((response) =>
             {   
                 this.datos = response.data;
-                console.log(datos)
+                console.log(this.datos)
             }).catch(function (error){
                 console.log('Error: ' + error);
             })
@@ -163,15 +179,20 @@ export default {
                 console.log(response)
                 this.cargando = false;
                 this.errors = [];
-                this.hecho = true;
                 this.agregar = false;
                 this.nombre = ''
                 this.precio = ''
                 this.descripcion = ''
+                SweetAlert.fire(
+                'Correcto',
+                'Se ha agregado un servicio exitosamente',
+                'success'
+            )
             })
             .catch(error=>{
                 this.errors = (error.response.data.errors)
                 this.cargando = false;
+            
             })
             this.errors= []
         },

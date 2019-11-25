@@ -22,13 +22,7 @@
                     <div class="col"></div>
                     <div class="col"></div>
                 </div>
-                <div class="login-content justify-content-around">
-                    <div v-if="hecho" class="alert alert-info w-100">
-                        <span>Se ha agregado correctamente un nuevo servicio</span>
-                        <br/>
-                    </div>
-                        <br/>
-                        <br/>
+                <div class="login-content justify-content-around ml-3 mr-3">
                     <div v-show="agregar">
                             <form method="post" @submit="addMiembros" class="border border-info">
                                 <div class="row justify-content-around">
@@ -128,6 +122,7 @@ import HeaderDesktop from './HeaderDesktop'
 import ErrorsList from './ErrorsList.vue'
 import axios from 'axios';
 import { mapState, mapActions } from 'vuex';
+import SweetAlert from 'sweetalert2'
 
 export default {
     components: {
@@ -142,7 +137,6 @@ export default {
             agregar: false,
             cargando: false,
             errors: [],
-            hecho: false,
             nombre: '',
             apellidos: '',
             telefono :'',
@@ -184,7 +178,11 @@ export default {
                 console.log(response)
                 this.cargando = false;
                 this.errors = [];
-                this.hecho = true;
+                SweetAlert.fire(
+                'Correcto',
+                'Se ha agregado un nuevo miembro exitosamente',
+                'success'
+            )
                 this.agregar = false;
                 this.nombre = ''
                 this.apellidos = ''

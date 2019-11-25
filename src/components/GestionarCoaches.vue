@@ -13,53 +13,68 @@
                         <br/>
                         <br/>
                     </div>
-                    <div>
-                        <button class="btn btn-info btn-lg" @click="agregar = !agregar">
-                        Nuevo coach
-                        </button>
+                    <div class="row">
+                        <div class="col">
+                            <button @click="$router.go(-1)" class="btn btn-primary ml-5 glyphicon glyphicon-arrow-left">
+                                Atras
+                            </button>
+                        </div>
+                        <div class="col"></div>
+                        <div class="col">
+                            <button class="btn btn-info btn-lg content-aling-center" @click="agregar = !agregar">
+                                Nuevo servicio
+                                </button>
+                                <br/>
+                                <br/>
+                        </div>
+                        <div class="col"></div>
+                        <div class="col"></div>
                     </div>
-                    <div class="w-50" v-show="agregar">
-                        <div class="login-form">
-                            <form method="post" @submit="addCoach">
-                                <div class="form-group">
-                                    <error-list :errors="errors.nombre"></error-list>
-                                    <label>Nombre del coach: </label>
-                                    <input type="text" name="nombre" id="nombre" class="au-input au-input--full" v-model="nombre">
+                    <div class="login-content justify-content-around ml-5 mr-5">
+                        <div v-show="agregar">
+                            <form method="post" @submit="addCoach" class="border border-info">
+                                <div class="row justify-content-around">
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <error-list :errors="errors.nombre"></error-list>
+                                            <label>Nombre del coach: </label>
+                                            <input type="text" name="nombre" id="nombre" class="au-input au-input--full" v-model="nombre">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Biografía: </label>
+                                            <textarea type="text" name="biografia" id="biografia" class="au-input au-input--full" v-model="biografia"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <error-list :errors="errors.email"></error-list>
+                                            <label>Email: </label>
+                                            <input type="text" name="email" id="email" class="au-input au-input" v-model="email">
+                                        </div>
+                                        <div class="form-group">
+                                            
+                                            <label>Password: </label>
+                                            <input type="password" name="password" id="password" class="au-input au-input" v-model="password">
+                                        </div>
+                                        <div class="form-group">
+                                            
+                                            <label>Horarios: </label>
+                                            <input type="text" name="horarios" id="horarios" class="au-input au-input" v-model="horarios">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label>Biografía: </label>
-                                    <textarea type="text" name="biografia" id="biografia" class="au-input au-input--full" v-model="biografia"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <error-list :errors="errors.email"></error-list>
-                                    <label>Email: </label>
-                                    <input type="text" name="email" id="email" class="au-input au-input" v-model="email">
-                                </div>
-                                <div class="form-group">
-                                    
-                                    <label>Password: </label>
-                                    <input type="password" name="password" id="password" class="au-input au-input" v-model="password">
-                                </div>
-                                <div class="form-group">
-                                    
-                                    <label>Horarios: </label>
-                                    <input type="text" name="horarios" id="horarios" class="au-input au-input" v-model="horarios">
-                                </div>
-                                <div v-if="hecho" class="alert alert-info w-100">
-                                <span>Se ha agregado correctamente un nueva servio</span>
-                                <b/>
-                                </div>
-                                <br/>
-                                <br/>
-                                <div>
-                                    <button class="au-btn au-btn--block au-btn--green m-b-20 w-50" v-if="!cargando" type="submit" @click.prevent="addCoach">
+                                <div class="row">
+                                    <div class="col"></div>
+                                    <div class="col">
+                                        <button class="au-btn au-btn--block au-btn--green m-b-20 w-50" v-if="!cargando" type="submit" @click.prevent="addCoach">
                                         <span class="glyphicon glyphicon-plus"></span>Agregar</button>
-                                    <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
+                                        <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
+                                    </div>
+                                    <div class="col"></div>
                                 </div>
                             </form>
                         </div>
-                    </div>
-                    <table class="table table-bordered table-hover">
+                        <table class="table table-bordered table-hover text-center">
                         <thead>
                             <tr>
                                 <th>Nombre</th>
@@ -82,6 +97,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </div>
         </div>
