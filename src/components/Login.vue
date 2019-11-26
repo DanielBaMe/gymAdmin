@@ -80,7 +80,6 @@ export default {
                 this.updateAccessToken = response.data.access_token;
                 //Crypted info
                 let gimnasio = JSON.stringify(response.data.usuario);
-                var CryptoJs = require("crypto-js");
                 var infoGym = CryptoJs.AES.encrypt(gimnasio, 'hola mundo')
                 localStorage.setItem('gimnasio', infoGym) 
 

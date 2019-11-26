@@ -13,7 +13,7 @@ export default new Vuex.Store({
     perfil: null
   },
   data(){
-    _this = this
+      _this = this
   },
   mutations: {
     loginStart: state => state.loggingIn = true,
@@ -26,6 +26,9 @@ export default new Vuex.Store({
     },
     logout: (state) => {
       state.token = null;
+    },
+    dataProfile: (state, datos) => {
+      state.perfil = datos;
     }
   },
   actions: {
@@ -76,20 +79,13 @@ export default new Vuex.Store({
           console.log('Error: ' + error);
       })
     },
-    getPerfil(){
-      axios.get('/perfil')
-        .then((response) =>
-        {   
-           //Decrypt
-          var CryptoJs = require("crypto-js");
+    getPerfil({commit}){
+    
           var infoGym = localStorage.getItem('gimnasio')
           var bytes = CryptoJs.AES.decrypt(infoGym.toString(), 'hola mundo')
           var decryptedData = JSON.parse(bytes.toString(CryptoJs.enc.Utf8))
-          this.perfil = decryptedData
-          //return decryptedData
-        }).catch(function (error){
-            console.log('Error: ' + error);
-        })
+          commit('dataProfile', decryptedData)
+    
     }
   },
   modules: {

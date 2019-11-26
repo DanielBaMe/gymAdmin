@@ -7,8 +7,7 @@
             <div class="main-content">
                 <div class="row">
                     <div class="col">
-                        <button @click="$router.go(-1)" class="btn btn-primary ml-5 glyphicon glyphicon-arrow-left">
-                            Atras
+                        <button @click="$router.go(-1)" class="btn btn-primary ml-5 glyphicon glyphicon-arrow-left" title="Atrás">
                         </button>
                     </div>
                     <div class="col"></div>
@@ -16,90 +15,104 @@
                         <button class="btn btn-info btn-lg content-aling-center" @click="agregar = !agregar">
                             Nuevo servicio
                             </button>
-                            <br/>
-                            <br/>
                     </div>
                     <div class="col"></div>
                     <div class="col"></div>
                 </div>
-                    <div class="login-content justify-content-around ml-5 mr-5">
-                                <div v-show="agregar">
-                                    <form method="post" @submit="addService" class="border border-info">
-                                        <div class="row">
-                                            <div class="col"></div>
-                                            <div class="col">
-                                                <div>
-                                                    <error-list :errors="errors.nombre"></error-list>
-                                                    <div>
-                                                        <div class="form-group text-center">
-                                                            <label>Nombre del servicio </label>
+                    <br/>
+                    <br/>
+                    <div v-show="agregar">
+                        <div class="row align-items-start">
+                            <div class="col"></div>
+                            <div class="col"></div>
+                                <div class="col-lg-6">
+                                    <div class="card">
+                                        <h4 class="card-header">Datos del nuevo servicio</h4>
+                                            <div class="card-body card-block">
+                                                <form method="post" @submit="addService" class="ml-5 mr-5">
+                                                    <div class="form-group">
+                                                        <error-list :errors="errors.nombre"></error-list>
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon">Nombre</div>
                                                             <input type="text" name="servicio" id="servicio" class="form-control" v-model="nombre">
                                                         </div>
-                                                        <div class="form-group text-center">
-                                                            <error-list :errors="errors.precio"></error-list>
-                                                            <label>Precio del servicio </label>
-                                                        <input type="number" step="0.01" name="precio" id="precio" class="form-control" v-model="precio">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <error-list :errors="errors.precio"></error-list>
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon">Precio</div>
+                                                            <input type="number" step="0.01" name="precio" id="precio" class="form-control" v-model="precio">
                                                         </div>
-                                                        <div class="form-group text-center">
-                                                            <error-list :errors="errors.descripcion"></error-list>
-                                                            <label>Descripcion del servicio </label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <error-list :errors="errors.descripcion"></error-list>
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon">Descripcion</div>
                                                             <input type="text" name="descripcion" id="descripcion" class="form-control" v-model="descripcion">
                                                         </div>
-                                                        
-                                                        
-                                                        <div class="row">
-                                                            <div class="col"></div>
-                                                            <div class="w-50 col h-25">
-                                                                <button class="au-btn au-btn--block au-btn--green m-b-20 text-center" v-if="!cargando" type="submit" @click.prevent="addService">
-                                                                <span class="glyphicon glyphicon-plus"></span></button>
-                                                                <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
-                                                            </div>
-                                                            <div class="col"></div>
-                                                            
-                                                        </div>
-
                                                     </div>
-                                                </div>
+                                                    <div class="row">
+                                                        <div class="col"></div>
+                                                        <div class="w-50 col h-25">
+                                                            <button class="au-btn au-btn--block au-btn--green m-b-20 text-center" v-if="!cargando" type="submit" @click.prevent="addService">
+                                                                <span>Agregar</span></button>
+                                                            <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
+                                                        </div>
+                                                        <div class="col"></div>
+                                                    </div>
+                                                </form>
                                             </div>
-                                            <div class="col"></div>
                                         </div>
-                                    </form>
                                 </div>
-                                <table class="table table-bordered table-hover text-center">
+                                <div class="col"></div>
+                            <div class="col"></div>
+                        </div>
+                    </div>
+                        <div class="col-md-12 m-3">
+                            <div class="table-responsive table-responsive-data2">
+                                <table class="table table-data2">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">Nombre</th>
-                                            <th class="text-center">Precio</th>
-                                            <th class="text-center">Descripcion</th>
-                                            <th class="text-center text-primary">Editar</th>
-                                            <th class="text-center text-danger">Editar</th>
+                                            <th >Nombre</th>
+                                            <th >Precio</th>
+                                            <th >Descripcion</th>
+                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(item,index) of datos" :key="item.id">
-                                            <td>{{item.nombre}}</td>
-                                            <td>{{item.precio}}</td>
-                                            <td>{{item.descripcion}}</td>
+                                        <tr class="tr-shadow" v-for="(item,index) of datos" :key="item.id">
                                             <td>
-                                                <router-link :to="'/edit-servicio/' + item.id" class="btn btn-info btn-lg">
-                                                    <span class="glyphicon glyphicon-pencil"></span> 
-                                                </router-link>
+                                                <span>{{item.nombre}}</span>
                                             </td>
-                                            
                                             <td>
-                                                <button class="btn btn-danger btn-lg" type="submit" @click.prevent="deleteServicio(index,item.id)">
-                                                    <span class="glyphicon glyphicon-minus"></span>
-                                                </button>
+                                                <span class="badge badge-pill badge-dark">{{item.precio}}</span>
                                             </td>
-                                        
+                                            <td class="desc">
+                                                <span>{{item.descripcion}}</span>
+                                            </td>
+                                            <td>
+                                                <div class="table-data-feature justify-content-around">
+                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Editar">
+                                                        <router-link :to="'/edit-servicio/' + item.id">
+                                                            <span class="zmdi zmdi-edit"></span> 
+                                                        </router-link>
+                                                    </button>
+                                                    
+                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="deleteServicio(index,item.id)">
+                                                        <span class="zmdi zmdi-delete"></span>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
+            </div>       
 </template>
 
 
@@ -181,7 +194,6 @@ export default {
                     id_gimnasio: this.ide
                 }
                 this.datos.unshift(servicio)
-                console.log(response)
                 this.cargando = false;
                 this.errors = [];
                 this.agregar = false;
@@ -197,7 +209,6 @@ export default {
             .catch(error=>{
                 this.errors = (error.response.data.errors)
                 this.cargando = false;
-            
             })
             this.errors= []
         },
@@ -205,9 +216,12 @@ export default {
             axios.delete('/servicios/'+ id)
             .then( response => {
                 this.datos.splice(index, 1)
-                console.log(response)
+                SweetAlert.fire(
+                'Correcto',
+                'Se ha eliminado un servicio exitosamente',
+                'success'
+            )
             }).catch(error => {
-                console.log(error)
             })
         }
     }

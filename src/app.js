@@ -5,7 +5,7 @@ window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.baseURL = 'https://smartgym.infornet.mx/api/gimnasio';
 window.jwt = require('jsonwebtoken');
-
+window.CryptoJs = require("crypto-js");
 if(localStorage.getItem('token') !== null){
   window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
 }

@@ -161,6 +161,7 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex';
+import store from '../store'
 export default {
 
     name: 'HeaderDesktop',
@@ -180,11 +181,8 @@ export default {
             this.getId()
         },
         obtenerDatos(){
-            var CryptoJs = require("crypto-js");
-            var info = localStorage.getItem('gimnasio')
-            var bytes = CryptoJs.AES.decrypt(info.toString(), 'hola mundo')
-            var decryptedData = JSON.parse(bytes.toString(CryptoJs.enc.Utf8))
-            this.datos = decryptedData
+            store.dispatch('getPerfil')
+            this.datos = store.state.perfil
         }
     }
 }

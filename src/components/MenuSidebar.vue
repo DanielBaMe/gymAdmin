@@ -6,7 +6,7 @@
             </a>
         </div>
         <div class="menu-sidebar__content js-scrollbar1 ">
-            <nav class="navbar-sidebar w-15">
+            <nav class="navbar-sidebar">
                 <ul class="list-unstyled navbar__list">
                     <li class="active has-sub">
                         <a class="js-arrow" href="#">
@@ -27,8 +27,10 @@
                         </ul>
                     </li>
                     <li>
-                        <router-link to="/gestionar-coaches">
-                        <i class="fas fa-chart-bar"></i>Gestionar coaches</router-link>
+                        <a href="index.html">
+                            <router-link to="/gestionar-coaches">
+                            <i class="fas fa-chart-bar"></i>Gestionar coaches</router-link>
+                        </a>
                     </li>
                     <li>
                         <router-link to="/miembros">
