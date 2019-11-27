@@ -21,16 +21,11 @@
                             <li>
                                 <a href="index3.html">Pagar plan</a>
                             </li>
-                            <!-- <li>
-                                <router-link to="/edit-password">Cambiar contraseña</router-link>
-                            </li> -->
                         </ul>
                     </li>
                     <li>
-                        <a href="index.html">
-                            <router-link to="/gestionar-coaches">
-                            <i class="fas fa-chart-bar"></i>Gestionar coaches</router-link>
-                        </a>
+                        <router-link to="/gestionar-coaches">
+                        <i class="fas fa-chart-bar"></i>Gestionar coaches</router-link>
                     </li>
                     <li>
                         <router-link to="/miembros">

@@ -57,7 +57,7 @@
                                                             <br/>
                                                         </div>
                                                         <label class="control-label mb-1">Contraseña actual</label>
-                                                        <input class="form-control" type="password" v-model="current_password" placeholder="Password actual">
+                                                        <input class="form-control" type="password" v-model="current_password" placeholder="Password actual" required>
                                                         <br/>
                                                     </div>
                                                     <div class="form-group">

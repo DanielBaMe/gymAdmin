@@ -8,7 +8,8 @@ import GestionarCoaches from '../components/GestionarCoaches.vue'
 import Miembros from '../components/Miembros.vue'
 import EditMiembro from '../components/EditMiembro.vue'
 import EditServicio from '../components/EditServicio.vue'
-import CambiarContraseña from '../components/CambiarContraseña.vue'
+import VerServicio from '../components/VerServicio.vue'
+import EditCoach from '../components/EditCoach.vue'
 
 import Home from '../components/Home.vue'
 
@@ -81,15 +82,6 @@ const routes = [
         }
     },
     {
-        path: '/edit-password',
-        name: 'EditPassword',
-        component: CambiarContraseña,
-        meta : {
-            title: 'Edit-Password',
-            requiresAuth: true
-        }
-    },
-    {
         path: '/gestionar-coaches',
         name:  'GestionarCoaches',
         component: GestionarCoaches,
@@ -124,7 +116,24 @@ const routes = [
             title: 'Edit Servicio',
             requiresAuth : true
         }
+    },
+    {   path : '/ver-servicio/:id',
+        name : 'VerServicio',
+        component : VerServicio,
+        meta : {
+            title: 'Ver Servicio',
+            requiresAuth: true
+        }
+    },
+    {   
+        path : '/edit-coach/:id',
+        name : 'EditarCoah',
+        component : EditCoach,
+        meta : {
+        title: 'Editar coach',
+        requiresAuth: true
     }
+}
 ];
 
 export default routes;

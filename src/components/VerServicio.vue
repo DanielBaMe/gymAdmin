@@ -9,13 +9,14 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-lg-3">
-                                <button @click="$router.go(-1)" class="btn btn-primary ml-5 btn-sm glyphicon glyphicon-arrow-left" title="Atrás">
+                                <button @click="$router.go(-1)" class="btn btn-primary btn-sm glyphicon glyphicon-arrow-left" title="Atrás">
+                                <!-- <span class="text-center">  Atrás</span> -->
                                 </button>
                             </div>
                             <div class="col-lg-6">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h3>Editar el servicio de {{servicio.nombre}}</h3></div>
+                                        <h3>{{servicio.nombre}}</h3></div>
                                         <div class="card-body">
                                             <form @submit.prevent="formSubmit" method="post" class="ml-5 mr-5">
                                                     <div v-if="er" class="alert alert-danger w-100">
@@ -27,26 +28,27 @@
                                                         <label class="control-label mb-1">Nombre</label> 
                                                         <input name='nombre' id='nombre' class="form-control" type="text"
                                                         pattern="[a-zA-Z0-9\s]+" title="Solo números y letras."
-                                                        v-model="servicio.nombre" minlength="4" maxlength="20">
+                                                        v-model="servicio.nombre" minlength="4" maxlength="20"  :disabled="validated">
                                                         <br/>  
                                                     </div>
                                                     <div class="form-group">
                                                         <error-list :errors="errors.precio"></error-list>
                                                         <label class="control-label mb-1">Precio</label>  
                                                         <input name='precio' id='precio' class="form-control" type="number" step="0.01"
-                                                        v-model="servicio.precio"> 
+                                                        v-model="servicio.precio"  :disabled="validated"> 
                                                         <br/>
                                                     </div>
                                                     <div class="form-group">
                                                         <error-list :errors="errors.descripcion"></error-list>
                                                         <label class="control-label mb-1">Descripcion</label>    
                                                         <textarea v-model="servicio.descripcion" type="text" name='descripcion'
-                                                        id='descripcion' class="form-control" rows="5" cols="50" pattern="[a-zA-Z0-9\s]+"></textarea>
+                                                        id='descripcion' class="form-control"
+                                                        rows="5" cols="50" pattern="[a-zA-Z0-9\s]+"  :disabled="validated"></textarea>
                                                         <br/>
                                                     </div>
                                                 <br/>
-                                                    <button v-if="!loading" type="submit" class="au-btn au-btn--block au-btn--green m-b-20">Editar</button>
-                                                    <button v-else disabled class="au-btn au-btn--block au-btn--info m-b-20">Actualizando...</button>
+                                                    <span v-if="validated" @click="validated = !validated" class="btn btn-success m-b-20 w-100">Habilitar edición</span>
+                                                    <button v-else type="submit" class="btn btn-primary m-b-20 w-100">Editar</button>
                                             </form>
                                         </div>
                                     </div>
@@ -57,6 +59,8 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -69,12 +73,12 @@ import { mapState, mapActions } from 'vuex';
 import SweetAlert from 'sweetalert2'
 
 export default {
+name: 'Servicios',
     components: {
         HeaderMobile,
         MenuSidebar,
         HeaderDesktop,
-        'error-list': ErrorsList,
-        'Swal' : SweetAlert
+        'error-list': ErrorsList
     },
     data(){
         return{
@@ -92,7 +96,8 @@ export default {
             er: false,
             error_message: '',
             loading: false,
-            ide:''
+            ide:'',
+            validated : true
         }
     },
     created(){
@@ -138,6 +143,8 @@ export default {
             this.errors=[];
             this.loading = false;
             }
-        }
     }
+
+}
+
 </script>

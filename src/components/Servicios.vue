@@ -5,114 +5,121 @@
         <div class="page-container">
             <HeaderDesktop/>
             <div class="main-content">
-                <div class="row">
-                    <div class="col">
-                        <button @click="$router.go(-1)" class="btn btn-primary ml-5 glyphicon glyphicon-arrow-left" title="Atrás">
-                        </button>
-                    </div>
-                    <div class="col"></div>
-                    <div class="col">
-                        <button class="btn btn-info btn-lg content-aling-center" @click="agregar = !agregar">
-                            Nuevo servicio
-                            </button>
-                    </div>
-                    <div class="col"></div>
-                    <div class="col"></div>
-                </div>
-                    <br/>
-                    <br/>
-                    <div v-show="agregar">
-                        <div class="row align-items-start">
-                            <div class="col"></div>
-                            <div class="col"></div>
-                                <div class="col-lg-6">
-                                    <div class="card">
-                                        <h4 class="card-header">Datos del nuevo servicio</h4>
-                                            <div class="card-body card-block">
-                                                <form method="post" @submit="addService" class="ml-5 mr-5">
-                                                    <div class="form-group">
-                                                        <error-list :errors="errors.nombre"></error-list>
-                                                        <div class="input-group">
-                                                            <div class="input-group-addon">Nombre</div>
-                                                            <input type="text" name="servicio" id="servicio" class="form-control" v-model="nombre">
-                                                        </div>
+                <div v-show="agregar">
+                    <div class="row align-items-start">
+                        <div class="col"></div>
+                        <div class="col"></div>
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4>Datos del nuevo servicio</h4></div>
+                                        <div class="card-body card-block">
+                                            <form method="post" @submit.prevent="addService" class="ml-5 mr-5">
+                                                <div class="form-group">
+                                                    <error-list :errors="errors.nombre"></error-list>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">Nombre</div>
+                                                        <input type="text" name="servicio" id="servicio"
+                                                        class="form-control" v-model="nombre"  pattern="[a-zA-Z0-9\s]+"
+                                                        title="Solo números y letras.">
                                                     </div>
-                                                    <div class="form-group">
-                                                        <error-list :errors="errors.precio"></error-list>
-                                                        <div class="input-group">
-                                                            <div class="input-group-addon">Precio</div>
-                                                            <input type="number" step="0.01" name="precio" id="precio" class="form-control" v-model="precio">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <error-list :errors="errors.descripcion"></error-list>
-                                                        <div class="input-group">
-                                                            <div class="input-group-addon">Descripcion</div>
-                                                            <input type="text" name="descripcion" id="descripcion" class="form-control" v-model="descripcion">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col"></div>
-                                                        <div class="w-50 col h-25">
-                                                            <button class="au-btn au-btn--block au-btn--green m-b-20 text-center" v-if="!cargando" type="submit" @click.prevent="addService">
-                                                                <span>Agregar</span></button>
-                                                            <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
-                                                        </div>
-                                                        <div class="col"></div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                </div>
-                                <div class="col"></div>
-                            <div class="col"></div>
-                        </div>
-                    </div>
-                        <div class="col-md-12 m-3">
-                            <div class="table-responsive table-responsive-data2">
-                                <table class="table table-data2">
-                                    <thead>
-                                        <tr>
-                                            <th >Nombre</th>
-                                            <th >Precio</th>
-                                            <th >Descripcion</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="tr-shadow" v-for="(item,index) of datos" :key="item.id">
-                                            <td>
-                                                <span>{{item.nombre}}</span>
-                                            </td>
-                                            <td>
-                                                <span class="badge badge-pill badge-dark">{{item.precio}}</span>
-                                            </td>
-                                            <td class="desc">
-                                                <span>{{item.descripcion}}</span>
-                                            </td>
-                                            <td>
-                                                <div class="table-data-feature justify-content-around">
-                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Editar">
-                                                        <router-link :to="'/edit-servicio/' + item.id">
-                                                            <span class="zmdi zmdi-edit"></span> 
-                                                        </router-link>
-                                                    </button>
-                                                    
-                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="deleteServicio(index,item.id)">
-                                                        <span class="zmdi zmdi-delete"></span>
-                                                    </button>
                                                 </div>
-                                            </td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                                                <div class="form-group">
+                                                    <error-list :errors="errors.precio"></error-list>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">Precio</div>
+                                                        <input type="number" step="0.01" name="precio" id="precio" class="form-control" v-model="precio">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <error-list :errors="errors.descripcion"></error-list>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">Descripcion</div>
+                                                        <textarea type="text" max="50" name="descripcion" id="descripcion" 
+                                                        class="form-control" v-model="descripcion" rows="5"  pattern="[a-zA-Z0-9\s]+"></textarea>
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="row">
+                                                    <div class="col-auto mr-auto">
+                                                        <button class="au-btn au-btn--block au-btn--green m-b-20 text-center" v-if="!cargando" type="submit" @click.prevent="addService">
+                                                        <span>Agregar</span></button>
+                                                        <button v-else disabled class="au-btn au-btn--block au-btn--info m-b-20 w-50">Agregando...</button>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-lg content-aling-center">X</span>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="col"></div>
+                        <div class="col"></div>
                     </div>
                 </div>
-            </div>       
+                <div class="col-md-12 m-3">
+                    <div class="table-data__tool">
+                        <div class="table-data__tool-left">
+                            <button @click="$router.go(-1)" class="btn btn-primary btn-sm glyphicon glyphicon-arrow-left" title="Atrás">
+                            </button>
+                        </div>
+                        <div class="table-data__tool-right">
+                            <button class="btn btn-info btn-sm content-aling-center" @click="agregar = !agregar" v-if="agregar === false">
+                                +   Nuevo servicio
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2">
+                            <thead>
+                                <tr>
+                                    <th >Nombre</th>
+                                    <th >Precio</th>
+                                    <th >Descripcion</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="tr-shadow" v-for="(item,index) of datos" :key="item.id">
+                                    <td>
+                                        <span>{{item.nombre}}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-pill badge-dark">$ {{item.precio}}</span>
+                                    </td>
+                                    <td class="desc">
+                                        <span>{{item.descripcion | delimitar}}</span>
+                                    </td>
+                                    <td>
+                                        <div class="table-data-feature justify-content-around">
+                                            <router-link :to="'/ver-servicio/' + item.id">
+                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Ver más">
+                                                    <span class="glyphicon glyphicon-zoom-in"></span> 
+                                                </button>
+                                            </router-link>
+
+                                            <router-link :to="'/edit-servicio/' + item.id">
+                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Editar">
+                                                    <span class="zmdi zmdi-edit"></span>
+                                                </button> 
+                                            </router-link>
+                                            
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="deleteServicio(index,item.id)">
+                                                <span class="zmdi zmdi-delete"></span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>       
 </template>
 
 
@@ -153,6 +160,13 @@ export default {
     },
     mounted(){
         this.obtenerDatos();
+    },
+    filters:{
+        delimitar(valor){
+            if((valor.split('').length) > 20){
+                return valor.slice(0,20)
+            }
+        }
     },
     methods:{
         ...mapActions([
@@ -213,16 +227,34 @@ export default {
             this.errors= []
         },
         deleteServicio(index,id){
-            axios.delete('/servicios/'+ id)
-            .then( response => {
-                this.datos.splice(index, 1)
-                SweetAlert.fire(
-                'Correcto',
-                'Se ha eliminado un servicio exitosamente',
-                'success'
-            )
-            }).catch(error => {
+            Swal.fire({
+            title: '¿Desea eliminar este servicio?',
+            text: "¡Esta acción no se podrá revertir!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Eliminar'
+            }).then((result) => {
+            if (result.value) {
+                axios.delete('/servicios/'+ id)
+                .then(response => {
+                    this.datos.splice(index, 1)
+                    Swal.fire(
+                    '¡Eliminado!',
+                    'El servicio ha sido eliminado.',
+                    'success'
+                    )
+                }).catch(error => {
+                    alert('Ha ocurrido un error: ' + error)
+                })
+            }
             })
+        },
+        limpiarDatos(){
+            this.nombre = ''
+            this.precio = ''
+            this.descripcion = ''
         }
     }
 }
