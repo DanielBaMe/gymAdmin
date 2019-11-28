@@ -10,6 +10,7 @@ import EditMiembro from '../components/EditMiembro.vue'
 import EditServicio from '../components/EditServicio.vue'
 import VerServicio from '../components/VerServicio.vue'
 import EditCoach from '../components/EditCoach.vue'
+import Planes from '../components/Planes.vue'
 
 import Home from '../components/Home.vue'
 
@@ -132,8 +133,17 @@ const routes = [
         meta : {
         title: 'Editar coach',
         requiresAuth: true
+        }
+    },
+    {
+        path : '/planes',
+        name : 'Planes',
+        component : Planes,
+        meta : {
+        title: 'Planes de entrenamiento',
+        requiresAuth: true
+        }
     }
-}
 ];
 
 export default routes;
