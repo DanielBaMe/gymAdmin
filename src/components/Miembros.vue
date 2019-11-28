@@ -5,110 +5,155 @@
         <div class="page-container">
             <HeaderDesktop/>
             <div class="main-content">
-                <div class="row">
-                    <div class="col">
-                        <button @click="$router.go(-1)" class="btn btn-primary ml-5 glyphicon glyphicon-arrow-left">
-                        Atras
-                        </button>
+                <div v-show="agregar">
+                    <div class="row align-items-start">
+                        <div class="col"></div>
+                        <div class="col"></div>
+                            <div class="col-lg-10">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4>Datos del miembro</h4></div>
+                                        <div class="card-body card-block">
+                                            <form method="post" @submit="addMiembros" class="ml-5 mr-5">
+                                                <div class="row justify-content-around">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <error-list :errors="errors.nombre"></error-list>
+                                                            <div class="input-group">
+                                                                <label>Nombre</label>
+                                                                <input type="text" name="nombre" id="nombre" pattern="[a-zA-Z\s]+" minlength="4"
+                                                                class="form-control" v-model="nombre">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <error-list :errors="errors.apellidos"></error-list>
+                                                            <div class="input-group">
+                                                                <label>Apellidos</label>
+                                                                <input type="text" name="apellidos" id="apellidos" pattern="[a-zA-Z\s]+" minlength="4"
+                                                                class="form-control" v-model="apellidos">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <error-list :errors="errors.telefono"></error-list>
+                                                            <div class="input-group">
+                                                                <label>Telefóno</label>
+                                                                <input type="text" name="telefono" id="telefono" pattern="[0-9]+" minlength="4"
+                                                                class="form-control" v-model="telefono">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <error-list :errors="errors.email"></error-list>
+                                                            <div class="input-group">
+                                                                <label>Email</label>
+                                                                <input type="text" name="email" id="email" class="form-control" pattern="[a-zA-Z0-9\s]+" minlength="4"
+                                                                v-model="email">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <error-list :errors="errors.fecha_nacimiento"></error-list>
+                                                            <div class="input-group">
+                                                                <label>Fecha de nacimiento: </label>
+                                                                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" v-model="fecha_nacimiento">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <error-list :errors="errors.telefono"></error-list>
+                                                            <div class="input-group">
+                                                                <label>Telefóno de emergencia</label>
+                                                                <input type="text" name="tel_emerg" id="tel_emerg" pattern="[0-9]+" minlength="4"
+                                                                class="form-control" v-model="tel_emerg">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <error-list :errors="errors.telefono"></error-list>
+                                                            <div class="input-group">
+                                                                <label>Servicios</label>
+                                                                <input type="text" name="servicios" id="servicios" pattern="[0-9]+" minlength="4"
+                                                                class="form-control" v-model="servicios">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <error-list :errors="errors.telefono"></error-list>
+                                                            <div class="input-group">
+                                                                <label>Condición fisica</label>
+                                                                <textarea type="text" name="cond_fisica" id="cond_fisica" pattern="[0-9]+" minlength="4"
+                                                                class="form-control" v-model="cond_fisica"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-auto mr-auto">
+                                                        <button class="au-btn au-btn--block au-btn--green m-b-20 w-50" v-if="!cargando" type="submit" @click.prevent="addMiembros">
+                                                            <span class="glyphicon glyphicon-plus" title="Agregar"></span></button>
+                                                        <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-lg content-aling-center">X</span>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="col"></div>
+                        <div class="col"></div>
                     </div>
-                    <div class="col"></div>
-                    <div class="col">
-                        <button class="btn btn-info btn-lg content-aling-center" @click="agregar = !agregar">
-                            Nuevo miembro
-                            </button>
-                            <br/>
-                            <br/>
-                    </div>
-                    <div class="col"></div>
-                    <div class="col"></div>
                 </div>
-                <div class="login-content justify-content-around ml-3 mr-3">
-                    <div v-show="agregar">
-                            <form method="post" @submit="addMiembros" class="border border-info">
-                                <div class="row justify-content-around">
-                                    <div class="col-lg-4">
-                                        <br/>
-                                        <div class="form-group">
-                                            <error-list :errors="errors.nombre"></error-list>
-                                            <label>Nombre del miembro: </label>
-                                            <input type="text" name="nombre" id="nombre" pattern="[a-zA-Z\s]+" minlength="4"
-                                            class="form-control" v-model="nombre">
-                                        </div>
-                                        <div class="form-group">
-                                            <error-list :errors="errors.apellidos"></error-list>
-                                            <label>Apellidos: </label>
-                                            <input type="text" name="apellidos" id="apellidos" pattern="[a-zA-Z\s]+" minlength="4"
-                                            class="form-control" v-model="apellidos">
-                                        </div>
-                                        <div class="form-group">
-                                            <error-list :errors="errors.telefono"></error-list>
-                                            <label>Telefono: </label>
-                                            <input type="text" name="telefono" id="telefono" pattern="[0-9]+" minlength="4"
-                                            class="form-control" v-model="telefono">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <br/>
-                                        <div class="form-group">
-                                            <error-list :errors="errors.email"></error-list>
-                                            <label>Email: </label>
-                                            <input type="text" name="email" id="email" class="form-control" pattern="[a-zA-Z0-9\s]+" minlength="4"
-                                            v-model="email">
-                                        </div>
-                                        <div class="form-group">
-                                            <error-list :errors="errors.fecha_nacimiento"></error-list>
-                                            <label>Fecha de nacimiento: </label>
-                                            <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" v-model="fecha_nacimiento">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col"></div>
-                                    <div class="col"></div>
-                                    <div class="col">
-                                        <button class="au-btn au-btn--block au-btn--green m-b-20 w-50" v-if="!cargando" type="submit" @click.prevent="addMiembros">
-                                            <span class="glyphicon glyphicon-plus" title="Agregar"></span></button>
-                                        <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
-                                    </div>
-                                    <div class="col"></div>
-                                    <div class="col"></div>
-                                </div>
-                            </form>
+                <div class="col-md-12 m-3">
+                    <div class="table-data__tool">
+                        <div class="table-data__tool-left">
+                            <button @click="$router.go(-1)" class="btn btn-primary btn-sm glyphicon glyphicon-arrow-left" title="Atrás">
+                            </button>
+                        </div>
+                        <div class="table-data__tool-right">
+                            <button class="btn btn-info btn-sm content-aling-center" @click="agregar = !agregar" v-if="agregar === false">
+                                +   Nuevo miembro
+                            </button>
+                        </div>
                     </div>
-                    <table class="table text-center">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Nombre</th>
-                                <th class="text-center">Apellidos</th>
-                                <th class="text-center">Telefono</th>
-                                <th class="text-center">Telefono emergencia</th>
-                                <th class="text-center">Cond. Fisica</th>
-                                <th class="text-center">Servicios</th>
-                                <th class="text-center text-primary">Editar</th>
-                                <th class="text-center text-danger">Eliminar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="item of datos" :key="item.id">
-                                <td>{{item.nombre}}</td>
-                                <td>{{item.apellidos}}</td>
-                                <td>{{item.telefono}}</td>
-                                <td>{{item.telefono_emergencia}}</td>
-                                <td>{{item.condicion_fisica}}</td>
-                                <td>{{item.servicios}}</td>
-                                <td>
-                                    <router-link :to="'/edit-miembro/' + item.id" class="btn btn-info btn-lg">
-                                        <span class="glyphicon glyphicon-pencil"></span> 
-                                    </router-link>
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger btn-lg" type="submit" @click.prevent="deleteMiembros(item)">
-                                        <span class="glyphicon glyphicon-minus"></span>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Apellidos</th>
+                                    <th>Telefono</th>
+                                    <th>Telefono emergencia</th>
+                                    <th>Cond. Fisica</th>
+                                    <th>Servicios</th>
+                                    <th>Estatus</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="tr-shadow" v-for="(item,index) of datos" :key="item.id">
+                                    <td><span>{{item.nombre}}</span></td>
+                                    <td><span>{{item.apellidos}}</span></td>
+                                    <td><span>{{item.telefono}}</span></td>
+                                    <td><span>{{item.telefono_emergencia}}</span></td>
+                                    <td><span>{{item.condicion_fisica}}</span></td>
+                                    <td><span>{{item.created_at}}</span></td>
+                                    <td><span>{{item.servicios}}</span></td>
+                                    <td>
+                                        <div class="table-data-feature justify-content-around">
+                                            <router-link :to="'/edit-miembro/' + item.id">
+                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Editar">
+                                                    <span class="zmdi zmdi-edit"></span>
+                                                </button>
+                                            </router-link>
+
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="deleteMiembros(index,item.id)">
+                                                <span class="zmdi zmdi-delete"></span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -141,7 +186,10 @@ export default {
             apellidos: '',
             telefono :'',
             fecha_nacimiento: '',
-            email: ''
+            email: '',
+            cond_fisica: '',
+            servicios: '',
+            tel_emerg: ''
         }
     },
     created(){
@@ -163,6 +211,7 @@ export default {
             .then((response) =>
             {   
                 this.datos = response.data
+                console.log(response.data)
             }).catch(function (error){
                 console.log('Error: ' + error);
             })
@@ -203,13 +252,37 @@ export default {
             })
             this.errors = []
         },
-        deleteMiembros(item){
-            axios.delete('/miembros/'+ item.id)
-            .then( response => {
-                console.log(response)
-            }).catch(error => {
-                console.log(error)
+        deleteMiembros(index,id){
+            Swal.fire({
+            title: '¿Desea eliminar a este coach?',
+            text: "¡Esta acción no se podrá revertir!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Eliminar'
+            }).then((result) => {
+            if (result.value) {
+                axios.delete('/miembros/'+ id)
+                .then(response => {
+                    this.datos.splice(index, 1)
+                    Swal.fire(
+                    '¡Eliminado!',
+                    'El coach ha sido eliminado.',
+                    'success'
+                    )
+                }).catch(error => {
+                    alert('Ha ocurrido un error: ' + error)
+                })
+            }
             })
+        },
+        limpiarDatos(){
+            this.nombre = ''
+            this.apellidos = ''
+            this.telefono = ''
+            this.fecha_nacimiento = ''
+            this.email = ''
         }
     }
 };

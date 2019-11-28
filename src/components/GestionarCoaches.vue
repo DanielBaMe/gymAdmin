@@ -33,11 +33,6 @@
                                                 class="form-control" v-model="email">
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label mb-1">Password </label>
-                                                <input type="password" name="password"
-                                                id="password" class="form-control" v-model="password" pattern="[a-zA-Z0-9\s]+">
-                                            </div>
-                                            <div class="form-group">
                                                 <label class="control-label mb-1">Horarios </label>
                                                 <br/>
                                                 <div class="row justift-center">
@@ -138,7 +133,6 @@ export default {
             nombre: '',
             biografia: '',
             email: '',
-            password: '',
             horarios: '',
             datos : [],
             errors: [],
@@ -186,7 +180,6 @@ export default {
                 nombre: this.nombre,
                 biografia: this.biografia,
                 email: this.email,
-                password: this.password,
                 id_gimnasio: this.ide,
                 horarios : this.horarios
             })
@@ -195,7 +188,6 @@ export default {
                     nombre: this.nombre,
                     biografia: this.biografia,
                     email: this.email,
-                    password: this.password,
                     id_gimnasio: this.ide,
                     horarios : this.horarios
                 }
@@ -206,7 +198,6 @@ export default {
                 this.nombre = ''
                 this.email = ''
                 this.biografia = ''
-                this.password = ''
                 this.horarios = ''
                 this.entrada = ''
                 this.salida = ''
@@ -259,7 +250,6 @@ export default {
                 this.nombre = ''
                 this.email = ''
                 this.biografia = ''
-                this.password = ''
                 this.horarios = ''
                 this.errors = ''
                 this.entrada = ''

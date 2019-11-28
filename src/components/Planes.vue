@@ -5,6 +5,172 @@
         <div class="page-container">
             <HeaderDesktop/>
             <div class="main-content">
+                <div v-show="agregar">
+                        <div v-if="numServicios > 5" class="row align-items-start mr-5 ml-5">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4>Datos del nuevo plan</h4></div>
+                                        <div class="card-body card-block">
+                                            <form @submit.prevent="addPlan" method="post" action="https://smartgym.infornet.mx/api/gimnasio/login" class="ml-5 mr-5">
+                                                <div class="form-group">
+                                                    <error-list :errors="errors.nombre"></error-list>
+                                                    <label class="control-label mb-1">Nombre del plan</label>                   
+                                                    <input name='nombre' id='nombre' class="form-control" type="text" pattern="[a-zA-Z0-9\s]+"
+                                                    minlength="4" maxlength="20" v-model="nombre" placeholder='Nombre'
+                                                    title="Solo letras, Tamaño minimo: 4. Tamaño maximo: 20">
+                                                    <br/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <error-list :errors="errors.telefono"></error-list>
+                                                    <label class="control-label mb-1">Precio</label>
+                                                    <input name='precio' id='precio' class="form-control" type="number" step="0.01" placeholder="$$$"
+                                                    v-model="precio"
+                                                    title="Solo números">
+                                                    <br/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <error-list :errors="errors.email"></error-list>
+                                                    <label class="control-label mb-1">Servicios</label>
+                                                    <div class="row justify-content-around">
+                                                        <div class="col">
+                                                            <table class="table table-borderless table-data3">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="text-center">Nombre</th>
+                                                                        <th class="text-center">Precio</th>
+                                                                        <th class="text-center">Agregar</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr class="tr-shadow" v-for="item of serviciosUno" :key="item.id">
+                                                                        <td class="text-center">
+                                                                            <span>{{item.nombre}}</span>
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <span class="badge badge-pill badge-info">$ {{item.precio}}</span>
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <input type="checkbox" :value="item.id" v-model="servicios">
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col">
+                                                            <table class="table table-borderless table-data3">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="text-center">Nombre</th>
+                                                                        <th class="text-center">Precio</th>
+                                                                        <th class="text-center">Agregar</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr class="tr-shadow" v-for="item of serviciosDos" :key="item.id">
+                                                                        <td class="text-center">
+                                                                            <span>{{item.nombre}}</span>
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <span class="badge badge-pill badge-info">$ {{item.precio}}</span>
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <input type="checkbox" :value="item.id" v-model="servicios">
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                </div>
+                                                    <br/>
+                                                <div class="row">
+                                                    <div class="col-auto mr-auto">
+                                                        <button class="au-btn au-btn--block au-btn--green m-b-20 text-center" v-if="!cargando" type="submit">
+                                                        <span>Agregar</span></button>
+                                                        <button v-else disabled class="au-btn au-btn--block au-btn--info m-b-20 w-50">Agregando...</button>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-lg content-aling-center">X</span>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div v-else class="row align-items-start">
+                            <div class="col"></div>
+                            <div class="col"></div>
+                                <div class="col-lg-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4>Datos del nuevo plan</h4></div>
+                                            <div class="card-body card-block">
+                                                <form @submit.prevent="addPlan" method="post" action="https://smartgym.infornet.mx/api/gimnasio/login" class="ml-5 mr-5">
+                                                    <div class="form-group">
+                                                        <error-list :errors="errors.nombre"></error-list>
+                                                        <label class="control-label mb-1">Nombre del plan</label>                   
+                                                        <input name='nombre' id='nombre' class="form-control" type="text" pattern="[a-zA-Z0-9\s]+"
+                                                        minlength="4" maxlength="20" v-model="nombre" placeholder='Nombre'
+                                                        title="Solo letras, Tamaño minimo: 4. Tamaño maximo: 20">
+                                                        <br/>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <error-list :errors="errors.telefono"></error-list>
+                                                        <label class="control-label mb-1">Precio</label>
+                                                        <input name='precio' id='precio' class="form-control" type="number" step="0.01" placeholder="$$$"
+                                                        v-model="precio"
+                                                        title="Solo números">
+                                                        <br/>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <error-list :errors="errors.email"></error-list>
+                                                        <label class="control-label mb-1">Servicios</label>
+                                                        <table class="table table-borderless table-data3">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center">Nombre</th>
+                                                                <th class="text-center">Precio</th>
+                                                                <th class="text-center">Agregar</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="tr-shadow" v-for="item of getServicios" :key="item.id">
+                                                                <td class="text-center">
+                                                                    <span>{{item.nombre}}</span>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <span class="badge badge-pill badge-info">$ {{item.precio}}</span>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <input type="checkbox" :value="item.id" v-model="servicios">
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                        </table>
+                                                        <br/>
+                                                    </div>
+                                                        <br/>
+                                                    <div class="row">
+                                                        <div class="col-auto mr-auto">
+                                                            <button class="au-btn au-btn--block au-btn--green m-b-20 text-center" v-if="!cargando" type="submit">
+                                                            <span>Agregar</span></button>
+                                                            <button v-else disabled class="au-btn au-btn--block au-btn--info m-b-20 w-50">Agregando...</button>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-lg content-aling-center">X</span>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="col"></div>
+                            <div class="col"></div>
+                        </div>
+                </div>
                 <div class="col-md-12 m-3">
                     <div class="table-data__tool">
                         <div class="table-data__tool-left">
@@ -13,80 +179,49 @@
                         </div>
                         <div class="table-data__tool-right">
                             <button class="btn btn-info btn-sm content-aling-center" @click="agregar = !agregar" v-if="agregar === false">
-                                +   Nuevo servicio
+                                +   Nuevo plan
                             </button>
                         </div>
                     </div>
-                    <div class="table-responsive table-responsive-data2">
-                        <form @submit.prevent="editInfo" method="post" action="https://smartgym.infornet.mx/api/gimnasio/login" class="ml-5 mr-5">
-                                                <div class="form-group">
-                                                    <error-list :errors="errors.nombre"></error-list>
-                                                    <label class="control-label mb-1">Nombre del plan</label>                   
-                                                    <input name='nombre' id='nombre' class="form-control" type="text" pattern="[a-zA-Z0-9\s]+"
-                                                    minlength="4" maxlength="20" v-model="nombre" placeholder='Editar nombre'
-                                                    title="Solo letras, Tamaño minimo: 4. Tamaño maximo: 20">
-                                                    <br/>
+                    <div class="col-lg-12">
+                        <!-- TOP CAMPAIGN-->
+                        
+                            <h3 class="title-3 m-b-30">Planes</h3>
+                            <div class="table-responsive2">
+                                <table class="table table-top-campaign">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre del plan</th>
+                                            <th>Precio</th>
+                                            <th>Servicios del plan</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="tr-shadow" v-for="(item, index) of datos" :key="item.id">
+                                            <td>
+                                                <span>{{item.nombre}}</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-pill badge-success">$ {{item.precio}}</span>
+                                            </td>
+                                            <td>
+                                                <span v-for="name of item.servicios" :key="name.id">
+                                                    {{name.nombre}}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="table-data-feature justify-content-around">
+                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="deletePlan(index,item.id)">
+                                                        <span class="zmdi zmdi-delete"></span>
+                                                    </button>
                                                 </div>
-                                                <div class="form-group">
-                                                    <error-list :errors="errors.telefono"></error-list>
-                                                    <label class="control-label mb-1">Precio</label>
-                                                    <input name='precio' id='precio' class="form-control" type="number" step="0.01"
-                                                    v-model="precio"
-                                                    title="Solo números">
-                                                    <br/>
-                                                </div>
-                                                <div class="form-group">
-                                                    <error-list :errors="errors.email"></error-list>
-                                                    <label class="control-label mb-1">Servicios</label>
-                                                    <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th >Nombre</th>
-                                                            <th >Precio</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr class="tr-shadow" v-for="item of getServicios" :key="item.id">
-                                                            <td>
-                                                                <span>{{item.nombre}}</span>
-                                                            </td>
-                                                            <td>
-                                                                <span class="badge badge-pill badge-dark">$ {{item.precio}}</span>
-                                                            </td>
-                                                            <td>
-                                                                <input type="checkbox" :value="item.id" v-model="servicios">
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                    </table>
-                                                    <br/>
-                                                </div>
-                                                <br/>
-                                                    <button v-if="!cargando" type="submit" class="au-btn au-btn--block au-btn--green m-b-20">Editar</button>
-                                                    <button v-else disabled class="au-btn au-btn--block au-btn--info m-b-20">Actualizando...</button>
-                                            </form>
-                                            <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th >Nombre</th>
-                                                            <th >Precio</th>
-                                                            <th>Servicios</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr class="tr-shadow" v-for="item of datos" :key="item.id">
-                                                            <td>
-                                                                <span>{{item.nombre}}</span>
-                                                            </td>
-                                                            <td>
-                                                                <span class="badge badge-pill badge-dark">$ {{item.precio}}</span>
-                                                            </td>
-                                                            <td>
-                                                                <span>{{item.servicios}}</span>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                    </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                     
                     </div>
                 </div>
             </div>
@@ -124,20 +259,18 @@ name: 'Servicios',
             agregar: false,
             btnagregar: false,
             cargando: false,
-            er: false
+            er: false,
+            nombreServicios: [],
+            numServicios: '',
+            dividirServicios: '',
+            serviciosUno: [],
+            serviciosDos: []
         };
     },
     created(){
         this.verifyToken();
         this.obtenerDatos();
         this.obtenerServicios();
-    },
-    filters:{
-        delimitar(valor){
-            if((valor.split('').length) > 20){
-                return valor.slice(0,20)
-            }
-        }
     },
     methods:{
         ...mapActions([
@@ -155,35 +288,104 @@ name: 'Servicios',
             })
         },
         obtenerServicios(){
-            console.log(this.servicios)
             axios.get('/servicios')
             .then(response => {
                 this.getServicios = response.data
+                this.numServicios = Object.keys(this.getServicios).length
+                this.dividirServicios = this.numServicios / 2
+
+                for (let index = 0; index < this.dividirServicios; index++) {
+                    this.serviciosUno[index] = this.getServicios[index]
+                }
+                let x = 0
+                for (let i = this.dividirServicios; i < this.numServicios; i++) {
+                    this.serviciosDos[i-3] = this.getServicios[i]
+                }
+                console.log(this.serviciosUno)
+                console.log(this.serviciosDos)
+
             }).catch(error => {
-                concole.log(error)
+                console.log(error)
             })
         },
         obtenerDatos(){
             axios.get('/planes-entrenamiento')
             .then(response =>
-            {   
+            {  
+                console.log(response.data) 
                 this.datos = response.data
-                console.log(response.data)
+                console.log(this.datos)
             }).catch(function (error){
                 console.log('Error: ' + error);
             })
         },
-        editInfo(){
+        addPlan(){
             console.log(this.servicios)
             axios.post('/planes-entrenamiento', {
                 nombre: this.nombre,
                 precio: this.precio,
                 servicios: this.servicios
             }).then(response =>{
-                console.log(response)
+            SweetAlert.fire(
+                'Correcto',
+                'Se ha agregado un servicio exitosamente',
+                'success'
+                // setTimeout(() => {
+                //     location.reload()
+                // }, 1500)
+            )
+                let plan = {
+                    nombre: this.nombre,
+                    precio: this.precio,
+                    servicios: this.servicios
+                }
+                this.datos.unshift(plan)
+                this.cargando = false;
+                this.errors = [];
+                this.agregar = false;
+                this.nombre ='',
+                this.precio ='',
+                this.servicios = []
             }).catch(error => {
                 console.log(error)
             })
+        },
+        limpiarDatos(){
+            this.nombre='',
+            this.precio='',
+            this.servicios=[]
+        },
+        nameServices(servicio){
+            servicio.forEach(element => {
+                console.log(element.nombre)
+                return this.nombreServicios = element.nombre
+            });
+        },
+        deletePlan(index,id){
+            Swal.fire({
+            title: '¿Desea eliminar este servicio?',
+            text: "¡Esta acción no se podrá revertir!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Eliminar'
+            }).then((result) => {
+            if (result.value) {
+                axios.delete('/planes-entrenamiento/'+ id)
+                .then(response => {
+                    this.datos.splice(index, 1)
+                    Swal.fire(
+                    '¡Eliminado!',
+                    'El servicio ha sido eliminado.',
+                    'success'
+                    )
+                }).catch(error => {
+                    alert('Ha ocurrido un error: ' + error)
+                })
+            }
+            })
+        
         }
     }
     

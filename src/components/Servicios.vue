@@ -229,7 +229,7 @@ export default {
         deleteServicio(index,id){
             Swal.fire({
             title: '¿Desea eliminar este servicio?',
-            text: "¡Esta acción no se podrá revertir!",
+            text: "Este servicio también se eliminará de los planes de entrenamiento en donde esté vinculado.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
