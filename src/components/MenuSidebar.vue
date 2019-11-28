@@ -36,8 +36,8 @@
                             <i class="far fa-check-square"></i>Servicios</router-link>
                     </li>
                     <li>
-                        <a href="calendar.html">
-                            <i class="fas fa-calendar-alt"></i>Planes</a>
+                        <router-link to="/planes">
+                            <i class="fas fa-calendar-alt"></i>Planes</router-link>
                     </li>
                     <li>
                         <a href="map.html">
