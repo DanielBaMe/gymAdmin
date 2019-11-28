@@ -125,7 +125,6 @@ import HeaderDesktop from './HeaderDesktop'
 import ErrorsList from './ErrorsList.vue'
 import axios from 'axios';
 import { mapState, mapActions } from 'vuex';
-import SweetAlert from 'sweetalert2'
 
 export default {
     components: {
@@ -182,7 +181,6 @@ export default {
         },
         addCoach(){
             this.horarios = this.entrada + '-' + this.salida
-            console.log(this.horarios)
             axios.post('/coaches',
             {
                 nombre: this.nombre,
@@ -193,7 +191,6 @@ export default {
                 horarios : this.horarios
             })
             .then( response => {
-                console.log(response)
                 let coach = {
                     nombre: this.nombre,
                     biografia: this.biografia,
@@ -214,11 +211,19 @@ export default {
                 this.entrada = ''
                 this.salida = ''
                 this.errors = ''
-                SweetAlert.fire(
+
+                
+                Swal.fire(
                 'Correcto',
                 'Se ha agregado un nuevo coach exitosamente',
                 'success'
                 )
+
+                setTimeout(() => {
+                    console.log('realoading...')
+                }, 3000)
+
+                
             })
             .catch(error=>{
                 this.errors = (error.response.data.errors)
