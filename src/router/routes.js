@@ -11,6 +11,8 @@ import EditServicio from '../components/EditServicio.vue'
 import VerServicio from '../components/VerServicio.vue'
 import EditCoach from '../components/EditCoach.vue'
 import Planes from '../components/Planes.vue'
+import VerPlan from '../components/VerPlan.vue'
+import EditPlan from '../components/EditPlan.vue'
 
 import Home from '../components/Home.vue'
 
@@ -141,6 +143,24 @@ const routes = [
         component : Planes,
         meta : {
         title: 'Planes de entrenamiento',
+        requiresAuth: true
+        }
+    },
+    {
+        path : '/ver-plan',
+        name : 'Ver plan',
+        component : VerPlan,
+        meta : {
+        title: 'Ver plan',
+        requiresAuth: true
+        }
+    },
+    {
+        path : '/edit-plan',
+        name : 'Editar plan',
+        component : EditPlan,
+        meta : {
+        title: 'Editar plan',
         requiresAuth: true
         }
     }

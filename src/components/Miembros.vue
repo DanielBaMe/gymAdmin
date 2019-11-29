@@ -70,8 +70,11 @@
                                                             <error-list :errors="errors.telefono"></error-list>
                                                             <div class="input-group">
                                                                 <label>Servicios</label>
-                                                                <input type="text" name="servicios" id="servicios" pattern="[0-9]+" minlength="4"
-                                                                class="form-control" v-model="servicios">
+                                                                <select name="" id="" v-model="darServicios" v-for="item of getServicios" :key='item.id'>
+                                                                    <option>{{item.nombre}} - {{item.precio}}</option> 
+                                                                </select>
+                                                                <!-- <input type="text" name="servicios" id="servicios" pattern="[0-9]+" minlength="4"
+                                                                class="form-control" v-model="servicios"> -->
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
@@ -189,12 +192,15 @@ export default {
             email: '',
             cond_fisica: '',
             servicios: '',
-            tel_emerg: ''
+            tel_emerg: '',
+            getServicios: '',
+            darServicios: []
         }
     },
     created(){
         this.verifyToken();
         this.obtenerDatos();
+        this.obtenerServicios();
     },
     mounted(){
         this.obtenerDatos();
@@ -205,6 +211,27 @@ export default {
         ]),
         verifyToken(){
             this.getToken()
+        },
+        obtenerServicios(){
+            axios.get('/servicios')
+            .then(response => {
+                this.getServicios = response.data
+                this.numServicios = Object.keys(this.getServicios).length
+                this.dividirServicios = this.numServicios / 2
+
+                for (let index = 0; index < this.dividirServicios; index++) {
+                    this.serviciosUno[index] = this.getServicios[index]
+                }
+                let x = 0
+                for (let i = this.dividirServicios; i < this.numServicios; i++) {
+                    this.serviciosDos[i-dividirServicios] = this.getServicios[i]
+                }
+                console.log(this.serviciosUno)
+                console.log(this.serviciosDos)
+
+            }).catch(error => {
+                console.log(error)
+            })
         },
         obtenerDatos(){
             axios.get('/miembros')

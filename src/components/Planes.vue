@@ -212,6 +212,18 @@
                                             </td>
                                             <td>
                                                 <div class="table-data-feature justify-content-around">
+                                                    <router-link :to="'/ver-plan/' + item.id">
+                                                        <button class="item" data-toggle="tooltip" data-placement="top" title="Ver más">
+                                                            <span class="glyphicon glyphicon-zoom-in"></span> 
+                                                        </button>
+                                                    </router-link>
+
+                                                    <router-link :to="'/editar-plan/' + item.id">
+                                                        <button class="item" data-toggle="tooltip" data-placement="top" title="Ver más">
+                                                            <span class="glyphicon glyphicon-zoom-in"></span> 
+                                                        </button>
+                                                    </router-link>
+
                                                     <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="deletePlan(index,item.id)">
                                                         <span class="zmdi zmdi-delete"></span>
                                                     </button>
@@ -221,7 +233,6 @@
                                     </tbody>
                                 </table>
                             </div>
-                     
                     </div>
                 </div>
             </div>
@@ -299,7 +310,7 @@ name: 'Servicios',
                 }
                 let x = 0
                 for (let i = this.dividirServicios; i < this.numServicios; i++) {
-                    this.serviciosDos[i-3] = this.getServicios[i]
+                    this.serviciosDos[i-dividirServicios] = this.getServicios[i]
                 }
                 console.log(this.serviciosUno)
                 console.log(this.serviciosDos)

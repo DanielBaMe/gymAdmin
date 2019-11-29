@@ -86,6 +86,7 @@ export default {
                 this.$router.push('/');
             })
             .catch(error => {
+                console.log(error.response)
                 if (!error.response.data.errors) {
                     this.er = true
                     this.error_message = error.response.data.message

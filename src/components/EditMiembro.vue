@@ -63,10 +63,10 @@ export default {
                 apellidos: '',
                 telefono: '',
                 condicion_fisica: '',
-                servicios: '',
-                id: '',
-                id_gimnasio: '',
-                updated_at: ''
+                servicios: [],
+                email: '',
+                tel_emerg: '',
+                fecha_nacimiento: ''
             },
             confirmacion: false,
             errors: []
@@ -94,6 +94,28 @@ export default {
                 console.log('Error: ' + error);
                 this.er = true
             })
+        },
+        editMiembro(){
+            axios.post('/miembros/' + this.ide, this.miembro)
+            .then(response => {
+                console.log(response)
+                this.errors= []
+                this.loading = false;
+                Swal.fire({ 
+                    title: 'Se ha editado el servicio exitosamente',
+                    icon: 'success',
+                    timer: 2000,
+                    onClose: () => {
+                        this.$router.push('/servicios');
+                    }
+                })   
+            }).catch(error => {
+                console.log(error.response)
+                this.errors = (error.response.data.errors)
+                this.loading = false;
+            })
+            this.errors=[];
+            this.loading = false;
         }
     }
 };
