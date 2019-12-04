@@ -22,7 +22,7 @@
                                                     <br/>
                                                 </div>
                                                 <div class="form-group">
-                                                    <error-list :errors="errors.telefono"></error-list>
+                                                    <error-list :errors="errors.precio"></error-list>
                                                     <label class="control-label mb-1">Precio</label>
                                                     <input name='precio' id='precio' class="form-control" type="number" step="0.01" placeholder="$$$"
                                                     v-model="precio"
@@ -30,7 +30,7 @@
                                                     <br/>
                                                 </div>
                                                 <div class="form-group">
-                                                    <error-list :errors="errors.email"></error-list>
+                                                    <error-list :errors="errors.servicios"></error-list>
                                                     <label class="control-label mb-1">Servicios</label>
                                                     <div class="row justify-content-around">
                                                         <div class="col">
@@ -183,12 +183,12 @@
                             </button>
                         </div>
                     </div>
-                    <div class="col-lg-12">
+                    <div v-if="!loading" class="col-lg-12">
                         <!-- TOP CAMPAIGN-->
                         
                             <h3 class="title-3 m-b-30">Planes</h3>
-                            <div class="table-responsive2">
-                                <table class="table table-top-campaign">
+                            <div class="table-responsive table-responsive-data2">
+                                <table class="table table-data2">
                                     <thead>
                                         <tr>
                                             <th>Nombre del plan</th>
@@ -206,8 +206,8 @@
                                                 <span class="badge badge-pill badge-success">$ {{item.precio}}</span>
                                             </td>
                                             <td>
-                                                <span v-for="name of item.servicios" :key="name.id">
-                                                    {{name.nombre}}
+                                                <span v-for="name of item.servicios" :key="name.id" class="badge badge-pill badge-info">
+                                                    {{name.nombre}} 
                                                 </span>
                                             </td>
                                             <td>
@@ -218,9 +218,9 @@
                                                         </button>
                                                     </router-link>
 
-                                                    <router-link :to="'/editar-plan/' + item.id">
-                                                        <button class="item" data-toggle="tooltip" data-placement="top" title="Ver más">
-                                                            <span class="glyphicon glyphicon-zoom-in"></span> 
+                                                    <router-link :to="'/edit-plan/' + item.id">
+                                                        <button class="item" data-toggle="tooltip" data-placement="top" title="Editar plan">
+                                                            <span class="zmdi zmdi-edit"></span> 
                                                         </button>
                                                     </router-link>
 
@@ -233,6 +233,11 @@
                                     </tbody>
                                 </table>
                             </div>
+                    </div>
+                    <div v-else class="row align-items-center">
+                        <div class="col"></div>
+                        <div class="col"> <img src="/images/68042.png" alt=""></div>
+                        <div class="col"></div>
                     </div>
                 </div>
             </div>
@@ -271,11 +276,11 @@ name: 'Servicios',
             btnagregar: false,
             cargando: false,
             er: false,
-            nombreServicios: [],
             numServicios: '',
             dividirServicios: '',
             serviciosUno: [],
-            serviciosDos: []
+            serviciosDos: [],
+            loading: false
         };
     },
     created(){
@@ -299,23 +304,34 @@ name: 'Servicios',
             })
         },
         obtenerServicios(){
+            this.loading = true;
             axios.get('/servicios')
             .then(response => {
+                this.loading = false;
                 this.getServicios = response.data
                 this.numServicios = Object.keys(this.getServicios).length
                 this.dividirServicios = this.numServicios / 2
-
-                for (let index = 0; index < this.dividirServicios; index++) {
+                if (this.dividirServicios % 1 == 0){
+                    for (let index = 0; index < this.dividirServicios; index++) {
+                        this.serviciosUno[index] = this.getServicios[index]
+                    }
+                    let x = 0
+                    for (let i = this.dividirServicios; i < this.numServicios; i++) {
+                        this.serviciosDos[i-dividirServicios] = this.getServicios[i]
+                    }
+                } else {
+                    var mitad = parseInt(this.dividirServicios)
+                    for (let index = 0; index < mitad; index++) {
                     this.serviciosUno[index] = this.getServicios[index]
+                    }
+                    let x = 0
+                    for (let i = mitad; i < this.numServicios; i++) {
+                        this.serviciosDos[i-mitad] = this.getServicios[i]
+                    }
                 }
-                let x = 0
-                for (let i = this.dividirServicios; i < this.numServicios; i++) {
-                    this.serviciosDos[i-dividirServicios] = this.getServicios[i]
-                }
-                console.log(this.serviciosUno)
-                console.log(this.serviciosDos)
 
             }).catch(error => {
+                this.loading = false;
                 console.log(error)
             })
         },
@@ -323,9 +339,7 @@ name: 'Servicios',
             axios.get('/planes-entrenamiento')
             .then(response =>
             {  
-                console.log(response.data) 
                 this.datos = response.data
-                console.log(this.datos)
             }).catch(function (error){
                 console.log('Error: ' + error);
             })
@@ -340,10 +354,10 @@ name: 'Servicios',
             SweetAlert.fire(
                 'Correcto',
                 'Se ha agregado un servicio exitosamente',
-                'success'
-                // setTimeout(() => {
-                //     location.reload()
-                // }, 1500)
+                'success',
+                setTimeout(() => {
+                    location.reload()
+                }, 500)
             )
                 let plan = {
                     nombre: this.nombre,
@@ -358,19 +372,15 @@ name: 'Servicios',
                 this.precio ='',
                 this.servicios = []
             }).catch(error => {
-                console.log(error)
+                this.errors = (error.response.data.errors)
             })
+            this.errors = [];
         },
         limpiarDatos(){
             this.nombre='',
             this.precio='',
-            this.servicios=[]
-        },
-        nameServices(servicio){
-            servicio.forEach(element => {
-                console.log(element.nombre)
-                return this.nombreServicios = element.nombre
-            });
+            this.servicios=[],
+            this.errors = [];
         },
         deletePlan(index,id){
             Swal.fire({

@@ -49,6 +49,14 @@
                                                                 v-model="email">
                                                             </div>
                                                         </div>
+                                                        <div class="form-group">
+                                                            <error-list :errors="errors.telefono"></error-list>
+                                                            <div class="input-group">
+                                                                <label>Condición fisica</label>
+                                                                <textarea type="text" name="cond_fisica" id="cond_fisica" pattern="[0-9]+" minlength="4"
+                                                                class="form-control" v-model="cond_fisica"></textarea>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
@@ -67,22 +75,71 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <error-list :errors="errors.telefono"></error-list>
-                                                            <div class="input-group">
-                                                                <label>Servicios</label>
-                                                                <select name="" id="" v-model="darServicios" v-for="item of getServicios" :key='item.id'>
-                                                                    <option>{{item.nombre}} - {{item.precio}}</option> 
-                                                                </select>
-                                                                <!-- <input type="text" name="servicios" id="servicios" pattern="[0-9]+" minlength="4"
-                                                                class="form-control" v-model="servicios"> -->
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="input-group">
+                                                                        <label>Servicios</label>
+                                                                        <select @change="selectServicio($event)" class="form-control h-25">
+                                                                            <option disabled value="">Seleccionar servicio</option>
+                                                                            <option v-for="item of getServicios" :key='item.id' :value="item.id">{{item.nombre}}  -  ${{item.precio}}</option> 
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <div class="input-group">
+                                                                        <label>Planes</label>
+                                                                        <select @change="selectPlan($event)" class="form-control h-25">
+                                                                            <option disabled value="">Seleccionar plan</option>
+                                                                            <option v-for="item of getPlanes" :key='item.id' :value="item.id">{{item.nombre}}  -  ${{item.precio}}</option> 
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <error-list :errors="errors.telefono"></error-list>
-                                                            <div class="input-group">
-                                                                <label>Condición fisica</label>
-                                                                <textarea type="text" name="cond_fisica" id="cond_fisica" pattern="[0-9]+" minlength="4"
-                                                                class="form-control" v-model="cond_fisica"></textarea>
+                                                            <br/>
+                                                            <div class="table-responsive table--no-card m-b-30">
+                                                                <table class="table table-borderless table-striped table-earning">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <td >Nombre</td>
+                                                                            <td>Precio</td>
+                                                                            <td>Quitar</td>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr class="tr-shadow" v-for="(item,index) of arrayServicios" :key="item.id">
+                                                                            <td>{{item.nombre}}</td>
+                                                                            <td>{{item.precio}}</td>
+                                                                            <td>
+                                                                                
+                                                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="quitarServicio(index,item.id)">
+                                                                                    <span class="zmdi zmdi-delete"></span>
+                                                                                </button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <br/>
+                                                                        <label for="">Total:</label>
+                                                                        <label for="">  ${{this.suma}}</label>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div>
+                                                                <table>
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <td>Nombre</td>
+                                                                            <td>Descripcion</td>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr v-for="item of rutinas" :key="item.id">
+                                                                            <td>{{item.nombre}}</td>
+                                                                            <td>{{item.precio}}</td>
+                                                                            <td class="text-center">
+                                                                                <input type="checkbox" :value="item.id" v-model="postRutinas">
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -117,7 +174,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="table-responsive table-responsive-data2">
+                    <div v-if="!loading" class="table-responsive table-responsive-data2">
                         <table class="table table-data2">
                             <thead>
                                 <tr>
@@ -125,9 +182,7 @@
                                     <th>Apellidos</th>
                                     <th>Telefono</th>
                                     <th>Telefono emergencia</th>
-                                    <th>Cond. Fisica</th>
-                                    <th>Servicios</th>
-                                    <th>Estatus</th>
+                                    <th>Fecha de registro</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -137,14 +192,12 @@
                                     <td><span>{{item.apellidos}}</span></td>
                                     <td><span>{{item.telefono}}</span></td>
                                     <td><span>{{item.telefono_emergencia}}</span></td>
-                                    <td><span>{{item.condicion_fisica}}</span></td>
                                     <td><span>{{item.created_at}}</span></td>
-                                    <td><span>{{item.servicios}}</span></td>
                                     <td>
                                         <div class="table-data-feature justify-content-around">
-                                            <router-link :to="'/edit-miembro/' + item.id">
-                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Editar">
-                                                    <span class="zmdi zmdi-edit"></span>
+                                            <router-link :to="'/ver-miembro/' + item.id">
+                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Ver más">
+                                                    <span class="glyphicon glyphicon-zoom-in"></span> 
                                                 </button>
                                             </router-link>
 
@@ -156,6 +209,11 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div v-else class="row align-items-center">
+                        <div class="col"></div>
+                        <div class="col"> <img src="/images/68042.png" alt=""></div>
+                        <div class="col"></div>
                     </div>
                 </div>
             </div>
@@ -170,7 +228,6 @@ import HeaderDesktop from './HeaderDesktop'
 import ErrorsList from './ErrorsList.vue'
 import axios from 'axios';
 import { mapState, mapActions } from 'vuex';
-import SweetAlert from 'sweetalert2'
 
 export default {
     components: {
@@ -194,16 +251,25 @@ export default {
             servicios: '',
             tel_emerg: '',
             getServicios: '',
-            darServicios: []
+            darServicios: [],
+            darPlanes: [],
+            getPlanes: [],
+            arrayServicios: [],
+            dinero: '',
+            suma : 0,
+            rutinas: [],
+            postRutinas: [],
+            mostrarServicios: [],
+            plan: '',
+            loading: false
         }
     },
     created(){
         this.verifyToken();
         this.obtenerDatos();
         this.obtenerServicios();
-    },
-    mounted(){
-        this.obtenerDatos();
+        this.obtenerPlanes();
+        this.obtenerRutinas();
     },
     methods:{
         ...mapActions([
@@ -213,22 +279,29 @@ export default {
             this.getToken()
         },
         obtenerServicios(){
+            this.loading= true
             axios.get('/servicios')
             .then(response => {
+                this.loading = false
                 this.getServicios = response.data
-                this.numServicios = Object.keys(this.getServicios).length
-                this.dividirServicios = this.numServicios / 2
-
-                for (let index = 0; index < this.dividirServicios; index++) {
-                    this.serviciosUno[index] = this.getServicios[index]
-                }
-                let x = 0
-                for (let i = this.dividirServicios; i < this.numServicios; i++) {
-                    this.serviciosDos[i-dividirServicios] = this.getServicios[i]
-                }
-                console.log(this.serviciosUno)
-                console.log(this.serviciosDos)
-
+                var memberService = this.getServicios
+            }).catch(error => {
+                this.loading = false
+                console.log(error)
+            })
+        },
+        obtenerRutinas(){
+            axios.get('/miembros/create')
+            .then(response => {
+                this.rutinas = response.data.rutinas
+            }).catch(error => {
+                console.log(error)
+            })
+        },
+        obtenerPlanes(){
+            axios.get('/planes-entrenamiento')
+            .then(response => {
+                this.getPlanes = response.data
             }).catch(error => {
                 console.log(error)
             })
@@ -238,41 +311,55 @@ export default {
             .then((response) =>
             {   
                 this.datos = response.data
-                console.log(response.data)
             }).catch(function (error){
                 console.log('Error: ' + error);
             })
         },
         addMiembros(){
+
             axios.post('/miembros', {
                 nombre: this.nombre,
                 apellidos: this.apellidos,
                 telefono: this.telefono,
                 fecha_nacimiento : this.fecha_nacimiento,
-                email : this.email
+                email : this.email,
+                servicios : this.darServicios,
+                condicion_fisica : this.cond_fisica,
+                telefono_emergencia : this.tel_emerg,
+                rutinas: this.postRutinas,
+                id_plan_entrenamiento : this.plan
             }).then(response => {
+                console.log(response)
+            Swal.fire(
+                'Correcto',
+                'Se ha agregado un nuevo miembro exitosamente',
+                'success',
+                setTimeout(() => {
+                    location.reload()
+                }, 500)
+            )
                 let miembro = {
                     nombre: this.nombre,
                     apellidos: this.apellidos,
                     telefono: this.telefono,
-                    fecha_nacimiento : this.fecha_nacimiento,
-                    email : this.email
+                    telefono_emergencia : this.tel_emerg,
+                    id_plan_entrenamiento : this.plan
                 }
                 this.datos.unshift(miembro)
-                console.log(response)
                 this.cargando = false;
                 this.errors = [];
-                SweetAlert.fire(
-                'Correcto',
-                'Se ha agregado un nuevo miembro exitosamente',
-                'success'
-            )
                 this.agregar = false;
                 this.nombre = ''
                 this.apellidos = ''
                 this.telefono = ''
                 this.fecha_nacimiento = ''
                 this.email = ''
+                this.arrayServicios= [],
+                this.darServicios = [],
+                this.suma = 0,
+                this.cond_fisica = '',
+                this.servicios = '',
+                this.tel_emerg = ''
             }).catch(error => {
                 this.errors = (error.response.data.errors)
                 console.log(error)
@@ -281,7 +368,7 @@ export default {
         },
         deleteMiembros(index,id){
             Swal.fire({
-            title: '¿Desea eliminar a este coach?',
+            title: '¿Desea eliminar a este miembro?',
             text: "¡Esta acción no se podrá revertir!",
             icon: 'warning',
             showCancelButton: true,
@@ -295,7 +382,7 @@ export default {
                     this.datos.splice(index, 1)
                     Swal.fire(
                     '¡Eliminado!',
-                    'El coach ha sido eliminado.',
+                    'El miembro ha sido eliminado.',
                     'success'
                     )
                 }).catch(error => {
@@ -304,12 +391,43 @@ export default {
             }
             })
         },
+        selectServicio(e){
+            var id = e.target.value
+            var servicio = this.getServicios.find(element => element.id == id)
+            var valor = servicio.precio
+            this.suma = this.suma + parseFloat(valor)
+            this.arrayServicios.push(servicio)
+            this.darServicios.push(parseInt(id, 10))
+        },
+        selectPlan(e){
+            var id = e.target.value
+            var plan = this.getPlanes.find(element => element.id == id)
+            var valor = plan.precio
+            this.suma = this.suma + parseFloat(valor)
+            this.arrayServicios.push(plan)
+            this.plan = id
+        },
+        darRutinas(e){
+            var id = e.target.value
+            var rut = this.rutinas.find(element => element.id == id)
+            this.postRutinas.push(id)
+        },
         limpiarDatos(){
             this.nombre = ''
             this.apellidos = ''
             this.telefono = ''
             this.fecha_nacimiento = ''
-            this.email = ''
+            this.email = '',
+            this.arrayServicios= [],
+            this.darServicios = [],
+            this.suma = 0
+        },
+        quitarServicio(index,id){
+            var serv = this.arrayServicios.find(element => element.id == id)
+            var v = serv.precio
+            console.log(v)
+            this.suma = this.suma - parseFloat(v)
+            this.arrayServicios.splice(index, 1)
         }
     }
 };

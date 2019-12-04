@@ -13,6 +13,7 @@ import EditCoach from '../components/EditCoach.vue'
 import Planes from '../components/Planes.vue'
 import VerPlan from '../components/VerPlan.vue'
 import EditPlan from '../components/EditPlan.vue'
+import SeeMember from '../components/SeeMember.vue'
 
 import Home from '../components/Home.vue'
 
@@ -133,8 +134,8 @@ const routes = [
         name : 'EditarCoah',
         component : EditCoach,
         meta : {
-        title: 'Editar coach',
-        requiresAuth: true
+            title: 'Editar coach',
+            requiresAuth: true
         }
     },
     {
@@ -142,28 +143,36 @@ const routes = [
         name : 'Planes',
         component : Planes,
         meta : {
-        title: 'Planes de entrenamiento',
-        requiresAuth: true
+            title: 'Planes de entrenamiento',
+            requiresAuth: true
         }
     },
     {
-        path : '/ver-plan',
+        path : '/ver-plan/:id',
         name : 'Ver plan',
         component : VerPlan,
         meta : {
-        title: 'Ver plan',
-        requiresAuth: true
+            title: 'Ver plan',
+            requiresAuth: true
         }
     },
     {
-        path : '/edit-plan',
+        path : '/edit-plan/:id',
         name : 'Editar plan',
         component : EditPlan,
         meta : {
-        title: 'Editar plan',
-        requiresAuth: true
+            title: 'Editar plan',
+            requiresAuth: true
         }
-    }
+    },
+    {   path : '/ver-miembro/:id',
+        name : 'VerMiembor',
+        component : SeeMember,
+        meta : {
+            title: 'Ver Miembro',
+            requiresAuth: true
+        }
+},
 ];
 
 export default routes;

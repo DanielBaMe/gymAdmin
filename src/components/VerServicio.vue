@@ -10,7 +10,6 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <button @click="$router.go(-1)" class="btn btn-primary btn-sm glyphicon glyphicon-arrow-left" title="Atrás">
-                                <!-- <span class="text-center">  Atrás</span> -->
                                 </button>
                             </div>
                             <div class="col-lg-6">

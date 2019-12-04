@@ -217,7 +217,10 @@ export default {
                 SweetAlert.fire(
                 'Correcto',
                 'Se ha agregado un servicio exitosamente',
-                'success'
+                'success',
+                setTimeout(() => {
+                    location.reload()
+                }, 500)
             )
             })
             .catch(error=>{
