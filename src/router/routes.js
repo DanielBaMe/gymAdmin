@@ -14,6 +14,9 @@ import Planes from '../components/Planes.vue'
 import VerPlan from '../components/VerPlan.vue'
 import EditPlan from '../components/EditPlan.vue'
 import SeeMember from '../components/SeeMember.vue'
+import Eventos from '../components/Eventos.vue'
+import VerEvento from '../components/VerEvento.vue'
+//import ImageEvent from '../components/ImageEvent.vue'
 
 import Home from '../components/Home.vue'
 
@@ -172,7 +175,36 @@ const routes = [
             title: 'Ver Miembro',
             requiresAuth: true
         }
-},
+    },
+    {
+        path : '/eventos',
+        name : 'Eventos',
+        component : Eventos,
+        meta : {
+            title: 'Eventos',
+            requiresAuth : true
+        }
+
+    },
+    {
+        path : '/ver-evento/:id',
+        name : 'Ver evento',
+        component : VerEvento,
+        meta : {
+            title: 'VerEvento',
+            requiresAuth : true
+        }
+
+    },
+    // {
+    //     path : '/edit-evento-imagen/:id',
+    //     name : 'Editar imagen de evento',
+    //     component : ImageEvent,
+    //     meta : {
+    //         title: 'EditImagenEvento',
+    //         requiresAuth : true
+    //     }
+    // }
 ];
 
 export default routes;

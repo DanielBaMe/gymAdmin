@@ -247,13 +247,13 @@ export default {
             })
         },
         limpiarDatos(){
-                this.nombre = ''
-                this.email = ''
-                this.biografia = ''
-                this.horarios = ''
-                this.errors = ''
-                this.entrada = ''
-                this.salida = ''
+            this.nombre = ''
+            this.email = ''
+            this.biografia = ''
+            this.horarios = ''
+            this.errors = ''
+            this.entrada = ''
+            this.salida = ''
         }
     }
     }

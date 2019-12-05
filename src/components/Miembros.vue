@@ -316,7 +316,6 @@ export default {
             })
         },
         addMiembros(){
-
             axios.post('/miembros', {
                 nombre: this.nombre,
                 apellidos: this.apellidos,
