@@ -16,86 +16,75 @@
                             <br/>
                             <br/>
                             <br/>
-                            <div>
-                                <div class="col-lg-6">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h3>Editar imagen del evento/promoción</h3></div>
-                                        <div class="card-body">
-                                            <form @submit.prevent="editImagen" method="post" class="ml-5 mr-5">
-                                                <error-list :errors="errors.imagen"></error-list>
-                                                <label class="control-label mb-1">Imagen</label>  
-                                                <img :src="'https://smartgym.infornet.mx/assets/images/promociones_eventos/'+ evento.imagen" alt="" v-show="verImagen">
-                                                <br/>
-                                                <input type="file" name="file" id="file" ref="file"
-                                                class="form-control" @change="getImage($event)" accept="image/*" v-show="!verImagen">
-                                                <img :src=this.mostrarImagen alt="" v-if="!verImagen">
-                                                <br/>
-                                                <span v-if="verImagen" @click="verImagen = !verImagen" class="btn btn-success m-b-20 w-100">Editar información</span>
-                                                <button v-else type="submit" class="btn btn-primary m-b-20 w-100">Editar</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div v-if="!loading" class="col-lg-6">
-                                    <div class="card">
-                                    <div class="card-header">
-                                        <h3>Editar las información de {{evento.nombre}}</h3></div>
-                                        <div class="card-body">
-                                            <form @submit.prevent="editEvento" method="post" class="ml-5 mr-5">
-                                                    <div v-if="er" class="alert alert-danger w-100">
-                                                        {{ error_message}}
-                                                        <br/>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <error-list :errors="errors.nombre"></error-list>
-                                                        <label class="control-label mb-1">Nombre</label> 
-                                                        <input name='nombre' id='nombre' class="form-control" type="text"
-                                                        pattern="[a-zA-Z0-9\s]+" title="Solo números y letras."
-                                                        v-model="evento.nombre" minlength="4" maxlength="20"  :disabled="validated">
-                                                        <br/>  
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <error-list :errors="errors.descripcion"></error-list>
-                                                        <label class="control-label mb-1">Descripción</label>  
-                                                        <textarea name='descripcion' id='descripcion' class="form-control" type="text"
-                                                        v-model="evento.descripcion"  :disabled="validated"> </textarea>
-                                                        <br/>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <error-list :errors="errors.tipo"></error-list>
-                                                        <label class="control-label mb-1">Tipo</label>  
-                                                        <input name='tipo' id='tipo' class="form-control" type="text"
-                                                        v-model="evento.tipo"  :disabled="validated"> 
-                                                        <br/>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label mb-1">Fechas</label>
-                                                        <br/>
-                                                        <div class="row justift-center">
-                                                            <div class="col">
-                                                                <error-list :errors="errors.fecha_inicio"></error-list>
-                                                                <label class="control-label mb-1">Inicio</label>
-                                                                <input type="date" name="inicio" id="inicio"
-                                                                class="form-control" v-model="evento.fecha_inicio" :disabled="validated">
-                                                            </div>
-                                                            <div class="col">
-                                                                <error-list :errors="errors.fecha_fin"></error-list>
-                                                                <label class="control-label mb-1">Fin</label>
-                                                                <input type="date" name="fin" id="fin"
-                                                                class="form-control" v-model="evento.fecha_fin" :disabled="validated">
-                                                            </div>
+                            <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>{{evento.nombre}}</h3></div>
+                                    <div class="card-body">
+                                        <div class="ml-5 mr-5">
+                                                    {{ error_message}}
+                                                    <br/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <error-list :errors="errors.nombre"></error-list>
+                                                    <label class="control-label mb-1">Nombre</label> 
+                                                    <input name='nombre' id='nombre' class="form-control" type="text"
+                                                    pattern="[a-zA-Z0-9\s]+" title="Solo números y letras."
+                                                    v-model="evento.nombre" minlength="4" maxlength="20"  :disabled="validated">
+                                                    <br/>  
+                                                </div>
+                                                <div class="form-group">
+                                                    <error-list :errors="errors.precio"></error-list>
+                                                    <label class="control-label mb-1">Tipo</label>  
+                                                    <input name='tipo' id='tipo' class="form-control" type="text"
+                                                    v-model="evento.tipo"  :disabled="validated"> 
+                                                    <br/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <error-list :errors="errors.precio"></error-list>
+                                                    <label class="control-label mb-1">Descripción</label>  
+                                                    <textarea name='tipo' id='tipo' class="form-control" type="text"
+                                                    v-model="evento.descripcion"  :disabled="validated"></textarea>
+                                                    <br/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Fechas</label>
+                                                    <br/>
+                                                    <div class="row justift-center">
+                                                        <div class="col">
+                                                            <error-list :errors="errors.fecha_inicio"></error-list>
+                                                            <label class="control-label mb-1">Inicio</label>
+                                                            <input type="date" name="inicio" id="inicio" class="form-control" v-model="evento.fecha_inicio">
+                                                        </div>
+                                                        <div class="col">
+                                                            <error-list :errors="errors.fecha_fin"></error-list>
+                                                            <label class="control-label mb-1">Fin</label>
+                                                            <input type="date" name="fin" id="fin" class="form-control" v-model="evento.fecha_fin">
                                                         </div>
                                                     </div>
-                                                <br/>
-                                                    <span v-if="validated" @click="validated = !validated" class="btn btn-success m-b-20 w-100">Editar información</span>
-                                                    <button v-else type="submit" class="btn btn-primary m-b-20 w-100">Editar</button>
-                                                    <br/>
-                                                    <router-link to="/edit-evento-imagen">
-                                                        <button>Editar imagen</button>
+                                                </div>
+                                                <div class="form-group justify-content-center">
+                                                    <div>
+                                                        <p class="text-center">Imagen</p>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col"></div>
+                                                        <div class="col-lg-6"><img :src="'https://smartgym.infornet.mx/assets/images/promociones_eventos/'+ evento.imagen" alt="" v-show="verImagen" class="text-center"></div>
+                                                        <div class="col"></div>
+                                                    </div>
+                                                </div>
+                                            <br/>
+                                            <div class="row">
+                                                <div class="col"></div>
+                                                <div class="col"></div>
+                                                <div class="col">
+                                                    <router-link class="mb-5" :to="'/edit-evento/' + this.ide">
+                                                        <span class="btn btn-success m-b-20 w-100">Habilitar edición</span>
                                                     </router-link>
-                                            </form>
-                                        </div>
+                                                </div>
+                                                <div class="col"></div>
+                                                <div class="col"></div>
+                                            </div>
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +119,8 @@ export default {
             er:false,
             errors: [],
             mostrarImagen: '',
-            verImagen: true
+            verImagen: true,
+            error_message: ''
         }
     },
     created(){

@@ -17,6 +17,7 @@ import SeeMember from '../components/SeeMember.vue'
 import Eventos from '../components/Eventos.vue'
 import VerEvento from '../components/VerEvento.vue'
 //import ImageEvent from '../components/ImageEvent.vue'
+import EditarEvento from '../components/EditarEvento.vue'
 
 import Home from '../components/Home.vue'
 
@@ -204,7 +205,16 @@ const routes = [
     //         title: 'EditImagenEvento',
     //         requiresAuth : true
     //     }
-    // }
+    // },
+    {
+        path : '/edit-evento/:id',
+        name : 'Editar evento',
+        component : EditarEvento,
+        meta : {
+            title: 'EditEvento',
+            requiresAuth : true
+        }
+    }
 ];
 
 export default routes;

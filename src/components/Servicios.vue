@@ -187,7 +187,16 @@ export default {
             axios.get('/servicios')
             .then((response) =>
             {   
-                this.datos = response.data
+                if(response.data == '')
+                    {
+                        Swal.fire(
+                            'No hay servicios en el sistema',
+                            'Agrega algunos!',
+                            'info'
+                        )
+                    }else {
+                        this.datos = response.data
+                    }
             }).catch(function (error){
                 console.log('Error: ' + error);
             })

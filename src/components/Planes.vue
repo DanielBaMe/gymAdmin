@@ -317,7 +317,7 @@ name: 'Servicios',
                     }
                     let x = 0
                     for (let i = this.dividirServicios; i < this.numServicios; i++) {
-                        this.serviciosDos[i-dividirServicios] = this.getServicios[i]
+                        this.serviciosDos[i-this.dividirServicios] = this.getServicios[i]
                     }
                 } else {
                     var mitad = parseInt(this.dividirServicios)
@@ -339,7 +339,16 @@ name: 'Servicios',
             axios.get('/planes-entrenamiento')
             .then(response =>
             {  
-                this.datos = response.data
+                if(response.data == '')
+                    {
+                        Swal.fire(
+                            'No hay planes en el sistema',
+                            'Agrega algunos!',
+                            'info'
+                        )
+                    }else {
+                        this.datos = response.data
+                    }
             }).catch(function (error){
                 console.log('Error: ' + error);
             })

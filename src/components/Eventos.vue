@@ -86,17 +86,17 @@
                         </div>
                         <div class="table-data__tool-right">
                             <button class="btn btn-info btn-sm content-aling-center" @click="agregar = !agregar" v-if="agregar === false">
-                                +   Nuevo miembro
+                                +   Nuevo evento
                             </button>
                         </div>
                     </div>
                 </div>
-                <div class="row justify-content-around">
-                    <div class="card" v-for="(item,index) of eventos" :key="item.id">
+                <div class="row justify-content-around" v-if="!loading">
+                    <div class="card w-25" v-for="(item,index) of eventos" :key="item.id">
                         <div >
                             <img :src="'https://smartgym.infornet.mx/assets/images/promociones_eventos/'+ item.imagen">
                             <div class="card-body">
-                                <h2 class="card-title">Nombre: {{item.nombre}}</h2>
+                                <h2 class="card-title">{{item.nombre}}</h2>
                                 <p class="card-text">Tipo: {{item.tipo}}</p>
                                 <p class="card-text">Descripcion: {{item.descripcion | delimitar}}</p>
                                 <p class="card-text">Fecha de inicio: {{item.fecha_inicio}}</p>
@@ -109,7 +109,7 @@
                                     </button>
                                 </router-link>
 
-                                <router-link :to="'/edit-plan/' + item.id">
+                                <router-link :to="'/edit-evento/' + item.id">
                                     <button class="item" data-toggle="tooltip" data-placement="top" title="Editar plan">
                                         <span class="zmdi zmdi-edit"></span> 
                                     </button>
@@ -121,6 +121,11 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div v-else class="row align-items-center">
+                    <div class="col"></div>
+                    <div class="col"> <img src="/images/68042.png" alt=""></div>
+                    <div class="col"></div>
                 </div>
             </div>
         </div>
@@ -160,14 +165,15 @@ export default {
             ],
             agregar : false,
             eventos: [],
-            mostrarImagen: ''
+            mostrarImagen: '',
+            loading:false
         };
     },
     created(){
         this.verifyToken();
         this.getDatos();
     },
-        filters:{
+    filters:{
         delimitar(valor){
             if((valor.split('').length) > 20){
                 return valor.slice(0,20)
@@ -182,11 +188,22 @@ export default {
             this.getToken()
         },
         getDatos(){
+            this.loading = true
             axios.get('/promociones-eventos')
                 .then(response => {
+                    this.loading = false
+                    if(response.data == '')
+                    {
+                        Swal.fire(
+                            'No hay eventos/promociones en el sistema',
+                            'Agrega algunos!',
+                            'info'
+                        )
+                    }
                     this.eventos = response.data
                     console.log(this.eventos)
                 }).catch(error => {
+                    this.loading = false
                     console.log(error)
                 })
         },

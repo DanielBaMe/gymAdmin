@@ -6,7 +6,10 @@
             <HeaderDesktop/>
             <div class="main-content">
                 <div v-show="agregar">
-                    <div class="row align-items-start">
+                    <div v-if="agregando">
+                        <div class="col"> <img src="/images/descarga.png" alt=""></div>
+                    </div>
+                    <div class="row align-items-start" v-if="!agregando">
                         <div class="col"></div>
                         <div class="col"></div>
                             <div class="col-lg-10">
@@ -75,6 +78,44 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
+                                                            <error-list :errors="errors.telefono"></error-list>
+                                                            <div class="input-group">
+                                                                <label>Sexo</label>
+                                                                <select v-model="sexo" class="form-control h-25">
+                                                                    <option v-for="item of seleccion" :key="item.id">
+                                                                        {{item}}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <error-list :errors="errors.telefono"></error-list>
+                                                            <div class="input-group">
+                                                                <label>Estatura</label>
+                                                                <input name="estatura" id="estatura" type="number" step="0.01"
+                                                                class="form-control" v-model="estatura">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <error-list :errors="errors.telefono"></error-list>
+                                                            <div class="input-group">
+                                                                <label>Peso</label>
+                                                                <input name="peso" id="peso" type="number" step="0.01"
+                                                                class="form-control" v-model="peso">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <error-list :errors="errors.telefono"></error-list>
+                                                            <div class="input-group">
+                                                                <label>Objetivo</label>
+                                                                <select v-model="objetivo" class="form-control h-25">
+                                                                    <option v-for="item of objetives" :key="item.id">
+                                                                        {{item}}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
                                                             <div class="row">
                                                                 <div class="col">
                                                                     <div class="input-group">
@@ -106,7 +147,7 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                        <tr class="tr-shadow" v-for="(item,index) of arrayServicios" :key="item.id">
+                                                                        <tr class="tr-shadow" v-for="(item,index) of consumo" :key="item.id">
                                                                             <td>{{item.nombre}}</td>
                                                                             <td>{{item.precio}}</td>
                                                                             <td>
@@ -250,18 +291,34 @@ export default {
             cond_fisica: '',
             servicios: '',
             tel_emerg: '',
+            sexo: '',
+            estatura: '',
+            peso: '',
+            objetivo : '',
             getServicios: '',
             darServicios: [],
             darPlanes: [],
             getPlanes: [],
             arrayServicios: [],
+            arrayPlanes: [],
+            consumo: [],
             dinero: '',
             suma : 0,
             rutinas: [],
             postRutinas: [],
             mostrarServicios: [],
-            plan: '',
-            loading: false
+            mandarPlan: '',
+            loading: false,
+            agregando: false,
+            seleccion: [
+                'Hombre',
+                'Mujer'
+            ],
+            objetives: [
+                'Perder peso',
+                'Ganar masa muscular',
+                'Incrementar fuerza'
+            ]
         }
     },
     created(){
@@ -284,7 +341,6 @@ export default {
             .then(response => {
                 this.loading = false
                 this.getServicios = response.data
-                var memberService = this.getServicios
             }).catch(error => {
                 this.loading = false
                 console.log(error)
@@ -316,6 +372,7 @@ export default {
             })
         },
         addMiembros(){
+            this.agregando = true
             axios.post('/miembros', {
                 nombre: this.nombre,
                 apellidos: this.apellidos,
@@ -325,9 +382,14 @@ export default {
                 servicios : this.darServicios,
                 condicion_fisica : this.cond_fisica,
                 telefono_emergencia : this.tel_emerg,
-                rutinas: this.postRutinas,
-                id_plan_entrenamiento : this.plan
+                rutinas: 'kjnklsjnflsjkdnf',
+                id_plan_entrenamiento : this.mandarPlan,
+                sexo: this.sexo,
+                estatura :this.estatura,
+                peso: this.peso,
+                objetivo : this.objetivo
             }).then(response => {
+                this.agregando = false
                 console.log(response)
             Swal.fire(
                 'Correcto',
@@ -345,21 +407,8 @@ export default {
                     id_plan_entrenamiento : this.plan
                 }
                 this.datos.unshift(miembro)
-                this.cargando = false;
-                this.errors = [];
-                this.agregar = false;
-                this.nombre = ''
-                this.apellidos = ''
-                this.telefono = ''
-                this.fecha_nacimiento = ''
-                this.email = ''
-                this.arrayServicios= [],
-                this.darServicios = [],
-                this.suma = 0,
-                this.cond_fisica = '',
-                this.servicios = '',
-                this.tel_emerg = ''
             }).catch(error => {
+                this.agregando = false
                 this.errors = (error.response.data.errors)
                 console.log(error)
             })
@@ -395,16 +444,40 @@ export default {
             var servicio = this.getServicios.find(element => element.id == id)
             var valor = servicio.precio
             this.suma = this.suma + parseFloat(valor)
-            this.arrayServicios.push(servicio)
-            this.darServicios.push(parseInt(id, 10))
+            if(this.arrayServicios == ''){
+                this.arrayServicios.push(servicio)
+                this.consumo.push(servicio)
+                this.darServicios.push(parseInt(id, 10))
+            }else{
+                if(this.arrayServicios.find(element => element.id == id) ){
+                    Swal.fire({ 
+                        title: 'Este servicio ya existe dentro del plan',
+                        icon: 'warning',
+                    })  
+                }else{
+                    this.arrayServicios.push(servicio)
+                    this.consumo.push(servicio)
+                    this.darServicios.push(parseInt(id, 10))
+                }
+            }
         },
         selectPlan(e){
             var id = e.target.value
             var plan = this.getPlanes.find(element => element.id == id)
             var valor = plan.precio
             this.suma = this.suma + parseFloat(valor)
-            this.arrayServicios.push(plan)
-            this.plan = id
+            if(this.arrayPlanes.find(element => element.id == id) ){
+                Swal.fire({ 
+                    title: 'Este plan ya existe',
+                    icon: 'warning',
+                })  
+            }else{
+                var idplan = parseInt(id) + 10
+                plan.id = idplan
+                this.arrayPlanes.push(plan)
+                this.consumo.push(plan)
+                this.mandarPlan = id
+                }
         },
         darRutinas(e){
             var id = e.target.value
