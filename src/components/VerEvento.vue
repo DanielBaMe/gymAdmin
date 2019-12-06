@@ -16,7 +16,7 @@
                             <br/>
                             <br/>
                             <br/>
-                            <div class="col-lg-6">
+                            <div class="col-lg-6" v-if="!loading">
                             <div class="card">
                                 <div class="card-header">
                                     <h3>{{evento.nombre}}</h3></div>
@@ -87,6 +87,9 @@
                                             </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div v-else class="spinner-border text-success">
+
                             </div>
                         </div>
                     </div>

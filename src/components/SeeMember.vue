@@ -188,6 +188,7 @@ export default {
                 this.miembro = response.data;
                 this.serviciosPlan = this.miembro.plan_entrenamiento["servicios"]
                 this.nombrePlan = this.miembro.plan_entrenamiento["nombre"]
+                console.log(this.nombrePlan)
                 this.servicios = this.miembro.servicios
                 this.rutinas = this.miembro.rutinas
                 

@@ -94,13 +94,14 @@
                 <div class="row justify-content-around" v-if="!loading">
                     <div class="card w-25" v-for="(item,index) of eventos" :key="item.id">
                         <div >
-                            <img :src="'https://smartgym.infornet.mx/assets/images/promociones_eventos/'+ item.imagen">
+                            <img :src="'https://smartgym.infornet.mx/assets/images/promociones_eventos/'+ item.imagen" m-5>
                             <div class="card-body">
                                 <h2 class="card-title">{{item.nombre}}</h2>
                                 <p class="card-text">Tipo: {{item.tipo}}</p>
                                 <p class="card-text">Descripcion: {{item.descripcion | delimitar}}</p>
                                 <p class="card-text">Fecha de inicio: {{item.fecha_inicio}}</p>
                                 <p class="card-text">Fecha de finalización: {{item.fecha_fin}}</p>
+                                <br/>
                             </div>
                             <div class="table-data-feature justify-content-around">
                                 <router-link :to="'/ver-evento/' + item.id">
@@ -118,14 +119,14 @@
                                 <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="deleteEvento(index,item.id)">
                                     <span class="zmdi zmdi-delete"></span>
                                 </button>
+                               
                             </div>
+                             <br/>
+                              <br/>
                         </div>
                     </div>
                 </div>
-                <div v-else class="row align-items-center">
-                    <div class="col"></div>
-                    <div class="col"> <img src="/images/68042.png" alt=""></div>
-                    <div class="col"></div>
+                <div v-else class="spinner-border">
                 </div>
             </div>
         </div>
@@ -171,6 +172,9 @@ export default {
     },
     created(){
         this.verifyToken();
+        this.getDatos();
+    },
+    moundted(){
         this.getDatos();
     },
     filters:{

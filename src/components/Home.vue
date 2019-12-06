@@ -50,6 +50,7 @@ export default {
     created(){
         this.verifyToken();
         this.obtenerDatos();
+        this.pagos();
     },
     methods:{
         ...mapActions([
@@ -68,6 +69,14 @@ export default {
                 }
             }).catch(function (error){
                 console.log(error);
+            })
+        },
+        pagos(){
+            axios.get('')
+            .then(response => {
+                console.log(response.data)
+            }).catch(error => {
+                console.log(error)
             })
         }
     }

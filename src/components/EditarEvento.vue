@@ -88,7 +88,11 @@
                                                         </div>
                                                     </div>
                                                 <br/>
-                                                    <button type="submit" class="btn btn-primary m-b-20 w-100">Editar información</button>
+                                                    <button v-if="!editando" type="submit" class="btn btn-success">Editar</button>
+                                                    <button v-else disabled class="btn btn-primary">
+                                                        <i class="fa fa-spinner"></i>
+                                                        Editando...
+                                                        </button>
                                                     <br/>
                                                     <br/>
                                             </form>
@@ -98,7 +102,7 @@
                             </div>
                             <div v-else class="row align-items-center">
                                 <div class="col"></div>
-                                <div class="col"> <img src="/images/68042.png" alt=""></div>
+                                <div class="col spinner-border"></div>
                                 <div class="col"></div>
                             </div>
                         </div>
@@ -134,7 +138,8 @@ export default {
             mostrarImagen: '',
             verImagen: true,
             error_message: '',
-            imagen: ''
+            imagen: '',
+            editando: false
         }
     },
     created(){
@@ -155,7 +160,7 @@ export default {
             .then(response => {
                 this.loading = false;
                 this.evento = response.data
-                console.log(this.evento)
+                //console.log(this.evento)
             }).catch(error => {
                 this.loading = false;
                 console.log(error)
@@ -163,8 +168,11 @@ export default {
         },
         editImagen(){
             console.log(this.imagen)
+            console.log(this.evento.nombre)
+            var nombreImagen = this.evento.nombre
             var formData = new FormData();
             formData.append('imagen',this.imagen);
+            formData.append('nombre',nombreImagen);
             axios.post('/promociones-eventos/'+this.ide+'/imagen', formData)
             .then(response => {
             Swal.fire({
@@ -190,8 +198,10 @@ export default {
             this.verImagen = false
         },
         editEvento(){
+            this.editando = true
             axios.put('/promociones-eventos/'+ this.ide, this.evento)
             .then(response => {
+                this.editando = false
             Swal.fire({
                 title: 'Se ha editado el evento/promoción exitosamente',
                 icon: 'success',
@@ -201,6 +211,7 @@ export default {
                     }
                 })
             }).catch(error => {
+                this.editando = false
                 console.log(error)
                 this.errors = (error.response.data.errors)
                 this.loading = false;

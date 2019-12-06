@@ -97,10 +97,7 @@
                                     </div>
                                 </div>
                         </div>
-                        <div v-else class="row align-items-center">
-                            <div class="col"></div>
-                            <div class="col"> <img src="/images/68042.png" alt=""></div>
-                            <div class="col"></div>
+                        <div v-else class="spinner-border">
                         </div>
                     </div>
                 </div>

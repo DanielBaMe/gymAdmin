@@ -397,7 +397,7 @@ export default {
                 'success',
                 setTimeout(() => {
                     location.reload()
-                }, 500)
+                }, 2000)
             )
                 let miembro = {
                     nombre: this.nombre,
