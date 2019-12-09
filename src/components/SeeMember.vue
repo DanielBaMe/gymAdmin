@@ -184,6 +184,7 @@ export default {
             axios.get('/miembros/' + this.ide)
             .then((response) =>
             {  
+                console.log(response.data)
                 this.loading= false
                 this.miembro = response.data;
                 this.serviciosPlan = this.miembro.plan_entrenamiento["servicios"]

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios';
+import Chart from 'chart.js';
 import router from '../router/router'
 Vue.use(Vuex)
 

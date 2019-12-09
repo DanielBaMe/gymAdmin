@@ -53,7 +53,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <error-list :errors="errors.telefono"></error-list>
+                                            
                                                             <div class="input-group">
                                                                 <label>Condición fisica</label>
                                                                 <textarea type="text" name="cond_fisica" id="cond_fisica" pattern="[0-9]+" minlength="4"
@@ -70,7 +70,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <error-list :errors="errors.telefono"></error-list>
+                                              
                                                             <div class="input-group">
                                                                 <label>Telefóno de emergencia</label>
                                                                 <input type="text" name="tel_emerg" id="tel_emerg" pattern="[0-9]+" minlength="4"
@@ -78,7 +78,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <error-list :errors="errors.telefono"></error-list>
+                                                            <error-list :errors="errors.sexo"></error-list>
                                                             <div class="input-group">
                                                                 <label>Sexo</label>
                                                                 <select v-model="sexo" class="form-control h-25">
@@ -89,7 +89,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <error-list :errors="errors.telefono"></error-list>
+                                                        
                                                             <div class="input-group">
                                                                 <label>Estatura</label>
                                                                 <input name="estatura" id="estatura" type="number" step="0.01"
@@ -97,7 +97,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <error-list :errors="errors.telefono"></error-list>
+                                                    
                                                             <div class="input-group">
                                                                 <label>Peso</label>
                                                                 <input name="peso" id="peso" type="number" step="0.01"
@@ -105,7 +105,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <error-list :errors="errors.telefono"></error-list>
+                                                            <error-list :errors="errors.objetivo"></error-list>
                                                             <div class="input-group">
                                                                 <label>Objetivo</label>
                                                                 <select v-model="objetivo" class="form-control h-25">
@@ -121,7 +121,7 @@
                                                                     <div class="input-group">
                                                                         <label>Servicios</label>
                                                                         <select @change="selectServicio($event)" class="form-control h-25">
-                                                                            <option disabled value="">Seleccionar servicio</option>
+                                                                            <option selected="selected" >Seleccionar servicios</option>
                                                                             <option v-for="item of getServicios" :key='item.id' :value="item.id">{{item.nombre}}  -  ${{item.precio}}</option> 
                                                                         </select>
                                                                     </div>
@@ -130,7 +130,7 @@
                                                                     <div class="input-group">
                                                                         <label>Planes</label>
                                                                         <select @change="selectPlan($event)" class="form-control h-25">
-                                                                            <option disabled value="">Seleccionar plan</option>
+                                                                            <option selected="selected" >Seleccionar plan</option>
                                                                             <option v-for="item of getPlanes" :key='item.id' :value="item.id">{{item.nombre}}  -  ${{item.precio}}</option> 
                                                                         </select>
                                                                     </div>
@@ -253,7 +253,7 @@
                     </div>
                     <div v-else class="row align-items-center">
                         <div class="col"></div>
-                        <div class="col"> <img src="/images/68042.png" alt=""></div>
+                        <div class="col"> <img src="/images/68042.png" class="h-50 w-50"></div>
                         <div class="col"></div>
                     </div>
                 </div>
@@ -495,11 +495,23 @@ export default {
             this.suma = 0
         },
         quitarServicio(index,id){
-            var serv = this.arrayServicios.find(element => element.id == id)
+            var serv = this.consumo.find(element => element.id == id)
+            console.log(serv)
             var v = serv.precio
             console.log(v)
             this.suma = this.suma - parseFloat(v)
-            this.arrayServicios.splice(index, 1)
+            this.consumo.splice(index, 1)
+            // var nombre = this.arrayServicios.find(element => element.nombre == serv.nombre)
+            this.arrayServicios.forEach(element=>{
+                if(element.nombre == serv.nombre){
+                    this.arrayServicios.splice(serv,1)
+                }
+            })
+            this.arrayPlanes.forEach(element => {
+                if(element.nombre == serv.nombre){
+                    this.arrayPlanes.splice(serv,1)
+                }
+            })
         }
     }
 };
