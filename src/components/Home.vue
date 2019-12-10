@@ -9,20 +9,23 @@
                     <div class="row mb-5">
                         <div class="col"></div>
                         <div class="col">
-                            <h3>Estado del servicio</h3>
-                            <br/>
-                                <span class="alert alert-success w-100">{{datos.estado}}</span>
-                            <br/>
+                            <div class="au-card m-b-30 ml-5 mr-5">
+                                <div class="au-card-inner">
+                                    <h3>Total de miembros por año</h3>
+                                    <span>{{this.tma}}</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="col">
-                            <h3>Tipo de plan</h3>
-                            <p>{{datos.id_plan}}</p>   
-                            <br/>      
+                            <div class="au-card m-b-30 ml-5 mr-5">
+                                <div class="au-card-inner">
+                                    <h3>Total de miembros por mes</h3>
+                                    <span>{{this.tmm}}</span>
+                                </div>
+                            </div>     
                         </div>
                         <div class="col">
-                            <h3>Fecha de expiración</h3>
-                            <p>{{datos.fecha_expiracion}}</p>
-                            <br/>
+                           
                         </div>
                         <div class="col"></div>
                         </div>
@@ -31,8 +34,6 @@
                     <div class="au-card m-b-30 ml-5 mr-5">
                         <div class="au-card-inner">
                             <h3 class="title-2 m-b-40">Miembros nuevos</h3>
-                            <p>Total de miembros por año: {{this.tma}}</p>
-                            <p>Total de miembros por mes: {{this.tmm}}</p>
                             <canvas id="grafica"></canvas>
                         </div>
                     </div>
@@ -41,8 +42,6 @@
                     <div class="au-card m-b-30 ml-5 mr-5">
                         <div class="au-card-inner">
                             <h3 class="title-2 m-b-40">Planes mas utilizados en el mes</h3>
-                            <p>Nombre: {{this.nombrePlan}}</p>
-                            <p>Cantidad de personas en el plan: {{this.total}}</p>
                             <canvas id="planes"></canvas>
                         </div>
                     </div>
@@ -95,7 +94,7 @@ export default {
             array: []
         };
     },
-    created(){
+    mounted(){
         this.verifyToken();
         this.pagos('grafica', 'servicios', 'planes');
         this.obtenerDatos();
@@ -244,75 +243,41 @@ export default {
             ctx.height = 150;
             const myChart = new Chart(ctx, {
             type: 'bar',
-            defaultFontFamily: 'Poppins',
             data: {
                 labels: nombre,
                 datasets: [
-                    { // one line graph
+                    {   
                         data: chartData,
-                        borderColor: "rgba(0, 123, 255, 0.9)",
+                        borderColor: "rgba(0, 123, 255, 0.3)",
                         borderWidth: "0",
-                        backgroundColor: "rgba(0, 123, 255, 0.5)"
+                        backgroundColor: [
+                            "rgba(76, 40, 130, 1)",
+                            "rgba(0, 123, 255, 0.7)",
+                            "rgba(0, 255, 0, 1)"
+
+                            ]
                     },
                     ]
             },
             options: {
                 responsive: true,
-                    tooltips: {
-                        mode: 'index',
-                        titleFontSize: 12,
-                        titleFontColor: '#000',
-                        bodyFontColor: '#000',
-                        backgroundColor: '#fff',
-                        titleFontFamily: 'Poppins',
-                        bodyFontFamily: 'Poppins',
-                        cornerRadius: 3,
-                        intersect: false,
-                    },
-                    legend: {
-                        display: false,
-                        position: 'top',
-                        labels: {
-                        usePointStyle: true,
-                        fontFamily: 'Poppins',
-                        },
-                    },
-                    scales: {
-                        xAxes: [{
-                        display: true,
-                        gridLines: {
-                            display: false,
-                            drawBorder: false
-                        },
-                        scaleLabel: {
-                            display: false,
-                            labelString: 'Month'
-                        },
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
                         ticks: {
                             fontFamily: "Poppins"
                         }
-                        }],
-                        yAxes: [{
-                        display: true,
-                        gridLines: {
-                            display: false,
-                            drawBorder: false
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Cantidad',
-                            fontFamily: "Poppins"
-                        },
+                    }],
+                    yAxes: [{
                         ticks: {
-                            fontFamily: "Poppins",
-                            suggestedMin: 0
+                            beginAtZero: true,
+                            fontFamily: "Poppins"
                         }
-                        }]
-                    },
-                    title: {
-                        display: false,
-                    }
-            },
+                    }]
+                }
+            }
             });
         },
         graficaPlanes(chartId, chartData, cantidad) {
@@ -325,17 +290,18 @@ export default {
                 defaultFontFamily: 'Poppins',
                 datasets: [
                 { // one line graph
+                    labels: chartData,
                     data: cantidad,
                     backgroundColor: 
                     [
                     "rgba(0, 123, 255,0.9)",
-                    "rgba(0, 123, 255,0.7)",
-                    "rgba(0, 123, 255,0.5)",
+                    "rgba(0, 123, 255,0.6)",
+                    "rgba(0, 123, 255,0.3)",
                     ],
                     hoverBackgroundColor: [
                         "rgba(0, 123, 255,0.9)",
-                        "rgba(0, 123, 255,0.7)",
-                        "rgba(0, 123, 255,0.5)",
+                        "rgba(0, 123, 255,0.6)",
+                        "rgba(0, 123, 255,0.3)",
                     ],
                     borderWidth: 3.5,
                     pointStyle: 'circle',
@@ -349,7 +315,7 @@ export default {
                 responsive: true,
                     tooltips: {
                         mode: 'index',
-                        titleFontSize: 12,
+                        titleFontSize: 16,
                         titleFontColor: '#000',
                         bodyFontColor: '#000',
                         backgroundColor: '#fff',
@@ -359,47 +325,12 @@ export default {
                         intersect: false,
                     },
                     legend: {
-                        display: false,
                         position: 'top',
                         labels: {
-                        usePointStyle: true,
-                        fontFamily: 'Poppins',
+                            usePointStyle: true,
+                            fontFamily: 'Poppins',
                         },
                     },
-                    scales: {
-                        xAxes: [{
-                        display: true,
-                        gridLines: {
-                            display: false,
-                            drawBorder: false
-                        },
-                        scaleLabel: {
-                            display: false,
-                            labelString: 'Month'
-                        },
-                        ticks: {
-                            fontFamily: "Poppins"
-                        }
-                        }],
-                        yAxes: [{
-                        display: true,
-                        gridLines: {
-                            display: false,
-                            drawBorder: false
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Cantidad',
-                            fontFamily: "Poppins"
-                        },
-                        ticks: {
-                            fontFamily: "Poppins"
-                        }
-                        }]
-                    },
-                    title: {
-                        display: false,
-                    }
             },
             });
         }

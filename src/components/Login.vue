@@ -12,7 +12,7 @@
                                 {{ error_message }}
                                 <br/>
                             </div>
-                            <form @submit.prevent="loginSubmit" method="post" action="https://smartgym.infornet.mx/api/gimnasio/login">
+                            <form @submit.prevent="loginSubmit" method="post">
                                 <div class="form-group">
                                     <error-list :errors="errors.email"></error-list>
                                     <label>Correo electronico</label>
@@ -40,12 +40,16 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import ErrorsList from './ErrorsList.vue'
+import store from '../store'
 
 export default {
     components: {
         'error-list': ErrorsList
+    },
+    state:{
+        token: null
     },
     data(){
         return{
@@ -54,60 +58,53 @@ export default {
             errors: [],
             er: false,
             eo: false,
-            error_message: ''
+            error_message: '',
+            user: [],
+            datos: [],
+            gimnasio: [],
+            t: ''
         }
     },
-    computed: {
-        ...mapState([
-            'token'
-        ])
-    },
-    created() {
+    mounted() {
         this.checkAuth();
-        let gimnasio = localStorage.getItem('gimnasio')
-        let json = JSON.parse(gimnasio)
-        console.table(json)
     },
     methods: {
         loginSubmit(){
             axios.post('/login', {
                 email: this.email,
                 password: this.password
-            })
-            .then((response) => {
-                localStorage.setItem('token', response.data.access_token);
+            }).then((response) => {
+                this.datos = response.data
+                this.gimnasio = JSON.stringify(response.data.usuario);
+                localStorage.setItem('token', this.datos.access_token);
                 window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-                this.updateAccessToken = response.data.access_token;
                 //Crypted info
-                let gimnasio = JSON.stringify(response.data.usuario);
-                var infoGym = CryptoJs.AES.encrypt(gimnasio, 'hola mundo')
+                var infoGym = CryptoJs.AES.encrypt(this.gimnasio, 'hola mundo')
                 localStorage.setItem('gimnasio', infoGym) 
-
-                this.$router.push('/');
-            })
-            .catch(error => {
-                console.log(error.response)
+                this.$router.push('/')
+            }).catch((error) => {
+                console.log(response)
+                console.log(error)
                 if (!error.response.data.errors) {
                     this.er = true
                     this.error_message = error.response.data.message
                     
-                } else{
+                } else {
                     this.errors = (error.response.data.errors)
                 }
-                console.log(error.response)
             })
             this.er = false
             this.errors = []
             this.error_message= ''
         },
         checkAuth() {
-            let token = localStorage.getItem('token');
-            if (token !== null) {
-                jwt.verify(token, process.env.MIX_SECRET, (err, decoded) => {
+            let tken = localStorage.getItem('token');
+            if (tken !== null) {
+                jwt.verify(tken, process.env.MIX_SECRET, (err, decoded) => {
                     if (!err) {
                         this.$router.push('/')
                     } else {
-                        vm.$forceUpdate();
+                        vm.forceUpdate()
                         console.log(err.response)
                     }
                 });

@@ -24,7 +24,7 @@
                                                             <error-list :errors="errors.nombre"></error-list>
                                                             <div class="input-group">
                                                                 <label>Nombre</label>
-                                                                <input type="text" name="nombre" id="nombre" pattern="[a-zA-Z\s]+" minlength="4"
+                                                                <input type="text" name="nombre" id="nombre" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+" minlength="4"
                                                                 class="form-control" v-model="nombre">
                                                             </div>
                                                         </div>
@@ -32,7 +32,7 @@
                                                             <error-list :errors="errors.apellidos"></error-list>
                                                             <div class="input-group">
                                                                 <label>Apellidos</label>
-                                                                <input type="text" name="apellidos" id="apellidos" pattern="[a-zA-Z\s]+" minlength="4"
+                                                                <input type="text" name="apellidos" id="apellidos" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+" minlength="4"
                                                                 class="form-control" v-model="apellidos">
                                                             </div>
                                                         </div>
@@ -48,7 +48,7 @@
                                                             <error-list :errors="errors.email"></error-list>
                                                             <div class="input-group">
                                                                 <label>Email</label>
-                                                                <input type="text" name="email" id="email" class="form-control" pattern="[a-zA-Z0-9\s]+" minlength="4"
+                                                                <input type="text" name="email" id="email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" minlength="4"
                                                                 v-model="email">
                                                             </div>
                                                         </div>
@@ -66,7 +66,8 @@
                                                             <error-list :errors="errors.fecha_nacimiento"></error-list>
                                                             <div class="input-group">
                                                                 <label>Fecha de nacimiento: </label>
-                                                                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" v-model="fecha_nacimiento">
+                                                                <input type="date" name="fecha_nacimiento" min="1959-01-01" max="2004-01-01"
+                                                                id="fecha_nacimiento" class="form-control" v-model="fecha_nacimiento">
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
@@ -82,6 +83,7 @@
                                                             <div class="input-group">
                                                                 <label>Sexo</label>
                                                                 <select v-model="sexo" class="form-control h-25">
+                                                                    <option selected="selected" >Seleccionar sexo</option>
                                                                     <option v-for="item of seleccion" :key="item.id">
                                                                         {{item}}
                                                                     </option>
@@ -91,16 +93,16 @@
                                                         <div class="form-group">
                                                         
                                                             <div class="input-group">
-                                                                <label>Estatura</label>
-                                                                <input name="estatura" id="estatura" type="number" step="0.01"
+                                                                <label>Estatura (en metros)</label>
+                                                                <input name="estatura" id="estatura" type="number" step="0.01" min="1.20"
                                                                 class="form-control" v-model="estatura">
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
                                                     
                                                             <div class="input-group">
-                                                                <label>Peso</label>
-                                                                <input name="peso" id="peso" type="number" step="0.01"
+                                                                <label>Peso (en kilogramos)</label>
+                                                                <input name="peso" id="peso" type="number" step="1.00" min="40" pattern="^[0-9]+"
                                                                 class="form-control" v-model="peso">
                                                             </div>
                                                         </div>
@@ -109,6 +111,7 @@
                                                             <div class="input-group">
                                                                 <label>Objetivo</label>
                                                                 <select v-model="objetivo" class="form-control h-25">
+                                                                    <option selected="selected" >Seleccionar objetivo</option>
                                                                     <option v-for="item of objetives" :key="item.id">
                                                                         {{item}}
                                                                     </option>
@@ -141,7 +144,7 @@
                                                                 <table class="table table-borderless table-striped table-earning">
                                                                     <thead>
                                                                         <tr>
-                                                                            <td >Nombre</td>
+                                                                            <td>Nombre</td>
                                                                             <td>Precio</td>
                                                                             <td>Quitar</td>
                                                                         </tr>

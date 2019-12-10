@@ -175,14 +175,17 @@ export default {
     },
     methods:{
         ...mapActions([
-            'getId'
+            'getId',
+            'getPerfil'
         ]),
         obtenerId(){
             this.getId()
         },
         obtenerDatos(){
-            store.dispatch('getPerfil')
-            this.datos = store.state.perfil
+            setTimeout(() => {
+                store.dispatch('getPerfil')
+                this.datos = store.state.perfil
+            }, 100)
         }
     }
 }

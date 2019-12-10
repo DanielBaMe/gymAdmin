@@ -34,15 +34,18 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label mb-1">Horarios </label>
+                                                <small>El horario de servicio es de 5am a 10pm</small>
                                                 <br/>
                                                 <div class="row justift-center">
                                                     <div class="col">
                                                         <label class="control-label mb-1">Entrada</label>
-                                                        <input type="time" min=”05:00:00″ max=”23:00:00″ name="entrada" id="entrada" class="form-control" v-model="entrada" required>
+                                                        <input type="time" min="05:00" max="22:00"
+                                                        name="entrada" id="entrada" class="form-control" v-model="entrada" required>
                                                     </div>
                                                     <div class="col">
                                                         <label class="control-label mb-1">Salida</label>
-                                                        <input type="time" min=”05:00:00″ max=”23:00:00″ name="salida" id="salida" class="form-control" v-model="salida" required>
+                                                        <input type="time" min="05:00" max="22:00"
+                                                        name="salida" id="salida" class="form-control" v-model="salida" required>
                                                     </div>
                                                 </div>
                                             </div>
