@@ -17,7 +17,15 @@ router.beforeEach((to, from, next) => {
             
             jwt.verify(token, process.env.MIX_SECRET, function(err, decoded) {
                 if (err) {
-                    next('/login');
+                    Swal.fire(
+                        'Token de seguridad expirado',
+                        'Inicie sesión nuevamente',
+                        'warning',
+                        setTimeout(() => {
+                            next('/login');
+                        }, 2000)
+                    )
+                    //next('/login');
                     console.log(token)
                     console.log(err)
                 } else {

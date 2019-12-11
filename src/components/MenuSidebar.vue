@@ -10,7 +10,7 @@
                 <ul class="list-unstyled navbar__list">
                     <li class="active has-sub">
                         <a class="js-arrow" href="#">
-                            <i class="fas fa-tachometer-alt"></i>Perfil</a>
+                            <i class="fas fa-address-card"></i>Perfil</a>
                         <ul class="list-unstyled navbar__sub-list js-sub-list">
                             <li>
                                 <router-link to="/edit-info">Editar información del gimnasio</router-link>
@@ -25,31 +25,31 @@
                     </li>
                     <li>
                         <router-link to="/gestionar-coaches">
-                        <i class="fas fa-chart-bar"></i>Gestionar coaches</router-link>
+                        <i class="fas fa-users"></i>Gestionar coaches</router-link>
                     </li>
                     <li>
                         <router-link to="/miembros">
-                        <i class="fas fa-table"></i>Miembros</router-link>
+                        <i class="fas fa-universal-access"></i>Miembros</router-link>
                     </li>
                     <li>
                         <router-link to='/servicios'>
-                            <i class="far fa-check-square"></i>Servicios</router-link>
+                            <i class="fas fa-list-alt"></i>Servicios</router-link>
                     </li>
                     <li>
                         <router-link to="/planes">
-                            <i class="fas fa-calendar-alt"></i>Planes</router-link>
+                            <i class="fas fa-cubes"></i>Planes</router-link>
                     </li>
                     <li>
                         <a href="map.html">
-                            <i class="fas fa-map-marker-alt"></i>Pagos</a>
+                            <i class="fas fa-money-bill-alt"></i>Pagos</a>
                     </li>
                     <li>
                         <router-link to="/eventos">
-                            <i class="fas fa-copy"></i>Eventos</router-link>
+                            <i class="fas fa-calendar-plus"></i>Eventos</router-link>
                     </li>
                     <li>
                         <a href="#" @click.prevent="logout">
-                            <i class="fa fa-sign-out-alt"></i> Salir
+                            <i class="fa fa-sign-out-alt"></i>Salir
                         </a>
                     </li>
 

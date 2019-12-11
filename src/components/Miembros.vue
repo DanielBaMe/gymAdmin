@@ -6,9 +6,6 @@
             <HeaderDesktop/>
             <div class="main-content">
                 <div v-show="agregar">
-                    <div v-if="agregando">
-                        <div class="col"> <img src="/images/descarga.png" alt=""></div>
-                    </div>
                     <div class="row align-items-start" v-if="!agregando">
                         <div class="col"></div>
                         <div class="col"></div>
@@ -17,7 +14,7 @@
                                     <div class="card-header">
                                         <h4>Datos del miembro</h4></div>
                                         <div class="card-body card-block">
-                                            <form method="post" @submit="addMiembros" class="ml-5 mr-5">
+                                            <form method="post" @submit.prevent="addMiembros" class="ml-5 mr-5">
                                                 <div class="row justify-content-around">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
@@ -99,10 +96,10 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                    
+                                                            <error-list :errors="errors.peso"></error-list>
                                                             <div class="input-group">
                                                                 <label>Peso (en kilogramos)</label>
-                                                                <input name="peso" id="peso" type="number" step="1.00" min="40" pattern="^[0-9]+"
+                                                                <input name="peso" id="peso" type="number" step="1" min="40" pattern="^[0-9]+"
                                                                 class="form-control" v-model="peso">
                                                             </div>
                                                         </div>
@@ -161,8 +158,8 @@
                                                                             </td>
                                                                         </tr>
                                                                         <br/>
-                                                                        <label for="">Total:</label>
-                                                                        <label for="">  ${{this.suma}}</label>
+                                                                        <label for="">&nbsp;&nbsp;&nbsp;&nbsp; Total:</label>
+                                                                        <label for="">&nbsp;&nbsp;&nbsp;&nbsp;${{this.suma}}</label>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -190,9 +187,11 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-auto mr-auto">
-                                                        <button class="au-btn au-btn--block au-btn--green m-b-20 w-50" v-if="!cargando" type="submit" @click.prevent="addMiembros">
-                                                            <span class="glyphicon glyphicon-plus" title="Agregar"></span></button>
-                                                        <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
+                                                        <button class="btn btn-success btn-lg" v-if="!cargando" type="submit">Agregar</button>
+                                                        <button v-else disabled class="btn btn-info btn-lg">
+                                                            <i class="fas fa-circle-notch fa-spin"></i>
+                                                            Agregando...
+                                                        </button>
                                                     </div>
                                                     <div class="col-auto">
                                                         <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-lg content-aling-center">X</span>
@@ -254,9 +253,13 @@
                             </tbody>
                         </table>
                     </div>
-                    <div v-else class="row align-items-center">
+                    <div v-else class="row">
                         <div class="col"></div>
-                        <div class="col"> <img src="/images/68042.png" class="h-50 w-50"></div>
+                        <div class="col">
+                            <div class="w-50 h-50">
+                                <i class="fas fa-spinner fa-spin" style="width:20; height:20"></i>
+                            </div>
+                        </div>
                         <div class="col"></div>
                     </div>
                 </div>
@@ -326,6 +329,8 @@ export default {
     },
     created(){
         this.verifyToken();
+    },
+    mounted(){
         this.obtenerDatos();
         this.obtenerServicios();
         this.obtenerPlanes();
@@ -339,13 +344,10 @@ export default {
             this.getToken()
         },
         obtenerServicios(){
-            this.loading= true
             axios.get('/servicios')
             .then(response => {
-                this.loading = false
                 this.getServicios = response.data
             }).catch(error => {
-                this.loading = false
                 console.log(error)
             })
         },
@@ -366,16 +368,19 @@ export default {
             })
         },
         obtenerDatos(){
+            this.loading= true
             axios.get('/miembros')
             .then((response) =>
-            {   
-                this.datos = response.data
+            {      
+                this.datos = response.data['data']
+                this.loading = false
             }).catch(function (error){
                 console.log('Error: ' + error);
+                this.loading = false
             })
         },
         addMiembros(){
-            this.agregando = true
+            this.cargando = true
             axios.post('/miembros', {
                 nombre: this.nombre,
                 apellidos: this.apellidos,
@@ -392,16 +397,15 @@ export default {
                 peso: this.peso,
                 objetivo : this.objetivo
             }).then(response => {
-                this.agregando = false
-                console.log(response)
-            Swal.fire(
-                'Correcto',
-                'Se ha agregado un nuevo miembro exitosamente',
-                'success',
-                setTimeout(() => {
-                    location.reload()
-                }, 2000)
-            )
+                this.cargando = false
+                Swal.fire(
+                    'Correcto',
+                    'Se ha agregado un nuevo miembro exitosamente',
+                    'success',
+                    setTimeout(() => {
+                        location.reload()
+                    }, 2000)
+                )
                 let miembro = {
                     nombre: this.nombre,
                     apellidos: this.apellidos,
@@ -411,7 +415,7 @@ export default {
                 }
                 this.datos.unshift(miembro)
             }).catch(error => {
-                this.agregando = false
+                this.cargando = false
                 this.errors = (error.response.data.errors)
                 console.log(error)
             })
@@ -488,14 +492,24 @@ export default {
             this.postRutinas.push(id)
         },
         limpiarDatos(){
-            this.nombre = ''
-            this.apellidos = ''
-            this.telefono = ''
-            this.fecha_nacimiento = ''
+            this.nombre = '',
+            this.apellidos = '',
+            this.telefono = '',
+            this.cond_fisica = '',
+            this.tel_emerg = '',
+            this.sexo = '',
+            this.peso = '',
+            this.objetivo = '',
+            this.fecha_nacimiento = '',
             this.email = '',
-            this.arrayServicios= [],
+            this.arrayServicios = [],
             this.darServicios = [],
-            this.suma = 0
+            this.consumo = [],
+            this.arrayPlanes = [],
+            this.suma = 0,
+            this.errors = [],
+            this.mandarPlan = '',
+            this.estatura = ''
         },
         quitarServicio(index,id){
             var serv = this.consumo.find(element => element.id == id)

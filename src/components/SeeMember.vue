@@ -72,14 +72,19 @@
                                                 <error-list :errors="errors.descripcion"></error-list>
                                                 <label class="control-label mb-1">Plan de entrenamiento</label> 
                                                 <input name='id_plan_entrenamiento' id='id_plan_entrenamiento' class="form-control" type="text"
-                                                v-model="nombrePlan"  :disabled="validated">    
+                                                v-model="this.nombrePlan"  :disabled="validated">    
                                             </div>
                                             <div class="form-group">
                                                 <error-list :errors="errors.descripcion"></error-list>
                                                 <label class="control-label mb-1">Servicios dentro del plan</label>    
-                                                <ul>
+                                                <ul v-if="!pe">
                                                     <li v-for="item of serviciosPlan" :key="item.id">
                                                         {{item.nombre}}
+                                                    </li>
+                                                </ul>
+                                                <ul v-else>
+                                                    <li :value="this.serviciosPlan">
+                                                        {{this.serviciosPlan}}
                                                     </li>
                                                 </ul>
                                             </div>
@@ -87,14 +92,19 @@
                                                 <error-list :errors="errors.descripcion"></error-list>
                                                 <label class="control-label mb-1">Plan de alimentación</label>  
                                                 <input name='id_plan_alimentacion' id='id_plan_alimentacion' class="form-control" type="text"
-                                                v-model="miembro.id_plan_alimentacion"  :disabled="validated"> 
+                                                v-model="pa"  :disabled="validated"> 
                                             </div>
                                             <div class="form-group">
                                                 <error-list :errors="errors.descripcion"></error-list>
                                                 <label class="control-label mb-1">Rutinas</label>    
-                                                <ul>
+                                                <ul v-if="!rtns">
                                                     <li v-for="item of rutinas" :key="item.id">
                                                         {{item.nombre}}
+                                                    </li>
+                                                </ul>
+                                                <ul v-else>
+                                                    <li>
+                                                        ninguno
                                                     </li>
                                                 </ul>
                                             </div>
@@ -122,10 +132,8 @@
                                 </form>
                             </div>
                         </div>
-                        <div v-else class="row align-items-center">
-                            <div class="col"></div>
-                            <div class="col"> <img src="/images/68042.png" alt=""></div>
-                            <div class="col"></div>
+                        <div v-else >
+                            <i class="fas fa-spinner fa-spin" style="width:20; height:20;"></i>
                         </div>
                     </div>
                 </div>
@@ -164,11 +172,17 @@ export default {
             nombrePlan: '',
             servicios: [],
             rutinas : [],
-            loading: false
+            loading: false,
+            pe: false,
+            rtns: false,
+            pa: '',
+            rutins: ''
         }
     },
     created(){
         this.verifyToken();
+    },
+    mounted(){
         this.obtenerDatos();
     },
     methods:{
@@ -179,24 +193,44 @@ export default {
             this.getToken()
         },
         obtenerDatos(){
-            this.loading= true
+            //this.loading = true
             this.ide = this.$route.params.id;
             axios.get('/miembros/' + this.ide)
             .then((response) =>
             {  
-                console.log(response.data)
-                this.loading= false
                 this.miembro = response.data;
-                this.serviciosPlan = this.miembro.plan_entrenamiento["servicios"]
-                this.nombrePlan = this.miembro.plan_entrenamiento["nombre"]
-                console.log(this.nombrePlan)
-                this.servicios = this.miembro.servicios
+                this.servicios = response.data.servicios
+                 console.log(this.miembro)
                 this.rutinas = this.miembro.rutinas
-                
-            }).catch(function (error){
-                this.loading= false
-                console.log(error)
-                this.er = true
+                for (let index = 0; index < this.rutinas.length; index++) {
+                    if(this.rutinas[index] == null){
+                        this.rutins = 'ninguno'
+                        this.rtns = true
+                        break;
+                    }
+                    
+                }
+                if(this.miembro.plan_entrenamiento == null){
+                    this.pe = true
+                    this.nombrePlan = 'ninguno'
+                    this.serviciosPlan = 'ninguno'
+                } else {
+                    this.pe = false
+                    this.serviciosPlan = this.miembro.plan_entrenamiento["servicios"]
+                    this.nombrePlan = this.miembro.plan_entrenamiento["nombre"]
+                }
+
+                if(this.miembro.plan_alimentacion == null){
+                    this.pa = 'ninguno'
+                } else {
+                    this.pa = this.miembro.plan_alimentacion
+                }
+                //this.loading = false
+                //console.log(this.miembro)
+            }).catch(error => {
+                //this.loading = false
+                console.log('Error:'+  error)
+                //this.er = true;
             })
         }
     }

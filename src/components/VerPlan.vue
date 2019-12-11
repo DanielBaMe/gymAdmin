@@ -93,11 +93,20 @@
                                             <br/>
                                                 <span v-if="validated" @click="validated = !validated" class="btn btn-success m-b-20 w-100">Habilitar edición</span>
                                                 <button v-else type="submit" class="btn btn-primary m-b-20 w-100">Editar</button>
+                                                <br/>
+                                                <br/>
                                         </form>
                                     </div>
                                 </div>
                         </div>
-                        <div v-else class="spinner-border">
+                        <div v-else class="row">
+                            <div class="col"></div>
+                            <div class="col">
+                                <div class="w-50 h-50">
+                                    <i class="fas fa-spinner fa-spin" style="width:20; height:20;"></i>
+                                </div>
+                            </div>
+                            <div class="col"></div>
                         </div>
                     </div>
                 </div>
@@ -147,8 +156,10 @@ export default {
             loading: false
         };
     },
-        created(){
+    created(){
         this.verifyToken();
+    },
+    mounted(){
         this.obtenerDatos();
         this.obtenerServicios();
     },
@@ -182,10 +193,7 @@ export default {
                     this.suma = this.suma + parseFloat(valor)
                     let id = element.id
                     this.darServicios.push(id)
-                    console.log(element.id)
                 });   
-                console.log(this.darServicios)
-                console.log(this.suma)
             }).catch(function (error){
                 console.log(error)
             })
@@ -194,7 +202,6 @@ export default {
             this.plan.servicios = this.darServicios
             axios.put('/planes-entrenamiento/'+ this.ide, this.plan)
             .then(response => {
-                console.log(response)
                 this.errors= []
                 this.loading = false;
                 Swal.fire({ 

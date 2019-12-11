@@ -18,33 +18,35 @@
                                                 <div class="form-group">
                                                     <error-list :errors="errors.nombre"></error-list>
                                                     <div class="input-group">
-                                                        <div class="input-group-addon">Nombre</div>
+                                                        <label class="control-label mb-1">Nombre</label>
                                                         <input type="text" name="servicio" id="servicio"
-                                                        class="form-control" v-model="nombre"  pattern="[a-zA-Z0-9\s]+"
+                                                        class="form-control" v-model="nombre"  pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ0-9\s]+"
                                                         title="Solo números y letras.">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <error-list :errors="errors.precio"></error-list>
                                                     <div class="input-group">
-                                                        <div class="input-group-addon">Precio</div>
-                                                        <input type="number" step="0.01" name="precio" id="precio" class="form-control" v-model="precio">
+                                                        <label class="control-label mb-1">Precio</label>
+                                                        <input type="number" step="0.50" name="precio" id="precio" class="form-control" v-model="precio">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <error-list :errors="errors.descripcion"></error-list>
                                                     <div class="input-group">
-                                                        <div class="input-group-addon">Descripcion</div>
+                                                        <label class="control-label mb-1">Descripcion</label>
                                                         <textarea type="text" max="50" name="descripcion" id="descripcion" 
-                                                        class="form-control" v-model="descripcion" rows="5"  pattern="[a-zA-Z0-9\s]+"></textarea>
+                                                        class="form-control" v-model="descripcion" rows="5"  pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ0-9\s]+"></textarea>
                                                     </div>
                                                 </div>
                                                 <br/>
                                                 <div class="row">
                                                     <div class="col-auto mr-auto">
-                                                        <button class="au-btn au-btn--block au-btn--green m-b-20 text-center" v-if="!cargando" type="submit" @click.prevent="addService">
-                                                        <span>Agregar</span></button>
-                                                        <button v-else disabled class="au-btn au-btn--block au-btn--info m-b-20 w-50">Agregando...</button>
+                                                        <button class="btn btn-success btn-lg" v-if="!cargando" type="submit">Agregar</button>
+                                                        <button v-else disabled class="btn btn-info btn-lg">
+                                                            <i class="fas fa-circle-notch fa-spin"></i>
+                                                            Agregando...
+                                                        </button>
                                                     </div>
                                                     <div class="col-auto">
                                                         <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-lg content-aling-center">X</span>
@@ -70,51 +72,62 @@
                             </button>
                         </div>
                     </div>
-                    <div class="table-responsive table-responsive-data2">
-                        <table class="table table-data2">
-                            <thead>
-                                <tr>
-                                    <th >Nombre</th>
-                                    <th >Precio</th>
-                                    <th >Descripcion</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="tr-shadow" v-for="(item,index) of datos" :key="item.id">
-                                    <td>
-                                        <span>{{item.nombre}}</span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-pill badge-dark">$ {{item.precio}}</span>
-                                    </td>
-                                    <td class="desc">
-                                        <span>{{item.descripcion | delimitar}}</span>
-                                    </td>
-                                    <td>
-                                        <div class="table-data-feature justify-content-around">
-                                            <router-link :to="'/ver-servicio/' + item.id">
-                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Ver más">
-                                                    <span class="glyphicon glyphicon-zoom-in"></span> 
-                                                </button>
-                                            </router-link>
+                    <div v-if="!loading">
+                        <div class="table-responsive table-responsive-data2">
+                            <table class="table table-data2">
+                                <thead>
+                                    <tr>
+                                        <th >Nombre</th>
+                                        <th >Precio</th>
+                                        <th >Descripcion</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="tr-shadow" v-for="(item,index) of datos" :key="item.id">
+                                        <td>
+                                            <span>{{item.nombre}}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-pill badge-dark">$ {{item.precio}}</span>
+                                        </td>
+                                        <td class="desc">
+                                            <span>{{item.descripcion | delimitar}}</span>
+                                        </td>
+                                        <td>
+                                            <div class="table-data-feature justify-content-around">
+                                                <router-link :to="'/ver-servicio/' + item.id">
+                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Ver más">
+                                                        <span class="glyphicon glyphicon-zoom-in"></span> 
+                                                    </button>
+                                                </router-link>
 
-                                            <router-link :to="'/edit-servicio/' + item.id">
-                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Editar">
-                                                    <span class="zmdi zmdi-edit"></span>
-                                                </button> 
-                                            </router-link>
-                                            
-                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="deleteServicio(index,item.id)">
-                                                <span class="zmdi zmdi-delete"></span>
-                                            </button>
-                                        </div>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                                <router-link :to="'/edit-servicio/' + item.id">
+                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Editar">
+                                                        <span class="zmdi zmdi-edit"></span>
+                                                    </button> 
+                                                </router-link>
+                                                
+                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="deleteServicio(index,item.id)">
+                                                    <span class="zmdi zmdi-delete"></span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div v-else class="row">
+                        <div class="col"></div>
+                        <div class="col">
+                            <div class="w-50 h-50">
+                                <i class="fas fa-spinner fa-spin" style="width:20; height:20;"></i>
+                            </div>
+                        </div>
+                        <div class="col"></div>
                     </div>
                 </div>
             </div>
@@ -152,7 +165,8 @@ export default {
             agregar: false,
             btnagregar: false,
             cargando: false,
-            er: false
+            er: false,
+            loading : false
         };
     },
     created(){
@@ -184,9 +198,11 @@ export default {
             })
         },
         obtenerDatos(){
+            this.loading = true;
             axios.get('/servicios')
             .then((response) =>
             {   
+                this.loading = false;
                 if(response.data == '')
                     {
                         Swal.fire(
@@ -198,6 +214,7 @@ export default {
                         this.datos = response.data
                     }
             }).catch(function (error){
+                this.loading = false
                 console.log('Error: ' + error);
             })
         },

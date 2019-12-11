@@ -38,11 +38,12 @@
                                             <div class="form-group">
                                                 <error-list :errors="errors.servicios"></error-list>
                                                 <label class="control-label mb-1">Servicios</label>
+                                                <select @change="selectServicio($event)" class="form-control h-25">
+                                                    <option disabled value="">Seleccionar</option>
+                                                    <option v-for="item of getServicios" :key='item.id' :value="item.id">{{item.nombre}}  -  ${{item.precio}}</option> 
+                                                </select>
+                                                <br/>
                                                 <div class="table-responsive table--no-card m-b-30">
-                                                    <select @change="selectServicio($event)" class="form-control h-25">
-                                                        <option disabled value="">Seleccionar</option>
-                                                        <option v-for="item of getServicios" :key='item.id' :value="item.id">{{item.nombre}}  -  ${{item.precio}}</option> 
-                                                    </select>
                                                     <table class="table table-borderless table-striped table-earning">
                                                         <thead>
                                                             <tr>
@@ -62,6 +63,7 @@
                                                                     </button>
                                                                 </td>
                                                             </tr>
+                                                            <br/>
                                                             <label for="">Total:</label>
                                                             <label for="">  ${{this.suma}}</label>
                                                         </tbody>
@@ -78,7 +80,11 @@
                             </div>
                             <div v-else class="row align-items-center">
                                 <div class="col"></div>
-                                <div class="col"> <img src="/images/68042.png" alt=""></div>
+                                <div class="col">
+                                    <div class="w-50 h-50">
+                                        <i class="fas fa-spinner fa-spin" style="width:20; height:20;"></i>
+                                    </div>
+                                </div>
                                 <div class="col"></div>
                             </div>
                         </div>
@@ -135,6 +141,8 @@ export default {
     },
     created(){
         this.verifyToken();
+    },
+    mounted(){
         this.obtenerDatos();
         this.obtenerServicios();
     },

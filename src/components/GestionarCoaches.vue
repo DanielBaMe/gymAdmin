@@ -19,17 +19,17 @@
                                                 <error-list :errors="errors.nombre"></error-list>
                                                 <label class="control-label mb-1">Nombre del coach </label>
                                                 <input type="text" name="nombre" id="nombre"
-                                                class="form-control" v-model="nombre" pattern="[a-zA-Z\s]+"> 
+                                                class="form-control" v-model="nombre" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+"> 
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label mb-1">Biografía </label>
                                                 <textarea type="text" name="biografia"
-                                                id="biografia" class="form-control" v-model="biografia" pattern="[a-zA-Z0-9\s]+"></textarea>
+                                                id="biografia" class="form-control" v-model="biografia" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+"></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <error-list :errors="errors.email"></error-list>
                                                 <label class="control-label mb-1">Email </label>
-                                                <input type="email" name="email" id="email"
+                                                <input type="email" name="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                                                 class="form-control" v-model="email">
                                             </div>
                                             <div class="form-group">
@@ -51,13 +51,17 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-auto mr-auto">
-                                                    <button class="au-btn au-btn--block au-btn--green m-b-20 text-center" v-if="!cargando" type="submit">
-                                                    <span>Agregar</span></button>
-                                                    <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
+                                                    <button class="btn btn-success btn-lg" v-if="!cargando" type="submit">Agregar</button>
+                                                    <button v-else disabled class="btn btn-info btn-lg">
+                                                        <i class="fas fa-circle-notch fa-spin"></i>
+                                                        Agregando...
+                                                        </button>
                                                 </div>
-                                                <div class="col-auto">  <div class="col-auto">
+                                                <div class="col-auto"> 
+                                                    <div class="col-auto">
                                                         <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-lg content-aling-center">X</span>
-                                                    </div></div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </form>
                                     </div>
@@ -78,7 +82,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="table-responsive table-responsive-data2">
+                    <div v-if="!loading" class="table-responsive table-responsive-data2">
                         <table class="table table-data2">
                             <thead>
                                 <tr>
@@ -95,12 +99,6 @@
                                     <td>{{item.horarios}}</td>
                                     <td>
                                         <div class="table-data-feature justify-content-around">
-                                            <!-- <router-link :to="'/edit-coach/' + item.id">
-                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Editar">
-                                                    <span class="zmdi zmdi-edit"></span>
-                                                </button> 
-                                            </router-link> -->
-                                            
                                             <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="deleteCoach(index,item.id)">
                                                 <span class="zmdi zmdi-delete"></span>
                                             </button>
@@ -109,6 +107,11 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div v-else class="row">
+                        <div class="col-md-6 offset-md-3 mr-auto ml-auto">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -133,6 +136,7 @@ export default {
     },
     data(){
         return {
+            loading: false,
             nombre: '',
             biografia: '',
             email: '',
@@ -150,6 +154,8 @@ export default {
     },
     created(){
         this.verifyToken();
+    },
+    mounted(){
         this.obtenerDatos();
     },
     methods:{
@@ -168,15 +174,21 @@ export default {
             })
         },
         obtenerDatos(){
+            this.loading = true;
             axios.get('/coaches')
             .then((response) =>
             {   
+                this.loading = false;
                 this.datos = response.data
             }).catch(function (error){
+                this.loading = false;
                 console.log('Error: ' + error);
             })
         },
         addCoach(){
+            this.cargando = true
+            console.log(this.entrada)
+            console.log(this.salida)
             this.horarios = this.entrada + '-' + this.salida
             axios.post('/coaches',
             {
@@ -187,6 +199,7 @@ export default {
                 horarios : this.horarios
             })
             .then( response => {
+                this.cargando = false
                 let coach = {
                     nombre: this.nombre,
                     biografia: this.biografia,
@@ -195,29 +208,14 @@ export default {
                     horarios : this.horarios
                 }
                 this.datos.unshift(coach)
-                this.cargando = false;
-                this.errors = [];
-                this.agregar = false;
-                this.nombre = ''
-                this.email = ''
-                this.biografia = ''
-                this.horarios = ''
-                this.entrada = ''
-                this.salida = ''
-                this.errors = ''
-
-                
                 Swal.fire(
-                'Correcto',
-                'Se ha agregado un nuevo coach exitosamente',
-                'success'
-                )
-
-                setTimeout(() => {
-                    console.log('realoading...')
-                }, 3000)
-
-                
+                    'Correcto',
+                    'Se ha agregado un nuevo coach exitosamente',
+                    'success',
+                    setTimeout(() => {
+                        location.reload()
+                    }, 2000)
+                )                
             })
             .catch(error=>{
                 this.errors = (error.response.data.errors)

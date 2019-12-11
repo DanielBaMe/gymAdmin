@@ -24,13 +24,23 @@
                                         <div class="card-body">
                                             <form @submit.prevent="editImagen" method="post" class="ml-5 mr-5">
                                                 <error-list :errors="errors.imagen"></error-list>
-                                                <img :src="'https://smartgym.infornet.mx/assets/images/promociones_eventos/'+ evento.imagen" alt="" v-show="verImagen" class="text-center">
+                                                <div class="row">
+                                                    <div class="col"></div>
+                                                    <div class="col-auto">
+                                                        <img :src="'https://smartgym.infornet.mx/assets/images/promociones_eventos/'+ evento.imagen" alt="" v-show="verImagen" class="text-center">
+                                                        <img :src=this.mostrarImagen alt="" v-show="!verImagen">
+                                                    </div>
+                                                    <div class="col"></div>
+                                                </div>
                                                 <br/>
                                                 <input type="file" name="file" id="file" ref="file"
-                                                class="form-control" @change="getImage($event)" accept="image/*">
-                                                <img :src=this.mostrarImagen alt="" v-show="!verImagen">
+                                                @change="getImage($event)" accept="image/*">
                                                 <br/>
-                                                <button type="submit" class="btn btn-primary m-b-20 w-100">Editar imagen</button>
+                                                <button class="btn btn-primary m-b-20 w-100" v-if="!cargando" type="submit">Editar imagen</button>
+                                                    <button v-else disabled class="btn btn-info m-b-20 w-100">
+                                                        <i class="fas fa-circle-notch fa-spin"></i>
+                                                        Editando...
+                                                    </button>
                                                 <br/>
                                                 <br/>
                                             </form>
@@ -40,7 +50,7 @@
                                 <div class="col-lg-6">
                                     <div class="card">
                                     <div class="card-header">
-                                        <h3>Editar las información de {{evento.nombre}}</h3></div>
+                                        <h3>Editar la información de {{evento.nombre}}</h3></div>
                                         <div class="card-body">
                                             <form @submit.prevent="editEvento" method="post" class="ml-5 mr-5">
                                                     <div v-if="er" class="alert alert-danger w-100">
@@ -88,8 +98,8 @@
                                                         </div>
                                                     </div>
                                                 <br/>
-                                                    <button v-if="!editando" type="submit" class="btn btn-success">Editar</button>
-                                                    <button v-else disabled class="btn btn-primary">
+                                                    <button v-if="!editando" type="submit" class="btn btn-success w-100">Editar</button>
+                                                    <button v-else disabled class="btn btn-info w-100">
                                                         <i class="fa fa-spinner"></i>
                                                         Editando...
                                                         </button>
@@ -102,7 +112,11 @@
                             </div>
                             <div v-else class="row align-items-center">
                                 <div class="col"></div>
-                                <div class="col spinner-border"></div>
+                                <div class="col">
+                                    <div class="w-50 h-50">
+                                        <i class="fas fa-spinner fa-spin" style="width:20; height:20;"></i>
+                                    </div>
+                                </div>
                                 <div class="col"></div>
                             </div>
                         </div>
@@ -139,7 +153,8 @@ export default {
             verImagen: true,
             error_message: '',
             imagen: '',
-            editando: false
+            editando: false,
+            cargando: false
         }
     },
     created(){
@@ -154,7 +169,7 @@ export default {
             this.getToken()
         },
         getDatos(){
-            this.loading= true
+            this.loading = true
             this.ide = this.$route.params.id;
             axios.get('/promociones-eventos/'+ this.ide)
             .then(response => {
@@ -167,6 +182,7 @@ export default {
             })
         },
         editImagen(){
+            this.cargando = true
             console.log(this.imagen)
             console.log(this.evento.nombre)
             var nombreImagen = this.evento.nombre
@@ -175,6 +191,7 @@ export default {
             formData.append('nombre',nombreImagen);
             axios.post('/promociones-eventos/'+this.ide+'/imagen', formData)
             .then(response => {
+                this.cargando = false;
             Swal.fire({
                 title: 'Se ha editado la imagen del evento/promoción exitosamente',
                 icon: 'success',
@@ -184,6 +201,7 @@ export default {
                     }
                 })
             }).catch(error => {
+                this.cargando = false
             Swal.fire({
                 title: 'Ha ocurrido un error',
                 icon: 'error',
@@ -214,7 +232,6 @@ export default {
                 this.editando = false
                 console.log(error)
                 this.errors = (error.response.data.errors)
-                this.loading = false;
             })
             this.errors=[];
             this.loading = false;

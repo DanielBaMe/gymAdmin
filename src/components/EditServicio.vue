@@ -26,14 +26,14 @@
                                                         <error-list :errors="errors.nombre"></error-list>
                                                         <label class="control-label mb-1">Nombre</label> 
                                                         <input name='nombre' id='nombre' class="form-control" type="text"
-                                                        pattern="[a-zA-Z0-9\s]+" title="Solo números y letras."
+                                                        pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ0-9\s]+" title="Solo números y letras."
                                                         v-model="servicio.nombre" minlength="4" maxlength="20">
                                                         <br/>  
                                                     </div>
                                                     <div class="form-group">
                                                         <error-list :errors="errors.precio"></error-list>
                                                         <label class="control-label mb-1">Precio</label>  
-                                                        <input name='precio' id='precio' class="form-control" type="number" step="0.01"
+                                                        <input name='precio' id='precio' class="form-control" type="number" step="0.50"
                                                         v-model="servicio.precio"> 
                                                         <br/>
                                                     </div>
@@ -41,7 +41,7 @@
                                                         <error-list :errors="errors.descripcion"></error-list>
                                                         <label class="control-label mb-1">Descripcion</label>    
                                                         <textarea v-model="servicio.descripcion" type="text" name='descripcion'
-                                                        id='descripcion' class="form-control" rows="5" cols="50" pattern="[a-zA-Z0-9\s]+"></textarea>
+                                                        id='descripcion' class="form-control" rows="5" cols="50" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ0-9\s]+"></textarea>
                                                         <br/>
                                                     </div>
                                                 <br/>

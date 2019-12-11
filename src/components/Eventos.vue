@@ -32,13 +32,19 @@
                                                 <error-list :errors="errors.imagen"></error-list>
                                                 <label class="control-label mb-1">Imagen</label>
                                                 <input type="file" name="file" id="file" ref="file"
-                                                class="form-control" @change="getImage($event)" accept="image/*">
-                                                <img :src=this.mostrarImagen alt="">
+                                                @change="getImage($event)" accept="image/*">
+                                                <br/>
+                                                <div class="row">
+                                                    <div class="col"></div>
+                                                    <div class="col-auto"><img :src=this.mostrarImagen alt="" ></div>
+                                                    <div class="col"></div>
+                                                </div>
                                             </div>
                                             <div class="form-group">
                                                 <error-list :errors="errors.tipo"></error-list>
                                                 <label class="control-label mb-1">Tipo</label>
                                                 <select v-model="tipo" class="form-control h-25">
+                                                    <option disable selected="selected">Seleccionar tipo</option>
                                                     <option v-for="item of seleccion" :key="item.id">
                                                         {{item}}
                                                     </option>
@@ -60,16 +66,20 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <br/>
                                             <div class="row">
                                                 <div class="col-auto mr-auto">
-                                                    <button class="au-btn au-btn--block au-btn--green m-b-20 text-center" v-if="!cargando" type="submit">
-                                                    <span>Agregar</span></button>
-                                                    <button v-else disabled class="au-btn au-btn--block au-btn--green m-b-20 w-50">Agregando...</button>
+                                                    <button class="btn btn-success btn-lg" v-if="!cargando" type="submit">Agregar</button>
+                                                    <button v-else disabled class="btn btn-info btn-lg">
+                                                        <i class="fas fa-circle-notch fa-spin"></i>
+                                                        Agregando...
+                                                    </button>
                                                 </div>
-                                                <div class="col-auto">  <div class="col-auto">
-                                                        <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-lg content-aling-center">X</span>
-                                                    </div></div>
+                                                <div class="col-auto">
+                                                    <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-lg content-aling-center">X</span>
+                                                </div>
                                             </div>
+                                            <br/>
                                         </form>
                                     </div>
                                 </div>
@@ -91,42 +101,51 @@
                         </div>
                     </div>
                 </div>
-                <div class="row justify-content-around" v-if="!loading">
-                    <div class="card w-25" v-for="(item,index) of eventos" :key="item.id">
-                        <div >
-                            <img :src="'https://smartgym.infornet.mx/assets/images/promociones_eventos/'+ item.imagen" m-5>
+                <div class="row" v-if="!loading">
+                    <div class="col-sm-6" v-for="(item,index) of eventos" :key="item.id">
+                        <div class="card m-5">
+                            <div class="card-header">
+                                <strong class="card-title mb-3">{{item.nombre}}</strong>
+                            </div>
                             <div class="card-body">
-                                <h2 class="card-title">{{item.nombre}}</h2>
-                                <p class="card-text">Tipo: {{item.tipo}}</p>
-                                <p class="card-text">Descripcion: {{item.descripcion | delimitar}}</p>
-                                <p class="card-text">Fecha de inicio: {{item.fecha_inicio}}</p>
-                                <p class="card-text">Fecha de finalización: {{item.fecha_fin}}</p>
+                                <div class="mx-auto d-block">
+                                    <!-- <img class="rounded-circle mx-auto d-block" src="images/icon/avatar-01.jpg" alt="Card image cap"> -->
+                                    <img class="rounded-circle mx-auto d-block w-75 h-75" alt="Card image cap" :src="'https://smartgym.infornet.mx/assets/images/promociones_eventos/'+ item.imagen">
+                                    <h5 class="text-sm-center mt-2 mb-1">{{item.tipo}}</h5>
+                                    <div class="location text-sm-center">
+                                        <i class="fas fa-calendar-check"></i>   {{item.fecha_inicio}} <br/> <i class="fas fa-calendar-times"></i>   {{item.fecha_fin}}</div>
+                                </div>
+                                <hr>
+                                <div class="table-data-feature justify-content-around">
+                                    <router-link :to="'/ver-evento/' + item.id">
+                                        <button class="item" data-toggle="tooltip" data-placement="top" title="Ver más">
+                                            <span class="glyphicon glyphicon-zoom-in"></span> 
+                                        </button>
+                                    </router-link>
+
+                                    <router-link :to="'/edit-evento/' + item.id">
+                                        <button class="item" data-toggle="tooltip" data-placement="top" title="Editar plan">
+                                            <span class="zmdi zmdi-edit"></span> 
+                                        </button>
+                                    </router-link>
+
+                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="deleteEvento(index,item.id)">
+                                        <span class="zmdi zmdi-delete"></span>
+                                    </button>
+                                </div>
                                 <br/>
                             </div>
-                            <div class="table-data-feature justify-content-around">
-                                <router-link :to="'/ver-evento/' + item.id">
-                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Ver más">
-                                        <span class="glyphicon glyphicon-zoom-in"></span> 
-                                    </button>
-                                </router-link>
-
-                                <router-link :to="'/edit-evento/' + item.id">
-                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Editar plan">
-                                        <span class="zmdi zmdi-edit"></span> 
-                                    </button>
-                                </router-link>
-
-                                <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="deleteEvento(index,item.id)">
-                                    <span class="zmdi zmdi-delete"></span>
-                                </button>
-                               
-                            </div>
-                             <br/>
-                              <br/>
                         </div>
                     </div>
                 </div>
-                <div v-else class="spinner-border">
+                <div v-else class="row">
+                    <div class="col"></div>
+                    <div class="col">
+                        <div class="w-50 h-50">
+                            <i class="fas fa-spinner fa-spin" style="width:20; height:20;"></i>
+                        </div>
+                    </div>
+                    <div class="col"></div>
                 </div>
             </div>
         </div>
@@ -172,9 +191,8 @@ export default {
     },
     created(){
         this.verifyToken();
-        this.getDatos();
     },
-    moundted(){
+    mounted(){
         this.getDatos();
     },
     filters:{
@@ -212,7 +230,7 @@ export default {
                 })
         },
         addEvent(event){
-            
+            this.cargando = true;
             let formData = new FormData();
 
             formData.append('nombre',this.nombre)
@@ -224,16 +242,18 @@ export default {
 
             axios.post('/promociones-eventos', formData)
             .then(response => {
-            Swal.fire(
-                'Correcto',
-                'Se ha agregado un nuevo evento o promoción',
-                'success',
-                setTimeout(() => {
-                    location.reload()
-                }, 500)
-            )
+                this.cargando = false;
+                Swal.fire(
+                    'Correcto',
+                    'Se ha agregado un nuevo evento o promoción',
+                    'success',
+                    setTimeout(() => {
+                        location.reload()
+                    }, 500)
+                )
                 console.log(response.data)
             }).catch(error => {
+                this.cargando = false;
                 console.log(error)
                 this.errors = (error.response.data.errors)
             })
@@ -244,12 +264,13 @@ export default {
             this.mostrarImagen = URL.createObjectURL(event.target.files[0])
         },
         limpiarDatos(){
-            this.nombre= ''
-            this.descripcion= ''
-            this.imagen= ''
-            this.tipo= ''
-            this.inicio= ''
-            this.fin = ''
+            this.nombre= '',
+            this.descripcion= '',
+            this.imagen= '',
+            this.tipo= '',
+            this.inicio= '',
+            this.fin = '',
+            this.mostrarImagen = ''
         },
         deleteEvento(index,id){
             Swal.fire({

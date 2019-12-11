@@ -69,7 +69,7 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col"></div>
-                                                        <div class="col-lg-6"><img :src="'https://smartgym.infornet.mx/assets/images/promociones_eventos/'+ evento.imagen" alt="" v-show="verImagen" class="text-center"></div>
+                                                        <div class="col-auto"><img :src="'https://smartgym.infornet.mx/assets/images/promociones_eventos/'+ evento.imagen" alt="" v-show="verImagen" class="text-center"></div>
                                                         <div class="col"></div>
                                                     </div>
                                                 </div>
@@ -88,8 +88,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div v-else class="spinner-border text-success">
-
+                            <div v-else class="row">
+                                <div class="col"></div>
+                                <div class="col">
+                                    <div class="w-50 h-50">
+                                        <i class="fas fa-spinner fa-spin" style="width:20; height:20;"></i>
+                                    </div>
+                                </div>
+                                <div class="col"></div>
                             </div>
                         </div>
                     </div>

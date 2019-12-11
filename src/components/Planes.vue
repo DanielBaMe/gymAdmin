@@ -155,9 +155,11 @@
                                                         <br/>
                                                     <div class="row">
                                                         <div class="col-auto mr-auto">
-                                                            <button class="au-btn au-btn--block au-btn--green m-b-20 text-center" v-if="!cargando" type="submit">
-                                                            <span>Agregar</span></button>
-                                                            <button v-else disabled class="au-btn au-btn--block au-btn--info m-b-20 w-50">Agregando...</button>
+                                                            <button class="btn btn-success btn-lg" v-if="!cargando" type="submit">Agregar</button>
+                                                            <button v-else disabled class="btn btn-info btn-lg">
+                                                                <i class="fas fa-circle-notch fa-spin"></i>
+                                                                Agregando...
+                                                            </button>
                                                         </div>
                                                         <div class="col-auto">
                                                             <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-lg content-aling-center">X</span>
@@ -234,7 +236,14 @@
                                 </table>
                             </div>
                     </div>
-                    <div v-else class="spinner-border">
+                    <div v-else class="row">
+                        <div class="col"></div>
+                        <div class="col">
+                            <div class="w-50 h-50">
+                                <i class="fas fa-spinner fa-spin" style="width:20; height:20;"></i>
+                            </div>
+                        </div>
+                        <div class="col"></div>
                     </div>
                 </div>
             </div>
@@ -282,6 +291,8 @@ name: 'Servicios',
     },
     created(){
         this.verifyToken();
+    },
+    mounted(){
         this.obtenerDatos();
         this.obtenerServicios();
     },
@@ -351,20 +362,21 @@ name: 'Servicios',
             })
         },
         addPlan(){
-            console.log(this.servicios)
+            this.cargando = true;
             axios.post('/planes-entrenamiento', {
                 nombre: this.nombre,
                 precio: this.precio,
                 servicios: this.servicios
             }).then(response =>{
-            SweetAlert.fire(
-                'Correcto',
-                'Se ha agregado un servicio exitosamente',
-                'success',
-                setTimeout(() => {
-                    location.reload()
-                }, 500)
-            )
+                this.cargando = false;
+                SweetAlert.fire(
+                    'Correcto',
+                    'Se ha agregado un servicio exitosamente',
+                    'success',
+                    setTimeout(() => {
+                        location.reload()
+                    }, 1000)
+                )
                 let plan = {
                     nombre: this.nombre,
                     precio: this.precio,
@@ -378,6 +390,7 @@ name: 'Servicios',
                 this.precio ='',
                 this.servicios = []
             }).catch(error => {
+                this.cargando = false
                 this.errors = (error.response.data.errors)
             })
             this.errors = [];
