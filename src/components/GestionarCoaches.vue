@@ -22,7 +22,7 @@
                                                 class="form-control" v-model="nombre" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+"> 
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label mb-1">Biografía </label>
+                                                <label class="control-label mb-1">Biografía <small>(opcional)</small> </label>
                                                 <textarea type="text" name="biografia"
                                                 id="biografia" class="form-control" v-model="biografia" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+"></textarea>
                                             </div>
@@ -82,7 +82,19 @@
                             </button>
                         </div>
                     </div>
-                    <div v-if="!loading" class="table-responsive table-responsive-data2">
+                    <div v-if="vacio">
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col"> 
+                                <div class="alert alert-info" role="alert">
+                                    <h1 class="text-center">No existen registros</h1>
+                                    <h3 class="text-center">Ingresa algunos</h3>
+                                </div>
+                            </div>
+                            <div class="col"></div>
+                        </div>
+                    </div>
+                    <div v-else class="table-responsive table-responsive-data2">
                         <table class="table table-data2">
                             <thead>
                                 <tr>
@@ -108,7 +120,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div v-else class="row">
+                    <div v-if="loading" class="row">
                         <div class="col-md-6 offset-md-3 mr-auto ml-auto">
                             <i class="fas fa-spinner fa-spin"></i>
                         </div>
@@ -149,7 +161,11 @@ export default {
             cargando: false,
             er: false,
             entrada: '',
-            salida: ''
+            salida: '',
+            vacio: false,
+            he: '',
+            hs: '',
+            horario: ''
         }
     },
     created(){
@@ -157,6 +173,7 @@ export default {
     },
     mounted(){
         this.obtenerDatos();
+        this.idGym();
     },
     methods:{
         ...mapActions([
@@ -169,19 +186,34 @@ export default {
             axios.get('/perfil')
             .then((response) => {
                 this.ide = response.data.gimnasio.id;
+                this.horario = response.data.gimnasio.h_servicios
+                console.log(this.horario)
             }).catch(function (error) {
                 console.log(error);
             })
+        },
+        obtenerPerfil(){
+            setTimeout(() => {
+                store.dispatch('getPerfil')
+                this.datos = store.state.perfil
+            }, 100)
         },
         obtenerDatos(){
             this.loading = true;
             axios.get('/coaches')
             .then((response) =>
             {   
-                this.loading = false;
-                this.datos = response.data
+                if(response.data['data'][0] == null){
+                    this.loading = false;
+                    console.log('vacio')
+                    this.vacio = true;
+                }else{
+                    this.loading =false;
+                    this.vacio =false;
+                    this.datos = response.data['data'];
+                } 
+
             }).catch(function (error){
-                this.loading = false;
                 console.log('Error: ' + error);
             })
         },

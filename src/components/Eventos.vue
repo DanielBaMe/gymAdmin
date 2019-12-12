@@ -100,52 +100,64 @@
                             </button>
                         </div>
                     </div>
-                </div>
-                <div class="row" v-if="!loading">
-                    <div class="col-sm-6" v-for="(item,index) of eventos" :key="item.id">
-                        <div class="card m-5">
-                            <div class="card-header">
-                                <strong class="card-title mb-3">{{item.nombre}}</strong>
+                    <div v-if="vacio">
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col"> 
+                                <div class="alert alert-info" role="alert">
+                                    <h1 class="text-center">No existen registros</h1>
+                                    <h3 class="text-center">Ingresa algunos</h3>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <div class="mx-auto d-block">
-                                    <!-- <img class="rounded-circle mx-auto d-block" src="images/icon/avatar-01.jpg" alt="Card image cap"> -->
-                                    <img class="rounded-circle mx-auto d-block w-75 h-75" alt="Card image cap" :src="'https://smartgym.infornet.mx/assets/images/promociones_eventos/'+ item.imagen">
-                                    <h5 class="text-sm-center mt-2 mb-1">{{item.tipo}}</h5>
-                                    <div class="location text-sm-center">
-                                        <i class="fas fa-calendar-check"></i>   {{item.fecha_inicio}} <br/> <i class="fas fa-calendar-times"></i>   {{item.fecha_fin}}</div>
+                            <div class="col"></div>
+                        </div>
+                    </div>
+                    <div v-else class="row">
+                        <div class="col-sm-6" v-for="(item,index) of eventos" :key="item.id">
+                            <div class="card m-5">
+                                <div class="card-header">
+                                    <strong class="card-title mb-3">{{item.nombre}}</strong>
                                 </div>
-                                <hr>
-                                <div class="table-data-feature justify-content-around">
-                                    <router-link :to="'/ver-evento/' + item.id">
-                                        <button class="item" data-toggle="tooltip" data-placement="top" title="Ver más">
-                                            <span class="glyphicon glyphicon-zoom-in"></span> 
-                                        </button>
-                                    </router-link>
+                                <div class="card-body">
+                                    <div class="mx-auto d-block">
+                                        <!-- <img class="rounded-circle mx-auto d-block" src="images/icon/avatar-01.jpg" alt="Card image cap"> -->
+                                        <img class="rounded-circle mx-auto d-block w-75 h-75" alt="Card image cap" :src="'https://smartgym.infornet.mx/assets/images/promociones_eventos/'+ item.imagen">
+                                        <h5 class="text-sm-center mt-2 mb-1">{{item.tipo}}</h5>
+                                        <div class="location text-sm-center">
+                                            <i class="fas fa-calendar-check"></i>   {{item.fecha_inicio}} <br/> <i class="fas fa-calendar-times"></i>   {{item.fecha_fin}}</div>
+                                    </div>
+                                    <hr>
+                                    <div class="table-data-feature justify-content-around">
+                                        <router-link :to="'/ver-evento/' + item.id">
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Ver más">
+                                                <span class="glyphicon glyphicon-zoom-in"></span> 
+                                            </button>
+                                        </router-link>
 
-                                    <router-link :to="'/edit-evento/' + item.id">
-                                        <button class="item" data-toggle="tooltip" data-placement="top" title="Editar plan">
-                                            <span class="zmdi zmdi-edit"></span> 
-                                        </button>
-                                    </router-link>
+                                        <router-link :to="'/edit-evento/' + item.id">
+                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Editar plan">
+                                                <span class="zmdi zmdi-edit"></span> 
+                                            </button>
+                                        </router-link>
 
-                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="deleteEvento(index,item.id)">
-                                        <span class="zmdi zmdi-delete"></span>
-                                    </button>
+                                        <button class="item" data-toggle="tooltip" data-placement="top" title="Eliminar" type="submit" @click.prevent="deleteEvento(index,item.id)">
+                                            <span class="zmdi zmdi-delete"></span>
+                                        </button>
+                                    </div>
+                                    <br/>
                                 </div>
-                                <br/>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div v-else class="row">
-                    <div class="col"></div>
-                    <div class="col">
-                        <div class="w-50 h-50">
-                            <i class="fas fa-spinner fa-spin" style="width:20; height:20;"></i>
+                    <div v-if="loading" class="row">
+                        <div class="col"></div>
+                        <div class="col">
+                            <div class="w-50 h-50">
+                                <i class="fas fa-spinner fa-spin" style="width:20; height:20;"></i>
+                            </div>
                         </div>
+                        <div class="col"></div>
                     </div>
-                    <div class="col"></div>
                 </div>
             </div>
         </div>
@@ -186,7 +198,8 @@ export default {
             agregar : false,
             eventos: [],
             mostrarImagen: '',
-            loading:false
+            loading:false,
+            vacio: false
         };
     },
     created(){
@@ -213,17 +226,17 @@ export default {
             this.loading = true
             axios.get('/promociones-eventos')
                 .then(response => {
-                    this.loading = false
-                    if(response.data == '')
-                    {
-                        Swal.fire(
-                            'No hay eventos/promociones en el sistema',
-                            'Agrega algunos!',
-                            'info'
-                        )
-                    }
-                    this.eventos = response.data
-                    console.log(this.eventos)
+
+                if(response.data['data'][0] == null){
+                    this.loading = false;
+                    console.log('vacio')
+                    this.vacio = true;
+                }else{
+                    this.loading =false;
+                    this.vacio =false;
+                    this.eventos = response.data['data']
+                }
+
                 }).catch(error => {
                     this.loading = false
                     console.log(error)

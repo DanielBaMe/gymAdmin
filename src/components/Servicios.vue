@@ -72,7 +72,19 @@
                             </button>
                         </div>
                     </div>
-                    <div v-if="!loading">
+                    <div v-if="vacio">
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col"> 
+                                <div class="alert alert-info" role="alert">
+                                    <h1 class="text-center">No existen registros</h1>
+                                    <h3 class="text-center">Ingresa algunos</h3>
+                                </div>
+                            </div>
+                            <div class="col"></div>
+                        </div>
+                    </div>
+                    <div v-else>
                         <div class="table-responsive table-responsive-data2">
                             <table class="table table-data2">
                                 <thead>
@@ -120,7 +132,7 @@
                             </table>
                         </div>
                     </div>
-                    <div v-else class="row">
+                    <div v-if="loading" class="row">
                         <div class="col"></div>
                         <div class="col">
                             <div class="w-50 h-50">
@@ -166,7 +178,8 @@ export default {
             btnagregar: false,
             cargando: false,
             er: false,
-            loading : false
+            loading : false,
+            vacio : false
         };
     },
     created(){
@@ -202,17 +215,16 @@ export default {
             axios.get('/servicios')
             .then((response) =>
             {   
-                this.loading = false;
-                if(response.data == '')
-                    {
-                        Swal.fire(
-                            'No hay servicios en el sistema',
-                            'Agrega algunos!',
-                            'info'
-                        )
-                    }else {
-                        this.datos = response.data
-                    }
+                if(response.data['data'][0] == null){
+                    this.loading = false;
+                    console.log('vacio')
+                    this.vacio = true;
+                }else{
+                    this.loading =false;
+                    this.vacio =false;
+                    this.datos = response.data['data'];
+                }
+
             }).catch(function (error){
                 this.loading = false
                 console.log('Error: ' + error);

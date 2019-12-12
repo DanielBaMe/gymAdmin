@@ -110,6 +110,7 @@ export default {
             axios.get('/perfil')
             .then((response) =>
             {   
+                console.log(response)
                 this.datos = response.data.contrato;
                 if(this.datos.estado === 'Activo'){
                     this.estado = true
@@ -142,8 +143,6 @@ export default {
                     this.nombreS.push(this.array[index].nombre);
                     this.totales.push(this.array[index]["total"]);
                 }
-                console.log(this.nombreS)
-                console.log(this.totales)
                 for (let index = 0; index < 12; index++) {
                     this.m.push(this.miembros[index].categorie_value);
                     

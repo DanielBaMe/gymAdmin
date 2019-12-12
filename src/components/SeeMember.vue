@@ -12,7 +12,7 @@
                             <button @click="$router.go(-1)" class="btn btn-primary btn-sm glyphicon glyphicon-arrow-left" title="Atrás">
                             </button>
                         </div>
-                        <div v-if="!loading" class="card">
+                        <div v-if="!loading" class="card md-6">
                             <div class="card-header">
                                 <h3>{{miembro.nombre}}</h3>
                             </div>
@@ -35,22 +35,22 @@
                                             <div class="form-group">
                                                 <error-list :errors="errors.precio"></error-list>
                                                 <label class="control-label mb-1">Apellidos</label>  
-                                                <input name='precio' id='precio' class="form-control" type="text" step="0.01"
+                                                <input name='apellidos' id='apellidos' class="form-control" type="text" step="0.01"
                                                 v-model="miembro.apellidos"  :disabled="validated"> 
                                                 <br/>
                                             </div>
                                             <div class="form-group">
                                                 <error-list :errors="errors.precio"></error-list>
                                                 <label class="control-label mb-1">Telefono</label>  
-                                                <input name='precio' id='precio' class="form-control" type="number" step="0.01"
+                                                <input name='telefono' id='telefono' class="form-control" type="number" step="0.01"
                                                 v-model="miembro.telefono"  :disabled="validated"> 
                                                 <br/>
                                             </div>
                                             <div class="form-group">
                                                 <error-list :errors="errors.precio"></error-list>
                                                 <label class="control-label mb-1">Tel. emergencia</label>  
-                                                <input name='precio' id='precio' class="form-control" type="number" step="0.01"
-                                                v-model="miembro.telefono_emergencia"  :disabled="validated"> 
+                                                <input name='telefono_emergencia' id='telefono_emergencia' class="form-control" type="text"
+                                                v-model="this.telefono"  :disabled="validated"> 
                                                 <br/>
                                             </div>
                                             <div class="form-group">
@@ -64,7 +64,7 @@
                                                 <error-list :errors="errors.descripcion"></error-list>
                                                 <label class="control-label mb-1">Condicion fisica</label>    
                                                 <textarea type="text" name="condicion_fisica" id="condicion_fisica" pattern="[0-9]+" minlength="4"
-                                                class="form-control" v-model="miembro.condicion_fisica" :disabled="validated"></textarea>
+                                                class="form-control" v-model="this.condicion" :disabled="validated"></textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -82,11 +82,9 @@
                                                         {{item.nombre}}
                                                     </li>
                                                 </ul>
-                                                <ul v-else>
-                                                    <li :value="this.serviciosPlan">
-                                                        {{this.serviciosPlan}}
-                                                    </li>
-                                                </ul>
+                                                <span v-else>
+                                                    <br/>NA
+                                                </span>
                                             </div>
                                             <div class="form-group">
                                                 <error-list :errors="errors.descripcion"></error-list>
@@ -102,20 +100,21 @@
                                                         {{item.nombre}}
                                                     </li>
                                                 </ul>
-                                                <ul v-else>
-                                                    <li>
-                                                        ninguno
-                                                    </li>
-                                                </ul>
+                                                <span v-else>
+                                                    <br/>NA
+                                                </span>
                                             </div>
                                             <div class="form-group">
                                                 <error-list :errors="errors.descripcion"></error-list>
                                                 <label class="control-label mb-1">Servicios</label>    
-                                                <ul>
+                                                <ul v-if="!servs">
                                                     <li v-for="item of servicios" :key="item.id">
                                                         {{item.nombre}}         {{item.precio}}
                                                     </li>
                                                 </ul>
+                                                <span v-else>
+                                                    <br/>NA
+                                                </span>
                                             </div>
                                             <div class="form-group">
                                                 <error-list :errors="errors.descripcion"></error-list>
@@ -126,9 +125,8 @@
                                             </div>
                                         </div>
                                     <br/>
-                                        <!-- <span v-if="validated" @click="validated = !validated" class="btn btn-success m-b-20 w-100">Habilitar edición</span>
-                                        <button v-else type="submit" class="btn btn-primary m-b-20 w-100">Editar</button> -->
                                     </div>
+                                    <br/>
                                 </form>
                             </div>
                         </div>
@@ -176,7 +174,10 @@ export default {
             pe: false,
             rtns: false,
             pa: '',
-            rutins: ''
+            telefono: '',
+            servs: false,
+            condicion : '',
+            cf: ''
         }
     },
     created(){
@@ -199,21 +200,38 @@ export default {
             .then((response) =>
             {  
                 this.miembro = response.data;
-                this.servicios = response.data.servicios
-                 console.log(this.miembro)
-                this.rutinas = this.miembro.rutinas
+                this.servicios = response.data.servicios;
+                this.cf = this.miembro.condicion_fisica;
+                console.log(this.miembro)
+                if(this.miembro.telefono_emergencia == null){
+                    this.telefono = 'NA'
+                }else {
+                    this.telefono = this.miembro.telefono_emergencia;
+                }
+                this.rutinas = this.miembro.rutinas;
+
                 for (let index = 0; index < this.rutinas.length; index++) {
                     if(this.rutinas[index] == null){
-                        this.rutins = 'ninguno'
-                        this.rtns = true
+                        this.rtns = true;
                         break;
                     }
                     
                 }
+
+                if(this.cf == null){
+                    this.condicion = 'NA'
+                } else {
+                    this.condicion = this.cf
+                }
+
+                    if(this.servicios[0] == null){
+                        this.servs = true;
+                    }
+
                 if(this.miembro.plan_entrenamiento == null){
                     this.pe = true
-                    this.nombrePlan = 'ninguno'
-                    this.serviciosPlan = 'ninguno'
+                    this.nombrePlan = 'NA'
+                    this.serviciosPlan = 'NA'
                 } else {
                     this.pe = false
                     this.serviciosPlan = this.miembro.plan_entrenamiento["servicios"]
@@ -221,16 +239,12 @@ export default {
                 }
 
                 if(this.miembro.plan_alimentacion == null){
-                    this.pa = 'ninguno'
+                    this.pa = 'NA'
                 } else {
                     this.pa = this.miembro.plan_alimentacion
                 }
-                //this.loading = false
-                //console.log(this.miembro)
             }).catch(error => {
-                //this.loading = false
                 console.log('Error:'+  error)
-                //this.er = true;
             })
         }
     }

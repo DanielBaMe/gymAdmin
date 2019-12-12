@@ -40,11 +40,13 @@
                                                 <div class="form-group">
                                                     <error-list :errors="errors.descripcion"></error-list>
                                                     <label class="control-label mb-1">Servicios</label>  
+                                                    <br/>
                                                     <div v-show="!validated">
                                                         <select @change="selectServicio($event)" class="form-control h-25">
-                                                            <option disabled value="">Seleccionar</option>
+                                                            <option dselected="selected">Seleccionar</option>
                                                             <option v-for="item of getServicios" :key='item.id' :value="item.id">{{item.nombre}}  -  ${{item.precio}}</option> 
                                                         </select>
+                                                        <br/>
                                                         <div class="table-responsive table--no-card m-b-30">
                                                             <table class="table table-borderless table-striped table-earning">
                                                                 <thead>
@@ -66,8 +68,8 @@
                                                                         </td>
                                                                     </tr>
                                                                     <br/>
-                                                                    <label for="">Precio sugerido:</label>
-                                                                    <label for="">  ${{this.suma}}</label>
+                                                                    <label for="">&nbsp;&nbsp;&nbsp;&nbsp;Precio sugerido:</label>
+                                                                    <label for="">&nbsp;&nbsp;&nbsp;&nbsp;${{this.suma}}</label>
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -90,9 +92,14 @@
                                                     </div>
                                                     <br/>
                                                 </div>
-                                            <br/>
                                                 <span v-if="validated" @click="validated = !validated" class="btn btn-success m-b-20 w-100">Habilitar edición</span>
-                                                <button v-else type="submit" class="btn btn-primary m-b-20 w-100">Editar</button>
+                                                <div v-else>
+                                                    <button class="btn btn-primary btn-lg w-100" v-if="!cargando" type="submit">Editar</button>
+                                                    <button v-else disabled class="btn btn-info btn-lg w-100">
+                                                        <i class="fas fa-circle-notch fa-spin"></i>
+                                                        Editando...
+                                                    </button>
+                                                </div>
                                                 <br/>
                                                 <br/>
                                         </form>
@@ -175,7 +182,7 @@ export default {
             axios.get('/servicios')
             .then(response => {
                 this.loading = false;
-                this.getServicios = response.data
+                this.getServicios = response.data['data']
             }).catch(error => {
                 this.loading = false;
                 console.log(error)
@@ -199,11 +206,12 @@ export default {
             })
         },
         formSubmit(){
-            this.plan.servicios = this.darServicios
+            this.cargando = true;
+            this.plan.servicios = this.darServicios;
             axios.put('/planes-entrenamiento/'+ this.ide, this.plan)
             .then(response => {
+                this.cargando = false
                 this.errors= []
-                this.loading = false;
                 Swal.fire({ 
                     title: 'Se ha editado el servicio exitosamente',
                     icon: 'success',
@@ -213,24 +221,23 @@ export default {
                     }
                 })           
             }).catch(error => {
+                this.cargando = false
                 console.log(error)
                 this.errors = (error.response.data.errors)
-                this.loading = false;
             })
             this.errors=[];
-            this.loading = false;
             },
         selectServicio(e){
             var id = e.target.value
             var servicio = this.getServicios.find(element => element.id == id)
             var valor = servicio.precio
-            this.suma = this.suma + parseFloat(valor)
             if(this.arrayServicios.find(element => element.id == id) ){
                 Swal.fire({ 
                     title: 'Este servicio ya existe dentro del plan',
                     icon: 'warning',
                 })  
             }else {
+                this.suma = this.suma + parseFloat(valor)
                 this.arrayServicios.push(servicio)
                 this.darServicios.push(parseInt(id, 10))
             }

@@ -64,17 +64,22 @@
                                                                 </td>
                                                             </tr>
                                                             <br/>
-                                                            <label for="">Total:</label>
-                                                            <label for="">  ${{this.suma}}</label>
+                                                            <label for="">&nbsp;&nbsp;&nbsp;&nbsp; Total:</label>
+                                                            <label for="">&nbsp;&nbsp;&nbsp;&nbsp; ${{this.suma}}</label>
                                                         </tbody>
                                                     </table>
                                                 </div>
                                                 <br/>
                                             </div>
-                                                <br/>
-                                            <button v-if="!loading" type="submit" class="au-btn au-btn--block au-btn--green m-b-20">Editar</button>
-                                            <button v-else disabled class="au-btn au-btn--block au-btn--info m-b-20">Actualizando...</button>
+                                            <button class="btn btn-primary btn-lg w-100" v-if="!cargando" type="submit">Editar</button>
+                                            <button v-else disabled class="btn btn-info btn-lg w-100">
+                                                <i class="fas fa-circle-notch fa-spin"></i>
+                                                Editando...
+                                            </button>
+                                            <br/>
+                                            <br/>
                                         </form>
+                                        <br/>
                                     </div>
                                 </div>
                             </div>
@@ -165,8 +170,9 @@ export default {
             this.loading = true;
             axios.get('/servicios')
             .then(response =>{ 
+                console.log(response)
                 this.loading = false;
-                this.getServicios = response.data
+                this.getServicios = response.data['data']
             }).catch(error => {
                 this.loading = false;
                 console.log(error)
@@ -215,12 +221,12 @@ export default {
         },
         editPlan(){
             this.plan.servicios = this.identi
-            this.loading = true
+            this.cargando = true
             axios.put('/planes-entrenamiento/'+ this.ide, this.plan)
             .then(response => {
                 console.log(response)
                 this.errors= []
-                this.loading = false;
+                this.cargando = false;
                 Swal.fire({ 
                     title: 'Se ha editado el plan exitosamente',
                     icon: 'success',
@@ -232,7 +238,7 @@ export default {
             }).catch(error => {
                 console.log(error)
                 this.errors = (error.response.data.errors)
-                this.loading = false;
+                this.cargando = false;
             })
             this.errors=[];
             this.loading = false;

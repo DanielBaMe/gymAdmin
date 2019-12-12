@@ -33,12 +33,23 @@
                                                                 class="form-control" v-model="apellidos">
                                                             </div>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <error-list :errors="errors.telefono"></error-list>
-                                                            <div class="input-group">
-                                                                <label>Telefóno</label>
-                                                                <input type="text" name="telefono" id="telefono" pattern="[0-9]+" minlength="4"
-                                                                class="form-control" v-model="telefono">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="form-group">
+                                                                    <error-list :errors="errors.telefono"></error-list>
+                                                                    <div class="input-group">
+                                                                        <label>Telefóno</label>
+                                                                        <input type="text" name="telefono" id="telefono" pattern="[0-9]+" minlength="4"
+                                                                        class="form-control" v-model="telefono">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="input-group">
+                                                                    <label>Telefóno de emergencia </label>
+                                                                    <input type="text" name="tel_emerg" id="tel_emerg" pattern="[0-9]+" minlength="4"
+                                                                    class="form-control" v-model="tel_emerg">
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
@@ -50,29 +61,11 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                            
-                                                            <div class="input-group">
-                                                                <label>Condición fisica</label>
-                                                                <textarea type="text" name="cond_fisica" id="cond_fisica" pattern="[0-9]+" minlength="4"
-                                                                class="form-control" v-model="cond_fisica"></textarea>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
                                                             <error-list :errors="errors.fecha_nacimiento"></error-list>
                                                             <div class="input-group">
-                                                                <label>Fecha de nacimiento: </label>
+                                                                <label>Fecha de nacimiento</label>
                                                                 <input type="date" name="fecha_nacimiento" min="1959-01-01" max="2004-01-01"
                                                                 id="fecha_nacimiento" class="form-control" v-model="fecha_nacimiento">
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                              
-                                                            <div class="input-group">
-                                                                <label>Telefóno de emergencia</label>
-                                                                <input type="text" name="tel_emerg" id="tel_emerg" pattern="[0-9]+" minlength="4"
-                                                                class="form-control" v-model="tel_emerg">
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
@@ -80,7 +73,7 @@
                                                             <div class="input-group">
                                                                 <label>Sexo</label>
                                                                 <select v-model="sexo" class="form-control h-25">
-                                                                    <option selected="selected" >Seleccionar sexo</option>
+                                                                    <option value="" disabled>Seleccionar sexo</option>
                                                                     <option v-for="item of seleccion" :key="item.id">
                                                                         {{item}}
                                                                     </option>
@@ -88,38 +81,54 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                        
-                                                            <div class="input-group">
-                                                                <label>Estatura (en metros)</label>
-                                                                <input name="estatura" id="estatura" type="number" step="0.01" min="1.20"
-                                                                class="form-control" v-model="estatura">
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <error-list :errors="errors.peso"></error-list>
-                                                            <div class="input-group">
-                                                                <label>Peso (en kilogramos)</label>
-                                                                <input name="peso" id="peso" type="number" step="1" min="40" pattern="^[0-9]+"
-                                                                class="form-control" v-model="peso">
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
                                                             <error-list :errors="errors.objetivo"></error-list>
                                                             <div class="input-group">
                                                                 <label>Objetivo</label>
                                                                 <select v-model="objetivo" class="form-control h-25">
-                                                                    <option selected="selected" >Seleccionar objetivo</option>
+                                                                    <option value="" disabled >Seleccionar objetivo</option>
                                                                     <option v-for="item of objetives" :key="item.id">
                                                                         {{item}}
                                                                     </option>
                                                                 </select>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <label>Condición fisica <small>(Opcional)</small> </label>
+                                                                    <textarea type="text" name="cond_fisica" id="cond_fisica" pattern="[0-9]+" minlength="4"
+                                                                    class="form-control" v-model="cond_fisica"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="form-group">
+                                                                <error-list :errors="errors.peso"></error-list>
+                                                                <div class="input-group">
+                                                                    <label>Peso en kilogramos <small>(Opcional)</small> </label>
+                                                                    <input name="peso" id="peso" type="number" step="1" min="40" pattern="^[0-9]+"
+                                                                    class="form-control" v-model="peso">
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <label>Estatura en metros <small>(Opcional)</small> </label>
+                                                                        <input name="estatura" id="estatura" type="number" step="0.01" min="1.20"
+                                                                        class="form-control" v-model="estatura">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         <div class="form-group">
                                                             <div class="row">
                                                                 <div class="col">
                                                                     <div class="input-group">
-                                                                        <label>Servicios</label>
+                                                                        <label>Servicios <small>(Opcional)</small> </label>
                                                                         <select @change="selectServicio($event)" class="form-control h-25">
                                                                             <option selected="selected" >Seleccionar servicios</option>
                                                                             <option v-for="item of getServicios" :key='item.id' :value="item.id">{{item.nombre}}  -  ${{item.precio}}</option> 
@@ -128,7 +137,7 @@
                                                                 </div>
                                                                 <div class="col">
                                                                     <div class="input-group">
-                                                                        <label>Planes</label>
+                                                                        <label>Planes <small>(Opcional)</small> </label>
                                                                         <select @change="selectPlan($event)" class="form-control h-25">
                                                                             <option selected="selected" >Seleccionar plan</option>
                                                                             <option v-for="item of getPlanes" :key='item.id' :value="item.id">{{item.nombre}}  -  ${{item.precio}}</option> 
@@ -163,8 +172,9 @@
                                                                     </tbody>
                                                                 </table>
                                                             </div>
-                                                            <div>
-                                                                <table>
+                                                            <label>Rutinas <small>(Opcional)</small> </label>
+                                                            <div class="table-responsive table--no-card m-b-30">
+                                                                <table class="table table-borderless table-striped table-earning">
                                                                     <thead>
                                                                         <tr>
                                                                             <td>Nombre</td>
@@ -185,6 +195,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                    <br/>
+                                                    <br/>
                                                 <div class="row">
                                                     <div class="col-auto mr-auto">
                                                         <button class="btn btn-success btn-lg" v-if="!cargando" type="submit">Agregar</button>
@@ -198,6 +210,8 @@
                                                     </div>
                                                 </div>
                                             </form>
+                                                <br/>
+                                                <br/>
                                         </div>
                                     </div>
                                 </div>
@@ -217,7 +231,19 @@
                             </button>
                         </div>
                     </div>
-                    <div v-if="!loading" class="table-responsive table-responsive-data2">
+                    <div v-if="vacio">
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col"> 
+                                <div class="alert alert-info" role="alert">
+                                    <h1 class="text-center">No existen registros</h1>
+                                    <h3 class="text-center">Ingresa algunos</h3>
+                                </div>
+                            </div>
+                            <div class="col"></div>
+                        </div>
+                    </div>
+                    <div v-else class="table-responsive table-responsive-data2">
                         <table class="table table-data2">
                             <thead>
                                 <tr>
@@ -253,7 +279,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div v-else class="row">
+                    <div v-if="loading" class="row">
                         <div class="col"></div>
                         <div class="col">
                             <div class="w-50 h-50">
@@ -324,7 +350,8 @@ export default {
                 'Perder peso',
                 'Ganar masa muscular',
                 'Incrementar fuerza'
-            ]
+            ],
+            vacio:false
         }
     },
     created(){
@@ -372,8 +399,15 @@ export default {
             axios.get('/miembros')
             .then((response) =>
             {      
-                this.datos = response.data['data']
-                this.loading = false
+                if(response.data['data'][0] == null){
+                    this.loading = false;
+                    console.log('vacio')
+                    this.vacio = true;
+                }else{
+                    this.vacio = false;
+                    this.datos = response.data['data']
+                    this.loading = false;
+                }
             }).catch(function (error){
                 console.log('Error: ' + error);
                 this.loading = false

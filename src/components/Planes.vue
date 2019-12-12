@@ -113,16 +113,15 @@
                                                         <error-list :errors="errors.nombre"></error-list>
                                                         <label class="control-label mb-1">Nombre del plan</label>                   
                                                         <input name='nombre' id='nombre' class="form-control" type="text" pattern="[a-zA-Z0-9\s]+"
-                                                        minlength="4" maxlength="20" v-model="nombre" placeholder='Nombre'
+                                                        minlength="4" maxlength="20" v-model="nombre"
                                                         title="Solo letras, Tamaño minimo: 4. Tamaño maximo: 20">
                                                         <br/>
                                                     </div>
                                                     <div class="form-group">
                                                         <error-list :errors="errors.telefono"></error-list>
                                                         <label class="control-label mb-1">Precio</label>
-                                                        <input name='precio' id='precio' class="form-control" type="number" step="0.01" placeholder="$$$"
-                                                        v-model="precio"
-                                                        title="Solo números">
+                                                        <input name='precio' id='precio' class="form-control" type="number" step="0.50" placeholder="$"
+                                                        v-model="precio">
                                                         <br/>
                                                     </div>
                                                     <div class="form-group">
@@ -185,7 +184,19 @@
                             </button>
                         </div>
                     </div>
-                    <div v-if="!loading" class="col-lg-12">
+                    <div v-if="vacio">
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col"> 
+                                <div class="alert alert-info" role="alert">
+                                    <h1 class="text-center">No existen registros</h1>
+                                    <h3 class="text-center">Ingresa algunos</h3>
+                                </div>
+                            </div>
+                            <div class="col"></div>
+                        </div>
+                    </div>
+                    <div v-else class="col-lg-12">
                         <!-- TOP CAMPAIGN-->
                         
                             <h3 class="title-3 m-b-30">Planes</h3>
@@ -236,7 +247,7 @@
                                 </table>
                             </div>
                     </div>
-                    <div v-else class="row">
+                    <div v-if="loading" class="row">
                         <div class="col"></div>
                         <div class="col">
                             <div class="w-50 h-50">
@@ -286,7 +297,8 @@ name: 'Servicios',
             dividirServicios: '',
             serviciosUno: [],
             serviciosDos: [],
-            loading: false
+            loading: false,
+            vacio : false
         };
     },
     created(){
@@ -316,7 +328,7 @@ name: 'Servicios',
             axios.get('/servicios')
             .then(response => {
                 this.loading = false;
-                this.getServicios = response.data
+                this.getServicios = response.data['data']
                 this.numServicios = Object.keys(this.getServicios).length
                 this.dividirServicios = this.numServicios / 2
                 if (this.dividirServicios % 1 == 0){
@@ -347,16 +359,15 @@ name: 'Servicios',
             axios.get('/planes-entrenamiento')
             .then(response =>
             {  
-                if(response.data == '')
-                    {
-                        Swal.fire(
-                            'No hay planes en el sistema',
-                            'Agrega algunos!',
-                            'info'
-                        )
-                    }else {
-                        this.datos = response.data
-                    }
+                if(response.data['data'][0] == null){
+                    this.loading = false;
+                    console.log('vacio')
+                    this.vacio = true;
+                }else{
+                    this.loading =false;
+                    this.vacio =false;
+                    this.datos = response.data['data']
+                }
             }).catch(function (error){
                 console.log('Error: ' + error);
             })
