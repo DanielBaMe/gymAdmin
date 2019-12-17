@@ -42,16 +42,17 @@
                                                 <br/>
                                                 <div class="row">
                                                     <div class="col-auto mr-auto">
-                                                        <button class="btn btn-success btn-lg" v-if="!cargando" type="submit">Agregar</button>
-                                                        <button v-else disabled class="btn btn-info btn-lg">
+                                                        <button class="btn btn-success btn-md" v-if="!cargando" type="submit">Agregar</button>
+                                                        <button v-else disabled class="btn btn-info btn-md">
                                                             <i class="fas fa-circle-notch fa-spin"></i>
                                                             Agregando...
                                                         </button>
                                                     </div>
                                                     <div class="col-auto">
-                                                        <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-lg content-aling-center">X</span>
+                                                        <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-md content-aling-center">X</span>
                                                     </div>
                                                 </div>
+                                                <br/>
                                             </form>
                                         </div>
                                     </div>
@@ -231,6 +232,7 @@ export default {
             })
         },
         addService(){
+            this.cargando = true
             axios.post('/servicios',
             {
                 nombre: this.nombre,
@@ -239,6 +241,7 @@ export default {
                 id_gimnasio: this.ide
             })
             .then( response => {
+                this.cargando = false
                 let servicio = {
                     nombre: this.nombre,
                     precio: this.precio,
@@ -262,6 +265,7 @@ export default {
             )
             })
             .catch(error=>{
+                this.cargando = false
                 this.errors = (error.response.data.errors)
                 this.cargando = false;
             })

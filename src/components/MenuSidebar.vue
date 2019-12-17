@@ -40,8 +40,8 @@
                             <i class="fas fa-cubes"></i>Planes</router-link>
                     </li>
                     <li>
-                        <a href="map.html">
-                            <i class="fas fa-money-bill-alt"></i>Pagos</a>
+                        <router-link to="/pagos">
+                            <i class="fas fa-money-bill-alt"></i>Pagos</router-link>
                     </li>
                     <li>
                         <router-link to="/eventos">

@@ -154,16 +154,17 @@
                                                         <br/>
                                                     <div class="row">
                                                         <div class="col-auto mr-auto">
-                                                            <button class="btn btn-success btn-lg" v-if="!cargando" type="submit">Agregar</button>
-                                                            <button v-else disabled class="btn btn-info btn-lg">
+                                                            <button class="btn btn-success btn-md" v-if="!cargando" type="submit">Agregar</button>
+                                                            <button v-else disabled class="btn btn-info btn-md">
                                                                 <i class="fas fa-circle-notch fa-spin"></i>
                                                                 Agregando...
                                                             </button>
                                                         </div>
                                                         <div class="col-auto">
-                                                            <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-lg content-aling-center">X</span>
+                                                            <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-md content-aling-center">X</span>
                                                         </div>
                                                     </div>
+                                                    <br/>
                                                 </form>
                                             </div>
                                         </div>

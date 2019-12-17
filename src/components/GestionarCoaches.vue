@@ -34,35 +34,37 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label mb-1">Horarios </label>
-                                                <small>El horario de servicio es de 5am a 10pm</small>
+                                                <small>El horario de servicio es de {{this.he}} a {{this.hs}}</small>
                                                 <br/>
                                                 <div class="row justift-center">
                                                     <div class="col">
                                                         <label class="control-label mb-1">Entrada</label>
-                                                        <input type="time" min="05:00" max="22:00"
+                                                        <input type="time" :min=this.he :max=this.hs
                                                         name="entrada" id="entrada" class="form-control" v-model="entrada" required>
                                                     </div>
                                                     <div class="col">
                                                         <label class="control-label mb-1">Salida</label>
-                                                        <input type="time" min="05:00" max="22:00"
+                                                        <input type="time" :min=this.he :max=this.hs
                                                         name="salida" id="salida" class="form-control" v-model="salida" required>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <br/>
                                             <div class="row">
                                                 <div class="col-auto mr-auto">
-                                                    <button class="btn btn-success btn-lg" v-if="!cargando" type="submit">Agregar</button>
-                                                    <button v-else disabled class="btn btn-info btn-lg">
+                                                    <button class="btn btn-success btn-md" v-if="!cargando" type="submit">Agregar</button>
+                                                    <button v-else disabled class="btn btn-info btn-md">
                                                         <i class="fas fa-circle-notch fa-spin"></i>
                                                         Agregando...
                                                         </button>
                                                 </div>
                                                 <div class="col-auto"> 
                                                     <div class="col-auto">
-                                                        <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-lg content-aling-center">X</span>
+                                                        <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-md content-aling-center">X</span>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <br/>
                                         </form>
                                     </div>
                                 </div>
@@ -165,7 +167,9 @@ export default {
             vacio: false,
             he: '',
             hs: '',
-            horario: ''
+            horario: '',
+            en: '',
+            sal: ''
         }
     },
     created(){
@@ -185,9 +189,11 @@ export default {
         idGym(){
             axios.get('/perfil')
             .then((response) => {
+                console.log(response)
                 this.ide = response.data.gimnasio.id;
                 this.horario = response.data.gimnasio.h_servicios
-                console.log(this.horario)
+                this.he = this.horario.substr(0,5)
+                this.hs = this.horario.substr(6,12)
             }).catch(function (error) {
                 console.log(error);
             })
@@ -203,6 +209,7 @@ export default {
             axios.get('/coaches')
             .then((response) =>
             {   
+                console.log(response.data)
                 if(response.data['data'][0] == null){
                     this.loading = false;
                     console.log('vacio')
@@ -218,9 +225,23 @@ export default {
             })
         },
         addCoach(){
+            this.en = this.entrada.substring(0,3)
+            let entry = parseInt(this.en)
+            console.log('entrada'+ entry)
+            this.sal = this.salida.substring(0,3)
+            let out = parseInt(this.sal)
+            console.log('salida'+ out)
+            let resultado = out - entry
+            console.log(resultado)
+            if(resultado >= 8){
+                Swal.fire(
+                    'Espera',
+                    'El maximo de horas laborales es de 8 al dia',
+                    'warning',
+                ) 
+            }
+
             this.cargando = true
-            console.log(this.entrada)
-            console.log(this.salida)
             this.horarios = this.entrada + '-' + this.salida
             axios.post('/coaches',
             {

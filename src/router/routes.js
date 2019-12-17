@@ -16,7 +16,7 @@ import EditPlan from '../components/EditPlan.vue'
 import SeeMember from '../components/SeeMember.vue'
 import Eventos from '../components/Eventos.vue'
 import VerEvento from '../components/VerEvento.vue'
-//import ImageEvent from '../components/ImageEvent.vue'
+import Pagos from '../components/Pagos.vue'
 import EditarEvento from '../components/EditarEvento.vue'
 
 import Home from '../components/Home.vue'
@@ -197,15 +197,15 @@ const routes = [
         }
 
     },
-    // {
-    //     path : '/edit-evento-imagen/:id',
-    //     name : 'Editar imagen de evento',
-    //     component : ImageEvent,
-    //     meta : {
-    //         title: 'EditImagenEvento',
-    //         requiresAuth : true
-    //     }
-    // },
+    {
+        path : '/pagos',
+        name : 'Pagos de miembros',
+        component : Pagos,
+        meta : {
+            title: 'Pagos',
+            requiresAuth : true
+        }
+    },
     {
         path : '/edit-evento/:id',
         name : 'Editar evento',

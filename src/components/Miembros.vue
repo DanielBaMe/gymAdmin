@@ -92,6 +92,18 @@
                                                                 </select>
                                                             </div>
                                                         </div>
+                                                        <div class="form-group">
+                                                            <error-list :errors="errors.objetivo"></error-list>
+                                                            <div class="input-group">
+                                                                <label>Plan de alimentación</label>
+                                                                <select v-model="planAlim_elegido" class="form-control h-25">
+                                                                    <option value="" disabled >Seleccionar plan</option>
+                                                                    <option v-for="item of plan_alimentacion" :key="item.id">
+                                                                        {{item.nombre}}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
@@ -167,7 +179,15 @@
                                                                             </td>
                                                                         </tr>
                                                                         <br/>
-                                                                        <label for="">&nbsp;&nbsp;&nbsp;&nbsp; Total:</label>
+                                                                        <div class="input-group">
+                                                                            <error-list :errors="errors.meses"></error-list>
+                                                                            <label>Meses de suscripción</label>
+                                                                            <select @change="agregarMeses($event)" class="form-control h-25">
+                                                                                <option selected="selected" >Seleccionar meses</option>
+                                                                                <option v-for="item of months" :key="item.id">{{item}}</option> 
+                                                                            </select>
+                                                                        </div>
+                                                                        <label for="">&nbsp;&nbsp;&nbsp;&nbsp; Total por mes:</label>
                                                                         <label for="">&nbsp;&nbsp;&nbsp;&nbsp;${{this.suma}}</label>
                                                                     </tbody>
                                                                 </table>
@@ -182,6 +202,7 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
+                                                                        <!-- <tr v-for="item of rutinas" :key="item.id"> -->
                                                                         <tr v-for="item of rutinas" :key="item.id">
                                                                             <td>{{item.nombre}}</td>
                                                                             <td>{{item.precio}}</td>
@@ -190,7 +211,27 @@
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>
+                                                                    
                                                                 </table>
+                                                                <nav>
+                                                                    <ul class="pagination">
+                                                                        <li v-if="paginacion.current_page > 1">
+                                                                            <a href="#" @click.prevent="changePage(paginacion.current_page - 1)">
+                                                                                <span>Atras</span>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li v-for="page in pageNumber" :key="page.id" :class="[ page == isActived ? 'active' : '']">
+                                                                            <a href="#" @click.prevent="changePage(page)">
+                                                                                {{page}}
+                                                                            </a>
+                                                                        </li>
+                                                                        <li v-if="paginacion.current_page < paginacion.last_page">
+                                                                            <a href="#" @click.prevent="changePage(paginacion.current_page - 1)">
+                                                                                <span>Siguiente</span>
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </nav>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -199,14 +240,14 @@
                                                     <br/>
                                                 <div class="row">
                                                     <div class="col-auto mr-auto">
-                                                        <button class="btn btn-success btn-lg" v-if="!cargando" type="submit">Agregar</button>
-                                                        <button v-else disabled class="btn btn-info btn-lg">
+                                                        <button class="btn btn-success btn-md" v-if="!cargando" type="submit">Agregar</button>
+                                                        <button v-else disabled class="btn btn-info btn-md">
                                                             <i class="fas fa-circle-notch fa-spin"></i>
                                                             Agregando...
                                                         </button>
                                                     </div>
                                                     <div class="col-auto">
-                                                        <span v-show="agregar" title="Cancelar" @click="agregar = !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-lg content-aling-center">X</span>
+                                                        <span v-show="agregar" title="Cancelar" @click="agregar= !agregar" @click.prevent="limpiarDatos()" class="btn btn-danger btn-md content-aling-center">X</span>
                                                     </div>
                                                 </div>
                                             </form>
@@ -346,12 +387,42 @@ export default {
                 'Hombre',
                 'Mujer'
             ],
+            months:[
+                '1',
+                '2',
+                '3',
+                '4',
+                '5',
+                '6',
+                '7',
+                '8',
+                '9',
+                '10',
+                '11',
+                '12'
+            ],
             objetives: [
                 'Perder peso',
                 'Ganar masa muscular',
                 'Incrementar fuerza'
             ],
-            vacio:false
+            vacio:false,
+            monto : '',
+            meses: '',
+            mesAnterior : 0,
+            sumaAnterior : '',
+            paginacion : {
+                'total': 0,
+                'current_page': 0,
+                'per_page': 0,
+                'last_page': 0,
+                'from': 0,
+                'to': 0
+            },
+            mesElegido : '',
+            plan_alimentacion: [],
+            planAlim_elegido: '',
+            peId : ''
         }
     },
     created(){
@@ -363,6 +434,33 @@ export default {
         this.obtenerPlanes();
         this.obtenerRutinas();
     },
+    computed :{
+        isActived : function (){
+            return this.paginacion.current_page;
+        },
+        pageNumber: function (){
+            if(!this.paginacion.to){
+                return [];
+            }
+
+            var from = this.paginacion.current_page - 2; //pendiente
+            if(from < 1){
+                from = 1;
+            }
+
+            var to = from + (2 * 2);
+            if(to >= this.paginacion.last_page){
+                to = this.paginacion.last_page;
+            }
+
+            var pagesArray = [];
+            while(from <= to){
+                pagesArray.push(from);
+                from++;
+            }
+            return pagesArray;
+        }
+    },
     methods:{
         ...mapActions([
             'getToken'
@@ -373,15 +471,19 @@ export default {
         obtenerServicios(){
             axios.get('/servicios')
             .then(response => {
-                this.getServicios = response.data
+                this.getServicios = response.data['data']
             }).catch(error => {
                 console.log(error)
             })
         },
-        obtenerRutinas(){
-            axios.get('/miembros/create')
+        obtenerRutinas(page){
+            axios.get('/miembros/create?page='+page)
             .then(response => {
-                this.rutinas = response.data.rutinas
+                console.log(response)
+                this.paginacion = response.data.rutinas['pagination']
+                this.plan_alimentacion = response.data.planes_alim
+                this.rutinas = response.data.rutinas['data']
+
             }).catch(error => {
                 console.log(error)
             })
@@ -389,7 +491,8 @@ export default {
         obtenerPlanes(){
             axios.get('/planes-entrenamiento')
             .then(response => {
-                this.getPlanes = response.data
+                //console.log(response)
+                this.getPlanes = response.data['data']
             }).catch(error => {
                 console.log(error)
             })
@@ -415,6 +518,15 @@ export default {
         },
         addMiembros(){
             this.cargando = true
+            this.monto = this.suma  * this.meses
+            //console.log(this.planAlim_elegido)
+            if(this.planAlim_elegido !== null){
+                var pe = this.plan_alimentacion.find(element => element.nombre == this.planAlim_elegido)
+                this.peId = pe.id
+                //console.log(pe.id)
+            }else{
+                this.peId = null
+            }
             axios.post('/miembros', {
                 nombre: this.nombre,
                 apellidos: this.apellidos,
@@ -424,12 +536,15 @@ export default {
                 servicios : this.darServicios,
                 condicion_fisica : this.cond_fisica,
                 telefono_emergencia : this.tel_emerg,
-                rutinas: 'kjnklsjnflsjkdnf',
+                rutinas: this.postRutinas,
                 id_plan_entrenamiento : this.mandarPlan,
                 sexo: this.sexo,
                 estatura :this.estatura,
                 peso: this.peso,
-                objetivo : this.objetivo
+                objetivo : this.objetivo,
+                monto : this.suma,
+                meses : this.mesElegido,
+                id_plan_alimentacion : this.peId
             }).then(response => {
                 this.cargando = false
                 Swal.fire(
@@ -547,9 +662,7 @@ export default {
         },
         quitarServicio(index,id){
             var serv = this.consumo.find(element => element.id == id)
-            console.log(serv)
             var v = serv.precio
-            console.log(v)
             this.suma = this.suma - parseFloat(v)
             this.consumo.splice(index, 1)
             // var nombre = this.arrayServicios.find(element => element.nombre == serv.nombre)
@@ -563,6 +676,21 @@ export default {
                     this.arrayPlanes.splice(serv,1)
                 }
             })
+        },
+        agregarMeses(e){
+            this.mesElegido = e.target.value
+            if(this.mesElegido > this.mesAnterior){
+                this.mesAnterior = this.mesElegido
+                this.sumaAnterior = this.suma
+                this.suma = this.suma * parseFloat(this.mesElegido)
+            } else if(this.mesElegido < this.mesAnterior){
+                this.mesAnterior = this.mesElegido
+                this.suma = this.sumaAnterior * parseFloat(this.mesElegido)
+            }
+        },
+        changePage(page){
+            this.paginacion.current_page = page;
+            this.obtenerRutinas(page);
         }
     }
 };

@@ -73,7 +73,7 @@ export default {
             axios.post('/login', {
                 email: this.email,
                 password: this.password
-            }).then((response) => {
+            }).then(response => {
                 this.datos = response.data
                 this.gimnasio = JSON.stringify(response.data.usuario);
                 localStorage.setItem('token', this.datos.access_token);
@@ -82,8 +82,7 @@ export default {
                 var infoGym = CryptoJs.AES.encrypt(this.gimnasio, 'hola mundo')
                 localStorage.setItem('gimnasio', infoGym) 
                 this.$router.push('/')
-            }).catch((error) => {
-                console.log(response)
+            }).catch(error => {
                 console.log(error)
                 if (!error.response.data.errors) {
                     this.er = true

@@ -12,7 +12,7 @@
                             <button @click="$router.go(-1)" class="btn btn-primary btn-sm glyphicon glyphicon-arrow-left" title="Atrás">
                             </button>
                         </div>
-                        <div v-if="!loading" class="card md-6">
+                        <div v-if="!loading" class="card lg-10">
                             <div class="card-header">
                                 <h3>{{miembro.nombre}}</h3>
                             </div>
@@ -90,7 +90,7 @@
                                                 <error-list :errors="errors.descripcion"></error-list>
                                                 <label class="control-label mb-1">Plan de alimentación</label>  
                                                 <input name='id_plan_alimentacion' id='id_plan_alimentacion' class="form-control" type="text"
-                                                v-model="pa"  :disabled="validated"> 
+                                                v-model="pa.nombre"  :disabled="validated"> 
                                             </div>
                                             <div class="form-group">
                                                 <error-list :errors="errors.descripcion"></error-list>
@@ -194,29 +194,35 @@ export default {
             this.getToken()
         },
         obtenerDatos(){
-            //this.loading = true
+            this.loading = true
             this.ide = this.$route.params.id;
             axios.get('/miembros/' + this.ide)
             .then((response) =>
             {  
+                this.loading = false
+                console.log(response.data)
                 this.miembro = response.data;
                 this.servicios = response.data.servicios;
                 this.cf = this.miembro.condicion_fisica;
-                console.log(this.miembro)
                 if(this.miembro.telefono_emergencia == null){
                     this.telefono = 'NA'
                 }else {
                     this.telefono = this.miembro.telefono_emergencia;
                 }
-                this.rutinas = this.miembro.rutinas;
 
-                for (let index = 0; index < this.rutinas.length; index++) {
-                    if(this.rutinas[index] == null){
-                        this.rtns = true;
-                        break;
-                    }
-                    
+                this.rutinas = this.miembro.rutinas;
+                console.log(this.rutinas)
+                if(this.rutinas == null){
+                    this.rtns = true;
                 }
+                // for (let index = 0; index < this.rutinas.length; index++) {
+                //     console.log(this.rutinas[index])
+                //     if(this.rutinas[index] === null){
+                //         console.log('rutinas vacio')
+                //         //this.rtns = true;
+                //         break;
+                //     }
+                // }
 
                 if(this.cf == null){
                     this.condicion = 'NA'
@@ -244,6 +250,7 @@ export default {
                     this.pa = this.miembro.plan_alimentacion
                 }
             }).catch(error => {
+                this.loading = false
                 console.log('Error:'+  error)
             })
         }
