@@ -120,7 +120,7 @@
                                                     <div class="form-group">
                                                         <error-list :errors="errors.telefono"></error-list>
                                                         <label class="control-label mb-1">Precio</label>
-                                                        <input name='precio' id='precio' class="form-control" type="number" step="0.50" placeholder="$"
+                                                        <input name='precio' id='precio' class="form-control" min="0" type="number" step="0.50" placeholder="$1.50"
                                                         v-model="precio">
                                                         <br/>
                                                     </div>

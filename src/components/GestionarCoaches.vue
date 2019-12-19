@@ -189,7 +189,6 @@ export default {
         idGym(){
             axios.get('/perfil')
             .then((response) => {
-                console.log(response)
                 this.ide = response.data.gimnasio.id;
                 this.horario = response.data.gimnasio.h_servicios
                 this.he = this.horario.substr(0,5)
@@ -233,47 +232,47 @@ export default {
             console.log('salida'+ out)
             let resultado = out - entry
             console.log(resultado)
-            if(resultado >= 8){
+            if(resultado > 8){
                 Swal.fire(
                     'Espera',
                     'El maximo de horas laborales es de 8 al dia',
                     'warning',
                 ) 
-            }
-
-            this.cargando = true
-            this.horarios = this.entrada + '-' + this.salida
-            axios.post('/coaches',
-            {
-                nombre: this.nombre,
-                biografia: this.biografia,
-                email: this.email,
-                id_gimnasio: this.ide,
-                horarios : this.horarios
-            })
-            .then( response => {
-                this.cargando = false
-                let coach = {
+            } else {
+                this.cargando = true
+                this.horarios = this.entrada + '-' + this.salida
+                axios.post('/coaches',
+                {
                     nombre: this.nombre,
                     biografia: this.biografia,
                     email: this.email,
                     id_gimnasio: this.ide,
                     horarios : this.horarios
-                }
-                this.datos.unshift(coach)
-                Swal.fire(
-                    'Correcto',
-                    'Se ha agregado un nuevo coach exitosamente',
-                    'success',
-                    setTimeout(() => {
-                        location.reload()
-                    }, 2000)
-                )                
-            })
-            .catch(error=>{
-                this.errors = (error.response.data.errors)
-                this.cargando = false;
-            })
+                })
+                .then( response => {
+                    this.cargando = false
+                    let coach = {
+                        nombre: this.nombre,
+                        biografia: this.biografia,
+                        email: this.email,
+                        id_gimnasio: this.ide,
+                        horarios : this.horarios
+                    }
+                    this.datos.unshift(coach)
+                    Swal.fire(
+                        'Correcto',
+                        'Se ha agregado un nuevo coach exitosamente',
+                        'success',
+                        setTimeout(() => {
+                            location.reload()
+                        }, 2000)
+                    )                
+                })
+                .catch(error=>{
+                    this.errors = (error.response.data.errors)
+                    this.cargando = false;
+                })
+            }
         },
         deleteCoach(index,id){
             Swal.fire({

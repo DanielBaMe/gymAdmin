@@ -33,7 +33,8 @@
                                                     <div class="form-group">
                                                         <error-list :errors="errors.precio"></error-list>
                                                         <label class="control-label mb-1">Precio</label>  
-                                                        <input name='precio' id='precio' class="form-control" type="number" step="0.50"
+                                                        <input name='precio' id='precio' min="0"
+                                                        class="form-control" type="number" step="0.50"
                                                         v-model="servicio.precio"> 
                                                         <br/>
                                                     </div>

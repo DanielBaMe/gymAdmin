@@ -30,7 +30,8 @@
                                             <div class="form-group">
                                                 <error-list :errors="errors.precio"></error-list>
                                                 <label class="control-label mb-1">Precio</label>
-                                                <input name='precio' id='precio' class="form-control" type="number" step="0.01" placeholder="$$$"
+                                                <input name='precio' id='precio' class="form-control" min="0"
+                                                type="number" step="0.50" placeholder="$1.50"
                                                 v-model="plan.precio"
                                                 title="Solo números">
                                                 <br/>
@@ -47,7 +48,7 @@
                                                     <table class="table table-borderless table-striped table-earning">
                                                         <thead>
                                                             <tr>
-                                                                <td >Nombre</td>
+                                                                <td>Nombre</td>
                                                                 <td>Precio</td>
                                                                 <td>Quitar</td>
                                                             </tr>

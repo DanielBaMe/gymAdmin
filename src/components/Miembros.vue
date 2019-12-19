@@ -6,7 +6,7 @@
             <HeaderDesktop/>
             <div class="main-content">
                 <div v-show="agregar">
-                    <div class="row align-items-start" v-if="!agregando">
+                    <div class="row align-items-start">
                         <div class="col"></div>
                         <div class="col"></div>
                             <div class="col-lg-10">
@@ -39,7 +39,7 @@
                                                                     <error-list :errors="errors.telefono"></error-list>
                                                                     <div class="input-group">
                                                                         <label>Telefóno</label>
-                                                                        <input type="text" name="telefono" id="telefono" pattern="[0-9]+" minlength="4"
+                                                                        <input type="text" name="telefono" id="telefono" pattern="[0-9]+" minlength="4" maxlength="10"
                                                                         class="form-control" v-model="telefono">
                                                                     </div>
                                                                 </div>
@@ -47,7 +47,7 @@
                                                             <div class="col">
                                                                 <div class="input-group">
                                                                     <label>Telefóno de emergencia </label>
-                                                                    <input type="text" name="tel_emerg" id="tel_emerg" pattern="[0-9]+" minlength="4"
+                                                                    <input type="text" name="tel_emerg" id="tel_emerg" pattern="[0-9]+" minlength="4" maxlength="10"
                                                                     class="form-control" v-model="tel_emerg">
                                                                 </div>
                                                             </div>
@@ -183,12 +183,12 @@
                                                                             <error-list :errors="errors.meses"></error-list>
                                                                             <label>Meses de suscripción</label>
                                                                             <select @change="agregarMeses($event)" class="form-control h-25">
-                                                                                <option selected="selected" >Seleccionar meses</option>
+                                                                                <option selected="selected">Seleccionar meses</option>
                                                                                 <option v-for="item of months" :key="item.id">{{item}}</option> 
                                                                             </select>
                                                                         </div>
                                                                         <label for="">&nbsp;&nbsp;&nbsp;&nbsp; Total por mes:</label>
-                                                                        <label for="">&nbsp;&nbsp;&nbsp;&nbsp;${{this.suma}}</label>
+                                                                        <label for="">&nbsp;&nbsp;&nbsp;&nbsp;${{this.sumaTotal}}</label>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -382,7 +382,6 @@ export default {
             mostrarServicios: [],
             mandarPlan: '',
             loading: false,
-            agregando: false,
             seleccion: [
                 'Hombre',
                 'Mujer'
@@ -422,7 +421,8 @@ export default {
             mesElegido : '',
             plan_alimentacion: [],
             planAlim_elegido: '',
-            peId : ''
+            peId : '',
+            sumaTotal: 0
         }
     },
     created(){
@@ -483,7 +483,6 @@ export default {
                 this.paginacion = response.data.rutinas['pagination']
                 this.plan_alimentacion = response.data.planes_alim
                 this.rutinas = response.data.rutinas['data']
-
             }).catch(error => {
                 console.log(error)
             })
@@ -507,6 +506,7 @@ export default {
                     console.log('vacio')
                     this.vacio = true;
                 }else{
+                    console.log(response.data)
                     this.vacio = false;
                     this.datos = response.data['data']
                     this.loading = false;
@@ -518,12 +518,15 @@ export default {
         },
         addMiembros(){
             this.cargando = true
+            //console.log(this.planAlim_elegido)
+            console.log(this.mandarPlan)
             this.monto = this.suma  * this.meses
             //console.log(this.planAlim_elegido)
-            if(this.planAlim_elegido !== null){
+            if(this.planAlim_elegido !== ''){
+                //console.log(this.planAlim_elegido)
                 var pe = this.plan_alimentacion.find(element => element.nombre == this.planAlim_elegido)
                 this.peId = pe.id
-                //console.log(pe.id)
+                //console.log(this.peId)
             }else{
                 this.peId = null
             }
@@ -537,14 +540,14 @@ export default {
                 condicion_fisica : this.cond_fisica,
                 telefono_emergencia : this.tel_emerg,
                 rutinas: this.postRutinas,
-                id_plan_entrenamiento : this.mandarPlan,
+                plan_entrenamiento : this.mandarPlan,
                 sexo: this.sexo,
                 estatura :this.estatura,
                 peso: this.peso,
                 objetivo : this.objetivo,
                 monto : this.suma,
                 meses : this.mesElegido,
-                id_plan_alimentacion : this.peId
+                plan_alimentacion : this.peId
             }).then(response => {
                 this.cargando = false
                 Swal.fire(
@@ -599,8 +602,9 @@ export default {
             var id = e.target.value
             var servicio = this.getServicios.find(element => element.id == id)
             var valor = servicio.precio
-            this.suma = this.suma + parseFloat(valor)
             if(this.arrayServicios == ''){
+                this.suma = this.suma + parseFloat(valor)
+                this.sumaTotal = this.suma
                 this.arrayServicios.push(servicio)
                 this.consumo.push(servicio)
                 this.darServicios.push(parseInt(id, 10))
@@ -611,6 +615,8 @@ export default {
                         icon: 'warning',
                     })  
                 }else{
+                    this.suma = this.suma + parseFloat(valor)
+                    this.sumaTotal = this.suma
                     this.arrayServicios.push(servicio)
                     this.consumo.push(servicio)
                     this.darServicios.push(parseInt(id, 10))
@@ -621,18 +627,19 @@ export default {
             var id = e.target.value
             var plan = this.getPlanes.find(element => element.id == id)
             var valor = plan.precio
-            this.suma = this.suma + parseFloat(valor)
             if(this.arrayPlanes.find(element => element.id == id) ){
                 Swal.fire({ 
                     title: 'Este plan ya existe',
                     icon: 'warning',
                 })  
             }else{
+                this.suma = this.suma + parseFloat(valor)
+                this.sumaTotal = this.suma
                 var idplan = parseInt(id) + 10
                 plan.id = idplan
                 this.arrayPlanes.push(plan)
                 this.consumo.push(plan)
-                this.mandarPlan = id
+                this.mandarPlan = (parseInt(id, 10))
                 }
         },
         darRutinas(e){
@@ -664,6 +671,7 @@ export default {
             var serv = this.consumo.find(element => element.id == id)
             var v = serv.precio
             this.suma = this.suma - parseFloat(v)
+            this.sumaTotal = this.suma
             this.consumo.splice(index, 1)
             // var nombre = this.arrayServicios.find(element => element.nombre == serv.nombre)
             this.arrayServicios.forEach(element=>{
@@ -679,13 +687,20 @@ export default {
         },
         agregarMeses(e){
             this.mesElegido = e.target.value
-            if(this.mesElegido > this.mesAnterior){
+            if(this.mesElegido == 1){
+                this.sumaTotal = this.suma
                 this.mesAnterior = this.mesElegido
-                this.sumaAnterior = this.suma
-                this.suma = this.suma * parseFloat(this.mesElegido)
+            } else if(this.mesElegido > this.mesAnterior){
+                this.sumaAnterior = this.sumaTotal
+                this.sumaTotal = this.suma * parseFloat(this.mesElegido)
+                this.mesAnterior = this.mesElegido
+                // this.mesAnterior = this.mesElegido
+                // this.sumaAnterior = this.suma
+                // this.suma = this.suma * parseFloat(this.mesElegido)
             } else if(this.mesElegido < this.mesAnterior){
+                this.sumaTotal = this.suma * parseFloat(this.mesElegido)
                 this.mesAnterior = this.mesElegido
-                this.suma = this.sumaAnterior * parseFloat(this.mesElegido)
+                //this.suma = this.sumaAnterior * parseFloat(this.mesAnterior)
             }
         },
         changePage(page){

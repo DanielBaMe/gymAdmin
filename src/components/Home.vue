@@ -110,7 +110,7 @@ export default {
             axios.get('/perfil')
             .then((response) =>
             {   
-                console.log(response)
+                //console.log(response)
                 this.datos = response.data.contrato;
                 if(this.datos.estado === 'Activo'){
                     this.estado = true
@@ -122,6 +122,7 @@ export default {
         pagos(chartId, chartI, cI){
             axios.get('')
             .then(response => {
+                console.log(response)
                 //Miembros
                 this.miembros = response.data.miembros.data_chart_anio;
                 this.tma = response.data.miembros.total_miembros_anio;

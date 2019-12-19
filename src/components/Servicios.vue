@@ -28,7 +28,8 @@
                                                     <error-list :errors="errors.precio"></error-list>
                                                     <div class="input-group">
                                                         <label class="control-label mb-1">Precio</label>
-                                                        <input type="number" step="0.50" name="precio" id="precio" class="form-control" v-model="precio">
+                                                        <input type="number" step="0.50" name="precio" id="precio" placeholder="$1.50"
+                                                        class="form-control" min="0" v-model="precio">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
