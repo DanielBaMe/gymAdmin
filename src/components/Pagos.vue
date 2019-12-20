@@ -133,7 +133,7 @@
                                                         <button class="btn btn-success btn-md" v-if="!cargando" type="submit">Pagar</button>
                                                         <button v-else disabled class="btn btn-info btn-md">
                                                             <i class="fas fa-circle-notch fa-spin"></i>
-                                                            Agregando...
+                                                            Enviando pago...
                                                         </button>
                                                     </div>
                                                     <div class="col-auto">
@@ -256,11 +256,11 @@ export default {
             montoActual : '',
             mesElegido : '',
             mesAnterior : 0,
-            mesElegido : '',
             suma : 0,
             ventana : false,
             montoOriginal : 0,
-            ide: ''
+            ide: '',
+            darServicios: []
         }
     },
     created(){
@@ -354,14 +354,13 @@ export default {
                     this.servs = true;
                 }
 
-                this.mandarPlan = arreglo.plan_entrenamiento["id"]
-
                 if(arreglo.plan_entrenamiento == null){
                     this.pe = true
                     this.nombrePlan = 'NA'
                     this.serviciosPlan = 'NA'
                 } else {
                     this.pe = false
+                    this.mandarPlan = arreglo.plan_entrenamiento["id"]
                     this.serviciosPlan = arreglo.plan_entrenamiento["servicios"]
                     this.nombrePlan = arreglo.plan_entrenamiento["nombre"]
                 }
@@ -415,11 +414,15 @@ export default {
         },
         pagarMiembro(){
             this.cargando = true;
-            //Actualizar pago
-            axios.post('/miembros/'+ this.ide +'/pagos/16',{
+            this.servicios.forEach(element => {
+                this.darServicios.push(element.id)
+            })
+            console.log(this.darServicios)
+            //Generar nuevo pago
+            axios.post('/miembros/'+ this.ide +'/pagos',{
                 meses : this.mesElegido,
                 monto : this.suma,
-                servicios : this.servicios,
+                servicios : this.darServicios,
                 plan_entrenamiento : this.mandarPlan
             }).then(response => {
                 this.cargando = false

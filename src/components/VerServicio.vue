@@ -123,7 +123,6 @@ name: 'Servicios',
         formSubmit(){
             axios.put('/servicios/'+ this.ide, this.servicio)
             .then(response => {
-                console.log(response)
                 this.errors= []
                 this.loading = false;
                 Swal.fire({ 
